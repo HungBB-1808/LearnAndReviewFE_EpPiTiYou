@@ -2,14 +2,14 @@
 
 A modern, high-performance Online Learning Platform (SPA) built with React 18, Vite, and Tailwind CSS. Featuring premium "Liquid Glass" aesthetics and state-of-the-art animations.
 
-## ✨ Key Features
+## Key Features
 - **3 Dynamic Learning Modes**: Study (sequential), Practice (instant feedback), and Mock Exam (timed).
 - **Premium UI/UX**: backdrop-blur glassmorphism, Framer Motion transitions, and Apple-like liquid animations.
 - **Admin Content Portal**: Secure gateway for managing question databases and answer keys.
 - **Smart Data Handling**: Supporting multi-answer questions and session persistence using Zustand.
 - **Keyboard Navigation**: Interactive Arrow Key support for all sessions.
 
-## 🚀 Tech Stack
+## Tech Stack
 - **Framework**: React 18
 - **Bundler**: Vite
 - **Styling**: Tailwind CSS (custom glass configuration)
@@ -17,7 +17,7 @@ A modern, high-performance Online Learning Platform (SPA) built with React 18, V
 - **State Management**: Zustand
 - **Routing**: React Router DOM (HashRouter)
 
-## 📦 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
@@ -43,7 +43,7 @@ npm run dev
 npm run build
 ```
 
-## 🔒 Security
+## Security
 The Admin Dashboard is protected via a secure authenticate gateway.
 - **Username**: HungBB
 - **Password**: 091104Hb@
