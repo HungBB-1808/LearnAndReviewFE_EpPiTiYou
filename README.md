@@ -48,5 +48,5 @@ The Admin Dashboard is protected via a secure authenticate gateway.
 - **Username**: HungBB
 - **Password**: 091104Hb@
 
-## 📄 License
+## License
 This project is for internal education purposes for FPT University students.
