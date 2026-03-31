@@ -117,8 +117,9 @@ export const useAppStore = create(
         const q = get().getQuestionById(id);
         if(!q) return ['A'];
         if(q.answer) {
-            const ansStr = Array.isArray(q.answer) ? q.answer[0] : q.answer;
-            if (ansStr) return ansStr.split(',').map(s => s.trim().toUpperCase());
+            // Robust join if array, then split by comma
+            const ansRaw = Array.isArray(q.answer) ? q.answer.join(',') : q.answer;
+            if (ansRaw) return ansRaw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
         }
         return ['A']; // Fallback like vanilla
       },
