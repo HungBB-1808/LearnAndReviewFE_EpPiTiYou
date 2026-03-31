@@ -116,7 +116,7 @@ export const useAppStore = create(
             for(let k in db) {
                 const idx = db[k].findIndex(q => q.id === qId);
                 if(idx !== -1) {
-                    db[k][idx] = { ...db[k][idx], question: newText };
+                    db[k][idx] = { ...db[k][idx], question: newText, questionTextCleaned: newText };
                     break;
                 }
             }

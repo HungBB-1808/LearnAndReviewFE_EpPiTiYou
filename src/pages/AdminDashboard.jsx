@@ -264,7 +264,7 @@ export const AdminDashboard = () => {
                                             <span className="px-3 py-1 bg-primary/10 text-primary-fixed text-[10px] font-bold rounded-full truncate max-w-full inline-block">{q.actualKey}</span>
                                         </td>
                                         <td className="px-8 py-5">
-                                            <p className="text-sm font-medium text-white truncate max-w-md">{q.questionTextCleaned || q.question}</p>
+                                            <p className="text-sm font-medium text-white truncate max-w-md">{q.question}</p>
                                         </td>
                                         <td className="px-8 py-5">
                                             <span className="px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full text-[10px] font-black">{cAns}</span>
