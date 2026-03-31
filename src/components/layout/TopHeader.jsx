@@ -45,17 +45,19 @@ export const TopHeader = ({ toggleSidebar }) => {
                 <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
             </Link>
 
-            <button 
-                onClick={() => {
-                    if(window.confirm("Are you sure you want to log out?")) {
-                        useAppStore.getState().userLogout();
-                        window.location.reload();
-                    }
-                }}
-                className="md:ml-4 px-6 py-2 rounded-full bg-primary/20 text-primary-fixed border border-primary/30 text-xs font-black uppercase tracking-widest hover:bg-primary/30 transition-colors"
-            >
-                Logout
-            </button>
+            {useAppStore.getState().isAdmin && (
+                <button 
+                    onClick={() => {
+                        if(window.confirm("Are you sure you want to log out?")) {
+                            useAppStore.getState().userLogout();
+                            window.location.reload();
+                        }
+                    }}
+                    className="md:ml-4 px-6 py-2 rounded-full bg-primary/20 text-primary-fixed border border-primary/30 text-xs font-black uppercase tracking-widest hover:bg-primary/30 transition-colors"
+                >
+                    Logout
+                </button>
+            )}
         </div>
     </motion.header>
   )
