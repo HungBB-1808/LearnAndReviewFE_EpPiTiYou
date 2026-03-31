@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
@@ -6,21 +6,31 @@ import { useNavigate } from 'react-router-dom'
 export const Bookmarks = () => {
     const { bookmarks, questionDB, toggleBookmark, getCorrectAnswerFor, startSession } = useAppStore()
     const navigate = useNavigate()
+    const [activeTab, setActiveTab] = useState('ALL')
 
-    // Find the actual questions from the DB
-    const bookmarkedQuestions = bookmarks
-        .map(b => {
+    // Find and group questions from DB
+    const subjects = useMemo(() => {
+        const grouped = {}
+        bookmarks.forEach(b => {
              for (const key in questionDB) {
                  const q = questionDB[key].find(x => x.id === b.id)
-                 if (q) return q
+                 if (q) {
+                     const match = key.match(/^([a-z]{3}\d{3})/i)
+                     const base = match ? match[1].toUpperCase() : key.split('-')[0].trim().toUpperCase()
+                     if (!grouped[base]) grouped[base] = []
+                     grouped[base].push({ ...q, parentKey: key })
+                     break
+                 }
              }
-             return null
         })
-        .filter(Boolean)
+        return grouped
+    }, [bookmarks, questionDB])
 
-    const handleReviewAll = () => {
-        if(bookmarkedQuestions.length === 0) return
-        startSession('study', bookmarkedQuestions)
+    const totalCount = bookmarks.length
+
+    const handleReviewSubject = (subQuestions) => {
+        if(subQuestions.length === 0) return
+        startSession('study', subQuestions)
         navigate('/study')
     }
 
@@ -37,62 +47,100 @@ export const Bookmarks = () => {
                         <span className="material-symbols-outlined text-4xl text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
                         Saved Questions
                     </h2>
-                    <p className="text-on-surface-variant max-w-md">Your personalized collection of tricky questions mapped for quick review.</p>
+                    <p className="text-on-surface-variant max-w-md">Your personalized collection categorized by subject for efficient learning.</p>
                 </div>
-                <button 
-                    onClick={handleReviewAll}
-                    disabled={bookmarkedQuestions.length === 0}
-                    className="px-6 py-3 rounded-full bg-primary/20 text-primary-fixed font-bold hover:bg-primary/30 transition-colors disabled:opacity-50 flex items-center gap-2"
-                >
-                    <span className="material-symbols-outlined text-sm">menu_book</span> Review All
-                </button>
             </div>
 
-            {bookmarkedQuestions.length === 0 ? (
+            {totalCount === 0 ? (
                 <div className="glass-panel p-20 rounded-[2rem] flex flex-col items-center justify-center text-center">
                     <span className="material-symbols-outlined text-6xl text-white/20 mb-4">bookmark_border</span>
                     <h3 className="text-2xl font-bold text-white mb-2">No Bookmarks</h3>
                     <p className="text-on-surface-variant">Questions you star during study or practice will appear here.</p>
                 </div>
             ) : (
-                <div className="grid gap-6">
-                    <AnimatePresence>
-                        {bookmarkedQuestions.map((q, i) => {
-                            const corrects = getCorrectAnswerFor(q.id)
-                            return (
-                                <motion.div 
-                                    key={q.id}
-                                    layout
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    className="glass-card p-6 rounded-2xl flex flex-col relative group"
+                <div className="space-y-12">
+                    {/* Tabs / Filter Navigation */}
+                    <div className="flex flex-wrap gap-4 mb-8 p-2 bg-white/5 rounded-3xl w-fit border border-white/5 backdrop-blur-3xl">
+                        <button 
+                            onClick={() => setActiveTab('ALL')}
+                            className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'ALL' ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
+                        >
+                            All ({totalCount})
+                        </button>
+                        {Object.entries(subjects).map(([subject, qList]) => (
+                            <button 
+                                key={subject}
+                                onClick={() => setActiveTab(subject)}
+                                className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === subject ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
+                            >
+                                {subject} ({qList.length})
+                            </button>
+                        ))}
+                    </div>
+
+                    {Object.entries(subjects)
+                        .filter(([subject]) => activeTab === 'ALL' || activeTab === subject)
+                        .map(([subject, qList]) => (
+                        <div key={subject} className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                                <h3 className="text-2xl font-black text-white flex items-center gap-3">
+                                    <div className="w-2 h-8 bg-primary rounded-full"></div>
+                                    {subject} <span className="text-lg text-on-surface-variant opacity-50 font-medium">({qList.length})</span>
+                                </h3>
+                                <button 
+                                    onClick={() => handleReviewSubject(qList)}
+                                    className="px-6 py-2 rounded-full bg-white/5 text-white text-xs font-bold hover:bg-white/10 border border-white/10 transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                    <button 
-                                        onClick={() => toggleBookmark(q.id)}
-                                        className="absolute top-6 right-6 text-yellow-500 hover:text-white/50 transition-colors"
-                                    >
-                                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
-                                    </button>
-                                    
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold tracking-widest uppercase text-tertiary border border-white/5">{q.parentKey || 'Unknown Subject'}</span>
-                                    </div>
-                                    
-                                    <h4 className="text-lg font-medium text-white mb-6 pr-12">{q.questionTextCleaned || q.question}</h4>
-                                    
-                                    <div className="mt-auto p-4 rounded-xl bg-green-500/5 border border-green-500/10 flex items-start gap-4 inline-block w-fit">
-                                        <span className="material-symbols-outlined text-green-400 text-sm mt-0.5">check_circle</span>
-                                        <div>
-                                            {corrects.map(c => (
-                                                <p key={c} className="text-sm font-medium text-green-400">{c}. {q.options[c]}</p>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )
-                        })}
-                    </AnimatePresence>
+                                    <span className="material-symbols-outlined text-xs">play_arrow</span> Review {subject}
+                                </button>
+                            </div>
+
+                            <div className="grid gap-6">
+                                <AnimatePresence>
+                                    {qList.map((q) => {
+                                        const corrects = getCorrectAnswerFor(q.id)
+                                        return (
+                                            <motion.div 
+                                                key={q.id}
+                                                layout
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                className="glass-card p-6 rounded-2xl flex flex-col relative group border border-white/5 hover:border-white/10 transition-colors"
+                                            >
+                                                <button 
+                                                    onClick={() => toggleBookmark(q.id)}
+                                                    className="absolute top-6 right-6 text-yellow-500 hover:text-white/30 transition-all p-2 bg-white/5 rounded-full"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
+                                                </button>
+                                                
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <span className="px-3 py-1 bg-primary/10 rounded-full text-[10px] font-black tracking-widest uppercase text-primary border border-primary/20">
+                                                        {q.parentKey.toUpperCase()}
+                                                    </span>
+                                                </div>
+                                                
+                                                <h4 className="text-lg font-bold text-white mb-6 pr-12 leading-relaxed">{q.questionTextCleaned || q.question}</h4>
+                                                
+                                                <div className="mt-auto p-5 rounded-xl bg-white/5 border border-white/5 flex items-start gap-4">
+                                                    <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
+                                                        <span className="material-symbols-outlined text-green-400 text-[14px]">done_all</span>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-1">Correct Answer</p>
+                                                        {corrects.map(c => (
+                                                            <p key={c} className="text-sm font-bold text-green-400/90">{c}. {q.options[c]}</p>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )
+                                    })}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </motion.div>

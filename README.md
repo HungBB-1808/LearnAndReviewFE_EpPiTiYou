@@ -1,4 +1,4 @@
-# EduGlass React SPA
+# EduFU React SPA
 
 A modern, high-performance Online Learning Platform (SPA) built with React 18, Vite, and Tailwind CSS. Featuring premium "Liquid Glass" aesthetics and state-of-the-art animations.
 
@@ -29,7 +29,7 @@ A modern, high-performance Online Learning Platform (SPA) built with React 18, V
 git clone https://github.com/HungBB-1808/LearnAndReviewFE_EpPiTiYou.git
 
 # Navigate to the project directory
-cd EduGlassReact
+cd EduFUReact
 
 # Install dependencies
 npm install

@@ -4,9 +4,10 @@ import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
 
 export const AdminDashboard = () => {
-    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, getCorrectAnswerFor, isAdmin, setIsAdmin } = useAppStore()
+    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, getCorrectAnswerFor, isAdmin, setIsAdmin, toggleSubjectLock, isSubjectLocked } = useAppStore()
     const navigate = useNavigate()
     const [filterSubject, setFilterSubject] = useState('ALL')
+    const [filterKey, setFilterKey] = useState('ALL')
     const [searchTerm, setSearchTerm] = useState('')
     
     // Login State
@@ -23,17 +24,32 @@ export const AdminDashboard = () => {
     const allSubjects = useMemo(() => {
         const set = new Set()
         dbKeys.forEach(k => {
-            const match = k.match(/^([a-z0-9]+)-/i)
-            if (match) set.add(match[1].toUpperCase())
-            else set.add(k.toUpperCase())
+            const match = k.match(/^([a-z]{3}\d{3})/i)
+            const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase()
+            if (base) set.add(base)
         })
         return Array.from(set)
     }, [dbKeys])
 
+    const availableKeys = useMemo(() => {
+        if (filterSubject === 'ALL') return []
+        return dbKeys.filter(k => {
+            const match = k.match(/^([a-z]{3}\d{3})/i)
+            const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase()
+            return base === filterSubject
+        })
+    }, [dbKeys, filterSubject])
+
     let displayList = []
     if (isDataLoaded) {
         dbKeys.forEach(k => {
-            if (filterSubject === 'ALL' || k.toUpperCase().startsWith(filterSubject)) {
+            const match = k.match(/^([a-z]{3}\d{3})/i)
+            const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase()
+            
+            const matchesSubject = filterSubject === 'ALL' || base === filterSubject
+            const matchesKey = filterKey === 'ALL' || k === filterKey
+
+            if (matchesSubject && matchesKey) {
                 questionDB[k].forEach(q => {
                     if (q.question.toLowerCase().includes(searchTerm.toLowerCase())) {
                         displayList.push({...q, actualKey: k})
@@ -150,6 +166,40 @@ export const AdminDashboard = () => {
                 </div>
             </section>
 
+            {/* Subject Locking Management */}
+            <section className="mb-12">
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary">lock_reset</span>
+                    Course Availability Management
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {allSubjects.map(sub => {
+                        const locked = isSubjectLocked(sub)
+                        return (
+                            <button 
+                                key={sub}
+                                onClick={() => toggleSubjectLock(sub)}
+                                className={`p-4 rounded-xl border transition-all flex flex-col items-center gap-3 group relative overflow-hidden ${
+                                    locked 
+                                    ? 'bg-error/10 border-error/30 text-error shadow-[0_10px_20px_rgba(255,110,132,0.1)]' 
+                                    : 'bg-primary/5 border-white/5 text-white/70 hover:border-primary/40 hover:bg-primary/10'
+                                }`}
+                            >
+                                <span className={`material-symbols-outlined text-2xl transition-transform group-hover:scale-110 ${locked ? 'text-error' : 'text-primary/40 group-hover:text-primary'}`}>
+                                    {locked ? 'lock' : 'lock_open'}
+                                </span>
+                                <span className="text-xs font-black tracking-widest uppercase">{sub}</span>
+                                {locked && (
+                                    <div className="absolute top-0 right-0 p-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></div>
+                                    </div>
+                                )}
+                            </button>
+                        )
+                    })}
+                </div>
+            </section>
+
             <section className="glass-panel rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col h-[calc(100vh-380px)] min-h-[500px]">
                 <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-surface-container-low/50">
                     <div className="flex items-center gap-4">
@@ -165,12 +215,23 @@ export const AdminDashboard = () => {
                         </div>
                         <select 
                             value={filterSubject}
-                            onChange={e => { setFilterSubject(e.target.value); setPage(1) }}
+                            onChange={e => { setFilterSubject(e.target.value); setFilterKey('ALL'); setPage(1) }}
                             className="bg-surface-container-highest/50 border-none rounded-full px-4 py-2 text-sm text-white outline-none cursor-pointer focus:ring-2 focus:ring-primary/50"
                         >
                             <option value="ALL">All Subjects</option>
                             {allSubjects.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
+
+                        {filterSubject !== 'ALL' && (
+                            <select 
+                                value={filterKey}
+                                onChange={e => { setFilterKey(e.target.value); setPage(1) }}
+                                className="bg-surface-container-highest/50 border-none rounded-full px-4 py-2 text-sm text-white outline-none cursor-pointer animate-in fade-in slide-in-from-left-2 duration-300 focus:ring-2 focus:ring-primary/50"
+                            >
+                                <option value="ALL">All Semesters</option>
+                                {availableKeys.map(k => <option key={k} value={k}>{k.toUpperCase()}</option>)}
+                            </select>
+                        )}
                     </div>
                     <div className="flex gap-2 text-white/40">
                         <button className="p-2 hover:bg-white/5 rounded-full transition-all hover:text-white"><span className="material-symbols-outlined">filter_list</span></button>

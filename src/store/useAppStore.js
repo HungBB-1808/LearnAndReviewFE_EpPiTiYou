@@ -25,20 +25,35 @@ export const useAppStore = create(
       isDataLoaded: false,
 
       loadInitialData: async () => {
-        if (get().isDataLoaded && Object.keys(get().questionDB).length > 0) return;
+        // Force reload to pick up new files or changes
         try {
-            const response = await fetch('/FE_Data_IOT102_Final.json');
-            const rawData = await response.json();
+            const files = ['/FE_Data_IOT102_Final.json', '/FE_Data_SSG104_Final.json'];
+            const allCleanData = {};
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const rawData = await response.json();
+                    
+                    Object.keys(rawData).forEach(key => {
+                        allCleanData[key] = rawData[key].map(q => ({
+                            ...q,
+                            questionTextCleaned: formatQuestionText(q.question) || q.question,
+                            id: generateHash(q.question)
+                        }));
+                    });
+                } catch (err) {
+                    console.warn(`Could not load ${file}:`, err);
+                }
+            }
             
-            const cleanData = {};
-            Object.keys(rawData).forEach(key => {
-                cleanData[key] = rawData[key].map(q => ({
-                    ...q,
-                    questionTextCleaned: formatQuestionText(q.question) || q.question,
-                    id: generateHash(q.question)
-                }));
-            });
-            set({ questionDB: cleanData, isDataLoaded: true });
+            // Merge with existing questionDB to preserve possible admin edits 
+            // but prioritize fresh loads for new subjects
+            set(state => ({ 
+                questionDB: { ...allCleanData, ...state.questionDB }, 
+                isDataLoaded: true 
+            }));
         } catch (e) {
             console.error("Failed to load initial JSON:", e);
         }
@@ -48,18 +63,19 @@ export const useAppStore = create(
       getUniqueSubjects: () => {
           const subjects = new Set();
           Object.keys(get().questionDB).forEach(k => {
-              const match = k.match(/^([a-z0-9]+)-/i);
-              if (match) subjects.add(match[1].toUpperCase());
-              else subjects.add(k.toUpperCase()); 
+              const match = k.match(/^([a-z]{3}\d{3})/i);
+              const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase();
+              if (base) subjects.add(base);
           });
           return Array.from(subjects);
       },
       getSemestersForSubject: (subjectPrefix) => {
           const terms = new Set();
           Object.keys(get().questionDB).forEach(k => {
-              if (k.toLowerCase().startsWith(subjectPrefix.toLowerCase())) {
-                  const match = k.match(new RegExp(`^${subjectPrefix}-([a-z0-9\\-]+)-fe`, 'i')) || k.match(new RegExp(`^${subjectPrefix}-([a-z0-9\\-]+)`, 'i'));
-                  if (match && match[1]) terms.add(match[1].toUpperCase());
+              const match = k.match(/^([a-z]{3}\d{3})/i);
+              const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase();
+              if (base === subjectPrefix.toUpperCase()) {
+                  terms.add(k); // We now keep the full original key as the "semester" indentifier
               }
           });
           return Array.from(terms);
@@ -67,8 +83,10 @@ export const useAppStore = create(
       getAllQuestionsForSubject: (subjectPrefix) => {
           let results = [];
           Object.entries(get().questionDB).forEach(([key, qList]) => {
-              if (key.toLowerCase().startsWith(subjectPrefix.toLowerCase())) {
-                  results = results.concat(qList);
+              const match = key.match(/^([a-z]{3}\d{3})/i);
+              const base = match ? match[1].toUpperCase() : key.split('-')[0].trim().toUpperCase();
+              if (base === subjectPrefix.toUpperCase()) {
+                  results = results.concat(qList.map(q => ({...q, parentKey: key})));
               }
           });
           return results;
@@ -170,11 +188,18 @@ export const useAppStore = create(
       updateSessionTime: (time) => set(state => ({
           activeSession: { ...state.activeSession, timeSpent: time }
       })),
-      clearSession: () => set({ activeSession: null })
+      clearSession: () => set({ activeSession: null }),
+      userLogout: () => set(state => ({
+          bookmarks: [],
+          examHistory: [],
+          activeSession: null,
+          isAdmin: false,
+          selectedSubject: null
+      }))
 
     }),
     {
-      name: 'eduglass-storage',
+      name: 'edufu-storage',
       partialize: (state) => ({ 
           selectedSubject: state.selectedSubject,
           isAdmin: state.isAdmin,

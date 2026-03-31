@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAppStore } from '../../store/useAppStore'
 
 export const TopHeader = ({ toggleSidebar }) => {
   return (
@@ -21,7 +22,7 @@ export const TopHeader = ({ toggleSidebar }) => {
                 <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                     <span className="material-symbols-outlined text-black font-black text-sm">school</span>
                 </div>
-                <h2 className="text-lg font-bold text-white tracking-tight">EduGlass SPA Portal</h2>
+                <h2 className="text-lg font-bold text-white tracking-tight">EduFU SPA Portal</h2>
             </div>
         </div>
 
@@ -47,7 +48,7 @@ export const TopHeader = ({ toggleSidebar }) => {
             <button 
                 onClick={() => {
                     if(window.confirm("Are you sure you want to log out?")) {
-                        localStorage.clear();
+                        useAppStore.getState().userLogout();
                         window.location.reload();
                     }
                 }}

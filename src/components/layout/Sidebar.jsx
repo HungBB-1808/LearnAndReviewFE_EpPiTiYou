@@ -33,7 +33,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
 
       <div className="p-8 relative z-10 flex justify-between items-center">
         <div>
-            <h1 className="text-2xl font-black tracking-tight text-white mb-1">EduGlass</h1>
+            <h1 className="text-2xl font-black tracking-tight text-white mb-1">EduFU</h1>
             <p className="text-[10px] font-bold tracking-widest text-primary uppercase">Portal</p>
         </div>
         {/* Mobile close button */}
@@ -70,15 +70,17 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
       </nav>
 
       <div className="p-6 border-t border-white/5 relative z-10">
-        <div className="flex items-center gap-4 hover:bg-white/5 p-3 rounded-xl cursor-pointer transition-colors">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary p-[2px]">
-                <div className="w-full h-full rounded-full bg-surface-container overflow-hidden flex items-center justify-center">
-                    <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" alt="Avatar" className="w-full h-full object-cover opacity-90" />
+        <div className="flex items-center gap-4 hover:bg-white/5 p-3 rounded-xl cursor-pointer transition-colors group/user">
+            <div className={`w-10 h-10 rounded-full p-[2px] transition-all duration-500 ${isAdmin ? 'bg-gradient-to-tr from-error to-secondary shadow-[0_0_15px_rgba(255,110,132,0.5)]' : 'bg-gradient-to-tr from-primary to-secondary'}`}>
+                <div className={`w-full h-full rounded-full bg-surface-container overflow-hidden flex items-center justify-center transition-colors ${isAdmin ? 'text-error' : 'text-white/40'}`}>
+                    <span className="material-symbols-outlined text-2xl">{isAdmin ? 'admin_panel_settings' : 'person'}</span>
                 </div>
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate">Alex Rivera</p>
-                <p className="text-[10px] text-on-surface-variant truncate uppercase tracking-widest">Student</p>
+                <p className="text-sm font-bold text-white truncate">{isAdmin ? 'Administrator' : 'Guest Account'}</p>
+                <p className={`text-[10px] truncate uppercase tracking-widest font-black transition-colors ${isAdmin ? 'text-error' : 'text-on-surface-variant'}`}>
+                    {isAdmin ? 'System Master' : 'Public Access'}
+                </p>
             </div>
         </div>
       </div>
