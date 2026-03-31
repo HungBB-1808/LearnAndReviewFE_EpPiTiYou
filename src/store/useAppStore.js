@@ -55,12 +55,19 @@ export const useAppStore = create(
                 }
             }
             
-            // Merge with existing questionDB to preserve possible admin edits 
-            // but prioritize fresh loads for new subjects
-            set(state => ({ 
-                questionDB: { ...state.questionDB, ...allCleanData }, 
-                isDataLoaded: true 
-            }));
+            // Merge with existing questionDB to preserve admin edits
+            // We put state.questionDB on the RIGHT so user edits win
+            set(state => {
+                const combined = { ...allCleanData, ...state.questionDB };
+                // Also clean any leftover Kizspy markers in the existing state
+                Object.keys(combined).forEach(k => {
+                    combined[k] = combined[k].map(q => {
+                        const txt = formatQuestionText(q.question);
+                        return { ...q, question: txt, questionTextCleaned: txt };
+                    });
+                });
+                return { questionDB: combined, isDataLoaded: true };
+            });
         } catch (e) {
             console.error("Failed to load initial JSON:", e);
         }
