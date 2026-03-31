@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
@@ -13,7 +13,13 @@ export const ModeSelection = () => {
     const [questionCount, setQuestionCount] = useState(40)
     const [bookmarksOnly, setBookmarksOnly] = useState(false)
     const availableTerms = getSemestersForSubject(selectedSubject)
-    const [selectedTerms, setSelectedTerms] = useState(availableTerms)
+    const [selectedTerms, setSelectedTerms] = useState([])
+
+    useEffect(() => {
+        if (availableTerms.length > 0 && selectedTerms.length === 0) {
+            setSelectedTerms(availableTerms)
+        }
+    }, [availableTerms, selectedTerms])
 
     if (!selectedSubject) {
         navigate('/subjects')
@@ -46,11 +52,9 @@ export const ModeSelection = () => {
             }
             const allDB = useAppStore.getState().questionDB
             selectedTerms.forEach(term => {
-                Object.keys(allDB).forEach(k => {
-                    if (k.toLowerCase().startsWith(selectedSubject.toLowerCase()) && k.toUpperCase().includes(term)) {
-                        pool = pool.concat(allDB[k])
-                    }
-                })
+                if (allDB[term]) {
+                    pool = pool.concat(allDB[term])
+                }
             })
         }
 
