@@ -3,8 +3,11 @@ import { persist } from 'zustand/middleware'
 
 const formatQuestionText = (text) => {
     if (!text) return "";
-    let clean = text.replace(/^.*?and\s*[_]+\s*(?:n?swer)?\s*\|?\s*\|?\s*/i, '').trim();
-    return clean.length > 0 ? clean : text;
+    // Remove "Kizspy |" and typical OCR garbage
+    let clean = text.replace(/Kizspy\s*\|\s*/gi, '')
+                    .replace(/^.*?and\s*[_]+\s*(?:n?swer)?\s*\|?\s*\|?\s*/i, '')
+                    .trim();
+    return clean;
 }
 
 const generateHash = (str) => {
@@ -27,7 +30,7 @@ export const useAppStore = create(
       loadInitialData: async () => {
         // Force reload to pick up new files or changes
         try {
-            const files = ['/FE_Data_IOT102_Final.json', '/FE_Data_SSG104_Final.json'];
+            const files = [`/FE_Data_IOT102_Final.json?v=${Date.now()}`, `/FE_Data_SSG104_Final.json?v=${Date.now()}`];
             const allCleanData = {};
 
             for (const file of files) {
@@ -37,11 +40,15 @@ export const useAppStore = create(
                     const rawData = await response.json();
                     
                     Object.keys(rawData).forEach(key => {
-                        allCleanData[key] = rawData[key].map(q => ({
-                            ...q,
-                            questionTextCleaned: formatQuestionText(q.question) || q.question,
-                            id: generateHash(q.question)
-                        }));
+                        allCleanData[key] = rawData[key].map(q => {
+                            const cleaned = formatQuestionText(q.question);
+                            return {
+                                ...q,
+                                question: cleaned,
+                                questionTextCleaned: cleaned,
+                                id: generateHash(q.question)
+                            };
+                        });
                     });
                 } catch (err) {
                     console.warn(`Could not load ${file}:`, err);
@@ -51,7 +58,7 @@ export const useAppStore = create(
             // Merge with existing questionDB to preserve possible admin edits 
             // but prioritize fresh loads for new subjects
             set(state => ({ 
-                questionDB: { ...allCleanData, ...state.questionDB }, 
+                questionDB: { ...state.questionDB, ...allCleanData }, 
                 isDataLoaded: true 
             }));
         } catch (e) {

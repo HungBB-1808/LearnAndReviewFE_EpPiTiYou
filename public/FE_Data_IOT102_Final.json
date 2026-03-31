@@ -4258,7 +4258,7 @@
     ],
     "iot102-su25-fe.4512": [
         {
-            "question": "Kizspy |  When using the LCD 1602 display with an Arduino, what is the purpose of wiring a 10k ohm potentiometer to the VO pin of the LCD?",
+            "question": " When using the LCD 1602 display with an Arduino, what is the purpose of wiring a 10k ohm potentiometer to the VO pin of the LCD?",
             "options": {
                 "A": "To adjust the display contrast",
                 "B": "To provide power to the LCD",
@@ -4268,7 +4268,7 @@
             "file_source": "Q34.webp"
         },
         {
-            "question": "Kizspy |  Which protocol is most commonly used for small data transmission in lot devices?",
+            "question": " Which protocol is most commonly used for small data transmission in lot devices?",
             "options": {
                 "A": "HTTP",
                 "B": "MGTT",
@@ -4277,7 +4277,7 @@
             "file_source": "Q39.webp"
         },
         {
-            "question": "Kizspy |  What programming strategies could be employed to handle the “velocity” aspect of big data in an foT system?",
+            "question": " What programming strategies could be employed to handle the “velocity” aspect of big data in an foT system?",
             "options": {
                 "A": "Implementing strict data type casting in all functions",
                 "B": "Utilizing just-in-time compilation for all code",
@@ -4287,7 +4287,7 @@
             "file_source": "Q23.webp"
         },
         {
-            "question": "Kizspy |  How might the evolving nature of the internet, where it's no longer just a means of communication. but also connects various devices like refrigerators, impact various aspects of our society?",
+            "question": " How might the evolving nature of the internet, where it's no longer just a means of communication. but also connects various devices like refrigerators, impact various aspects of our society?",
             "options": {
                 "A": "It will simplify security measures and reduce the need for big data analysis",
                 "B": "It will have no significant impact on employment as most jobs remain unchanged",
@@ -4297,7 +4297,7 @@
             "file_source": "Q22.webp"
         },
         {
-            "question": "Kizspy |  What is the maximum input voltage limit for an Arduino Uno?",
+            "question": " What is the maximum input voltage limit for an Arduino Uno?",
             "options": {
                 "A": "620V",
                 "B": "5-15V",
@@ -4306,7 +4306,7 @@
             "file_source": "Q3.webp"
         },
         {
-            "question": "Kizspy |  Given an array as follows: [4, 1. 2. 9. 8]. How is the array like after the first round of Bubble sort?",
+            "question": " Given an array as follows: [4, 1. 2. 9. 8]. How is the array like after the first round of Bubble sort?",
             "options": {
                 "A": "4,1,2,9,8",
                 "B": "1,2,4,89",
@@ -4315,7 +4315,7 @@
             "file_source": "Q45.webp"
         },
         {
-            "question": "Kizspy |  Which component is referred to as the ‘brain’ of the Arduino?",
+            "question": " Which component is referred to as the ‘brain’ of the Arduino?",
             "options": {
                 "A": "ATMega328",
                 "B": "16MHz crystal",
@@ -4325,7 +4325,7 @@
             "file_source": "Q43.webp"
         },
         {
-            "question": "Kizspy |  In Arduino, a “Sketch” ts a diagram that shows the physical arrangement of the components",
+            "question": " In Arduino, a “Sketch” ts a diagram that shows the physical arrangement of the components",
             "options": {
                 "A": "TRUE",
                 "B": "FALSE"
@@ -4333,7 +4333,7 @@
             "file_source": "Q11.webp"
         },
         {
-            "question": "Kizspy |  What is the primary purpose of the Internet of Things (loT)?",
+            "question": " What is the primary purpose of the Internet of Things (loT)?",
             "options": {
                 "A": "To connect only computers to the internet",
                 "B": "To connect everyday physical objects to the internet",
@@ -4343,7 +4343,7 @@
             "file_source": "Q38.webp"
         },
         {
-            "question": "Kizspy |  How many pins are there in a ?7-segment LED display? (Choose 1 answer} AS",
+            "question": " How many pins are there in a ?7-segment LED display? (Choose 1 answer} AS",
             "options": {
                 "B": "7",
                 "D": "10"
@@ -4351,7 +4351,7 @@
             "file_source": "Q6.webp"
         },
         {
-            "question": "Kizspy |  What is an interrupt in the context of Arduino UNO programming?",
+            "question": " What is an interrupt in the context of Arduino UNO programming?",
             "options": {
                 "A": "A function that stops the Arduino from running",
                 "B": "Asignal that pauses the current process to execute a specific function",
@@ -4361,7 +4361,7 @@
             "file_source": "Q4.webp"
         },
         {
-            "question": "Kizspy |  Can the setup() function change the value of constant variables?",
+            "question": " Can the setup() function change the value of constant variables?",
             "options": {
                 "A": "Yes, itcan change",
                 "B": "No, it cannot change",
@@ -4371,7 +4371,7 @@
             "file_source": "Q14.webp"
         },
         {
-            "question": "Kizspy |  To declare a variable that stores the value read from analog pin AQ. what data type is this variable?",
+            "question": " To declare a variable that stores the value read from analog pin AQ. what data type is this variable?",
             "options": {
                 "A": "String",
                 "B": "Single",
@@ -4381,7 +4381,7 @@
             "file_source": "Q12.webp"
         },
         {
-            "question": "Kizspy |  In the given Arduino code. what is the purpose of the \"analogWrite” function. and how is it used to control the LED's behavior?",
+            "question": " In the given Arduino code. what is the purpose of the \"analogWrite” function. and how is it used to control the LED's behavior?",
             "options": {
                 "A": "The \"analogWrite\" function is used to read analog values from a sensor.",
                 "B": "The \"analogWrite\" function is used to blink the LED on and off.",
@@ -4391,7 +4391,7 @@
             "file_source": "Q15.webp"
         },
         {
-            "question": "Kizspy |  What is a Mock-up?",
+            "question": " What is a Mock-up?",
             "options": {
                 "A": "tis a horizontal prototype.",
                 "B": "Itis a particular approach to throwaway prototype.",
@@ -4401,7 +4401,7 @@
             "file_source": "Q47.webp"
         },
         {
-            "question": "Kizspy |  In the Windows OS, which statement is true about the blocked state of a process?",
+            "question": " In the Windows OS, which statement is true about the blocked state of a process?",
             "options": {
                 "A": "Waiting for an event triggered by the CPU's scheduling mechanism",
                 "B": "Waiting for an event that has not happened yet",
@@ -4411,7 +4411,7 @@
             "file_source": "Q25.webp"
         },
         {
-            "question": "Kizspy |  How does IoT help improve tire maintenance in mining vehicles?",
+            "question": " How does IoT help improve tire maintenance in mining vehicles?",
             "options": {
                 "A": "By inflating tires automatically",
                 "B": "By monitoring tire pressure",
@@ -4420,7 +4420,7 @@
             "file_source": "Q36.webp"
         },
         {
-            "question": "Kizspy |  Consider the statement: “Each resource is either currently assigned to exactly one process or is available.\" Which of the following is appropriate for this statement?”",
+            "question": " Consider the statement: “Each resource is either currently assigned to exactly one process or is available.\" Which of the following is appropriate for this statement?”",
             "options": {
                 "A": "No-preemption",
                 "B": "Hold-and-wait",
@@ -4430,7 +4430,7 @@
             "file_source": "Q26.webp"
         },
         {
-            "question": "Kizspy |  Which component on tinkercad.com allows displaying the results of the simulation program?",
+            "question": " Which component on tinkercad.com allows displaying the results of the simulation program?",
             "options": {
                 "A": "Components",
                 "B": "Send to",
@@ -4440,7 +4440,7 @@
             "file_source": "Q18.webp"
         },
         {
-            "question": "Kizspy |  How is the distance to an object calculated using the ultrasonic sensor?",
+            "question": " How is the distance to an object calculated using the ultrasonic sensor?",
             "options": {
                 "A": "By measuring the intensity of the returned pulse",
                 "B": "By catculating the time it takes for a pulse to return",
@@ -4450,7 +4450,7 @@
             "file_source": "Q28.webp"
         },
         {
-            "question": "Kizspy |  In circuit design, which component is used to limit the current from the arduino board to the LED?",
+            "question": " In circuit design, which component is used to limit the current from the arduino board to the LED?",
             "options": {
                 "A": "Capacitor",
                 "B": "Diode",
@@ -4460,7 +4460,7 @@
             "file_source": "Q20.webp"
         },
         {
-            "question": "Kizspy |  Why do you use a breadboard?",
+            "question": " Why do you use a breadboard?",
             "options": {
                 "A": "It's an inexpensive way to check the design and function of your circuit.",
                 "B": "It can be used to mass produce lots of identical circuits easity and cost effectively",
@@ -4470,7 +4470,7 @@
             "file_source": "Q21.webp"
         },
         {
-            "question": "Kizspy |  How can you create a network of loT devices that efficiently exchange data?",
+            "question": " How can you create a network of loT devices that efficiently exchange data?",
             "options": {
                 "A": "By using a single protocot for all devices",
                 "B": "By connecting all devices directly to the internet",
@@ -4480,7 +4480,7 @@
             "file_source": "Q48.webp"
         },
         {
-            "question": "Kizspy |  Why might having 20 billion connected devices cause a major disruption in employment?",
+            "question": " Why might having 20 billion connected devices cause a major disruption in employment?",
             "options": {
                 "A": "Automation may replace jobs traditionally done by humans",
                 "B": "New job sectors will be created, making previous roles obsolete",
@@ -4490,7 +4490,7 @@
             "file_source": "Q37.webp"
         },
         {
-            "question": "Kizspy |  Is the Arduino code an Object-Oriented programming language or a Procedural programming language?",
+            "question": " Is the Arduino code an Object-Oriented programming language or a Procedural programming language?",
             "options": {
                 "A": "The Arduino Code follows the Top-Down Procedural ideology",
                 "B": "The Arduino Code follows a custom Procedural ideology",
@@ -4500,7 +4500,7 @@
             "file_source": "Q16.webp"
         },
         {
-            "question": "Kizspy |  Arduino can be used to develop interactive objects that can work without a computer.",
+            "question": " Arduino can be used to develop interactive objects that can work without a computer.",
             "options": {
                 "A": "TRUE",
                 "B": "FALSE"
@@ -4508,7 +4508,7 @@
             "file_source": "Q42.webp"
         },
         {
-            "question": "Kizspy |  What programming languge is used for a sketch in Arduino IDE?",
+            "question": " What programming languge is used for a sketch in Arduino IDE?",
             "options": {
                 "A": "Python",
                 "B": "Java",
@@ -4517,7 +4517,7 @@
             "file_source": "Q50.webp"
         },
         {
-            "question": "Kizspy |  What is the purpose of the TRIG pin on the SRFO05 ultrasonic sensor?",
+            "question": " What is the purpose of the TRIG pin on the SRFO05 ultrasonic sensor?",
             "options": {
                 "A": "To receive the echo signal",
                 "B": "To send out ultrasound bursts",
@@ -4527,7 +4527,7 @@
             "file_source": "Q35.webp"
         },
         {
-            "question": "Kizspy |  OT devices gather private information about users. Which statement is most true about the security of that data?",
+            "question": " OT devices gather private information about users. Which statement is most true about the security of that data?",
             "options": {
                 "A": "User can ensure security of collected data by encrypting it manualty",
                 "B": "User can sue data collecting agencies #f their data is not held securely",
@@ -4537,7 +4537,7 @@
             "file_source": "Q24.webp"
         },
         {
-            "question": "Kizspy |  Which of the following statements is WRONG about the loT devices?",
+            "question": " Which of the following statements is WRONG about the loT devices?",
             "options": {
                 "A": "loT devices use the internet for collecting and sharing data",
                 "B": "loT devices need microcontroller",
@@ -4547,7 +4547,7 @@
             "file_source": "Q46.webp"
         },
         {
-            "question": "Kizspy |  Which digital pin is used as the LED_BUILTIN value on an Arduino UNO board?",
+            "question": " Which digital pin is used as the LED_BUILTIN value on an Arduino UNO board?",
             "options": {
                 "A": "D10",
                 "B": "DI1",
@@ -4556,7 +4556,7 @@
             "file_source": "Q10.webp"
         },
         {
-            "question": "Kizspy |  What is the primary advantage of using EEPROM memory in an Arduino project?",
+            "question": " What is the primary advantage of using EEPROM memory in an Arduino project?",
             "options": {
                 "A": "EEPROM memory is faster than SRAM",
                 "B": "EEPROM memory retains its data even when the power is turned off.",
@@ -4566,7 +4566,7 @@
             "file_source": "Q27.webp"
         },
         {
-            "question": "Kizspy |  What is the difference between the INPUT and INPUT_PULLUP arguments in the pinMode() function?",
+            "question": " What is the difference between the INPUT and INPUT_PULLUP arguments in the pinMode() function?",
             "options": {
                 "A": "They are both the same",
                 "B": "INPUT supports only analog voltages while INPUT_PULLUP supports only digital voltage readings",
@@ -4576,7 +4576,7 @@
             "file_source": "Q44.webp"
         },
         {
-            "question": "Kizspy |  What is the size of the flash memory of the microcontroller of Arduino Uno Rev3?",
+            "question": " What is the size of the flash memory of the microcontroller of Arduino Uno Rev3?",
             "options": {
                 "A": "32KB",
                 "B": "40 KB",
@@ -4585,7 +4585,7 @@
             "file_source": "Q1.webp"
         },
         {
-            "question": "Kizspy |  Which mode parameter triggers the interrupt when the pin goes from low to high?",
+            "question": " Which mode parameter triggers the interrupt when the pin goes from low to high?",
             "options": {
                 "A": "LOW",
                 "B": "CHANGE",
@@ -4595,7 +4595,7 @@
             "file_source": "Q30.webp"
         },
         {
-            "question": "Kizspy |  Why ts the delay(1000); function used in the Arduino sketch for blinking an LED?",
+            "question": " Why ts the delay(1000); function used in the Arduino sketch for blinking an LED?",
             "options": {
                 "A": "To increase the voltage supplied to the LED",
                 "B": "To turn the LED off",
@@ -4605,7 +4605,7 @@
             "file_source": "Q32.webp"
         },
         {
-            "question": "Kizspy |  What is one of the main impacts of loT on urban areas?",
+            "question": " What is one of the main impacts of loT on urban areas?",
             "options": {
                 "A": "Creating smart cittes with smart buildings and transportation",
                 "B": "Improving public entertainment services.",
@@ -4615,7 +4615,7 @@
             "file_source": "Q29.webp"
         },
         {
-            "question": "Kizspy |  What is a \"Sketch\" in Arduino terminology?",
+            "question": " What is a \"Sketch\" in Arduino terminology?",
             "options": {
                 "A": "Asketch is a program written for the board and shields",
                 "B": "Asketch is a blueprint for designing a circuit",
@@ -4625,7 +4625,7 @@
             "file_source": "Q9.webp"
         },
         {
-            "question": "Kizspy |  What is the output of “pin1” if “pin2” is sent “1011” where 1 is 5V and 0 is 0V? int pin] = 12: Ht pin2 = 11, void setup() pinMode(pin1, OUTPUT}. pinMode(pin2, INPUT); Serial.begin(9600): } void loop() { if(digitalRead(pin2}==1) { digitafWrite(pin1,LOW); } else Íf(digitalRead(pn2)==0) { digitalWrite(pin1 HIGH); } }",
+            "question": " What is the output of “pin1” if “pin2” is sent “1011” where 1 is 5V and 0 is 0V? int pin] = 12: Ht pin2 = 11, void setup() pinMode(pin1, OUTPUT}. pinMode(pin2, INPUT); Serial.begin(9600): } void loop() { if(digitalRead(pin2}==1) { digitafWrite(pin1,LOW); } else Íf(digitalRead(pn2)==0) { digitalWrite(pin1 HIGH); } }",
             "options": {
                 "A": "1110",
                 "B": "0100",
@@ -4634,7 +4634,7 @@
             "file_source": "Q17.webp"
         },
         {
-            "question": "Kizspy |  What is the difference between an IDE and a compiler?",
+            "question": " What is the difference between an IDE and a compiler?",
             "options": {
                 "A": "The compiler executes the code while the IDE gives a graphical environment for writing the code",
                 "B": "The compiler links the code to the respective files and the IDE takes it from there",
@@ -4644,7 +4644,7 @@
             "file_source": "Q13.webp"
         },
         {
-            "question": "Kizspy |  How many digital ¥O pins does the Arduino Uno have? (Choose 1 answer} A 8",
+            "question": " How many digital ¥O pins does the Arduino Uno have? (Choose 1 answer} A 8",
             "options": {
                 "B": "10",
                 "D": "16"
@@ -4652,7 +4652,7 @@
             "file_source": "Q41.webp"
         },
         {
-            "question": "Kizspy |  What is the output of the program given below if a voltage of 5V is supptied to the pin corresponding to the AO pin on an Arduino UNO? void setup() { Serial. begin(9600): pinMode(A0, INPUT) } void loop() { int s = analogRead(A0) Serial println(s); }",
+            "question": " What is the output of the program given below if a voltage of 5V is supptied to the pin corresponding to the AO pin on an Arduino UNO? void setup() { Serial. begin(9600): pinMode(A0, INPUT) } void loop() { int s = analogRead(A0) Serial println(s); }",
             "options": {
                 "A": "0",
                 "B": "1023",
@@ -4661,7 +4661,7 @@
             "file_source": "Q19.webp"
         },
         {
-            "question": "Kizspy |  What are the four V's of big data defined by the IBM?",
+            "question": " What are the four V's of big data defined by the IBM?",
             "options": {
                 "A": "Volume, Velocity, Variety, and Veracity",
                 "B": "Vendor, Variety, and Volume",
@@ -4671,7 +4671,7 @@
             "file_source": "Q49.webp"
         },
         {
-            "question": "Kizspy |  How many pins on Arduino Uno R3 support the pulse width modulation (PWM}? (Choose 1 answer} A 7",
+            "question": " How many pins on Arduino Uno R3 support the pulse width modulation (PWM}? (Choose 1 answer} A 7",
             "options": {
                 "B": "5",
                 "D": "6"
@@ -4679,7 +4679,7 @@
             "file_source": "Q7.webp"
         },
         {
-            "question": "Kizspy |  What pins of Arduino Uno are the external interrupt pins? (Choose 1 answer} A23",
+            "question": " What pins of Arduino Uno are the external interrupt pins? (Choose 1 answer} A23",
             "options": {
                 "B": "3,4",
                 "D": "7,8"
@@ -4687,7 +4687,7 @@
             "file_source": "Q8.webp"
         },
         {
-            "question": "Kizspy |  What is the use of the ESP8266 WiFi Module?",
+            "question": " What is the use of the ESP8266 WiFi Module?",
             "options": {
                 "A": "Network Provider",
                 "B": "Switches circuits",
@@ -4697,7 +4697,7 @@
             "file_source": "Q2.webp"
         },
         {
-            "question": "Kizspy |  What is the main purpose of routing in network communication?",
+            "question": " What is the main purpose of routing in network communication?",
             "options": {
                 "A": "To encrypt data",
                 "B": "To select a path for traffic in a network",
@@ -4707,7 +4707,7 @@
             "file_source": "Q40.webp"
         },
         {
-            "question": "Kizspy |  Which of the following factors is NOT typically considered when choosing the medium for network communication in an loT setup?",
+            "question": " Which of the following factors is NOT typically considered when choosing the medium for network communication in an loT setup?",
             "options": {
                 "A": "The distance a signal needs to travel",
                 "B": "The type of data being transmitted.",
@@ -4717,7 +4717,7 @@
             "file_source": "Q33.webp"
         },
         {
-            "question": "Kizspy |  In the loT case study of a dairy farm, what is the primary purpose of the responders attached to the cows?",
+            "question": " In the loT case study of a dairy farm, what is the primary purpose of the responders attached to the cows?",
             "options": {
                 "A": "To measure the quantity of milk produced by each cow.",
                 "B": "To monitor the health and movement of the cows.",
@@ -4727,7 +4727,7 @@
             "file_source": "Q31.webp"
         },
         {
-            "question": "Kizspy |  What type of communication does the RX and TX pins on the Arduino Uno facilitate?",
+            "question": " What type of communication does the RX and TX pins on the Arduino Uno facilitate?",
             "options": {
                 "A": "Power transfer",
                 "B": "Wireless communication",
@@ -5000,7 +5000,7 @@
     ],
     "iot102-fa25-fe-half1.5032": [
         {
-            "question": "Kizspy |  Which issue in the cloud focuses on protecting data from theft or corruption?",
+            "question": " Which issue in the cloud focuses on protecting data from theft or corruption?",
             "options": {
                 "A": "DATA PRIVATE",
                 "B": "DATA ACCESS",
@@ -5010,7 +5010,7 @@
             "file_source": "Q34.webp"
         },
         {
-            "question": "Kizspy |  What is the primary purpose of a schematic diagram in electrical engineering?",
+            "question": " What is the primary purpose of a schematic diagram in electrical engineering?",
             "options": {
                 "A": "To display the physical arrangement of components in a finished device",
                 "B": "To provide a detailed description of the electrical properties of circuit components",
@@ -5020,7 +5020,7 @@
             "file_source": "Q39.webp"
         },
         {
-            "question": "Kizspy |  In circuit design, choose the correct usage for the LED component with Arduino board g",
+            "question": " In circuit design, choose the correct usage for the LED component with Arduino board g",
             "options": {
                 "A": "Anode of the LED component will indirectly connected by a resistor to 5V pin in Arduino board and cathode",
                 "B": "Anode of the LED component will indirectly connected by a resistor to 5V pin in Arduino board and the",
@@ -5030,7 +5030,7 @@
             "file_source": "Q23.webp"
         },
         {
-            "question": "Kizspy |  What is the purpose of Fritzing in the context of designing circuits?",
+            "question": " What is the purpose of Fritzing in the context of designing circuits?",
             "options": {
                 "A": "To physically build circuits in the real world",
                 "B": "To simulate circuit behavior.",
@@ -5040,7 +5040,7 @@
             "file_source": "Q22.webp"
         },
         {
-            "question": "Kizspy |  What is the full form of IDE in Arduino IDE software?",
+            "question": " What is the full form of IDE in Arduino IDE software?",
             "options": {
                 "A": "Intra Defense Environment",
                 "B": "Intra Development Environment",
@@ -5050,7 +5050,7 @@
             "file_source": "Q45.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is an example of a fog computing concept in !oT?",
+            "question": " Which of the following is an example of a fog computing concept in !oT?",
             "options": {
                 "A": "Storing data on remote servers.",
                 "B": "Routing data through multiple gateways",
@@ -5060,7 +5060,7 @@
             "file_source": "Q43.webp"
         },
         {
-            "question": "Kizspy |  If a resistor has bands of yellow, violet. and orange, what would be its resistance value?",
+            "question": " If a resistor has bands of yellow, violet. and orange, what would be its resistance value?",
             "options": {
                 "A": "43 kilo Ohms",
                 "B": "470 Ohms",
@@ -5070,7 +5070,7 @@
             "file_source": "Q38.webp"
         },
         {
-            "question": "Kizspy |  What is the use of the Vin pin present on some Arduino Boards?",
+            "question": " What is the use of the Vin pin present on some Arduino Boards?",
             "options": {
                 "A": "To ground the Arduino board",
                 "B": "To power the Arduino board",
@@ -5080,7 +5080,7 @@
             "file_source": "Q6.webp"
         },
         {
-            "question": "Kizspy |  What is the recommended input voltage for an Arduino Uno?",
+            "question": " What is the recommended input voltage for an Arduino Uno?",
             "options": {
                 "A": "510V",
                 "B": "7-12V",
@@ -5089,7 +5089,7 @@
             "file_source": "Q4.webp"
         },
         {
-            "question": "Kizspy |  How is the input voltage range of 0 to 5 volts converted to a digital value between 0 and 1023 in an Arduino microcontroller?",
+            "question": " How is the input voltage range of 0 to 5 volts converted to a digital value between 0 and 1023 in an Arduino microcontroller?",
             "options": {
                 "A": "By using an external circuit",
                 "B": "By using a digital-to-anatog converter (DAC)",
@@ -5099,7 +5099,7 @@
             "file_source": "Q14.webp"
         },
         {
-            "question": "Kizspy |  Which type of network is the connection between a Bluetooth headset and a smartphone?",
+            "question": " Which type of network is the connection between a Bluetooth headset and a smartphone?",
             "options": {
                 "A": "PAN",
                 "B": "MAN",
@@ -5108,7 +5108,7 @@
             "file_source": "Q12.webp"
         },
         {
-            "question": "Kizspy |  Which function in the Arduino is used to initialize the serial communication?",
+            "question": " Which function in the Arduino is used to initialize the serial communication?",
             "options": {
                 "A": "Serial.printin{)",
                 "B": "Serial available()",
@@ -5118,7 +5118,7 @@
             "file_source": "Q47.webp"
         },
         {
-            "question": "Kizspy |  The following trend ts NOT related to the growth in JOT technology",
+            "question": " The following trend ts NOT related to the growth in JOT technology",
             "options": {
                 "A": "Increase in computer monitor size over time",
                 "B": "Decrease in computer size over time",
@@ -5128,7 +5128,7 @@
             "file_source": "Q25.webp"
         },
         {
-            "question": "Kizspy |  In the context of loT and networking. what does the abbreviation LPWAN stand for?",
+            "question": " In the context of loT and networking. what does the abbreviation LPWAN stand for?",
             "options": {
                 "A": "Lightweight Protocol for Wide Area Network",
                 "B": "Low-Profite Wireless Access Node",
@@ -5138,7 +5138,7 @@
             "file_source": "Q36.webp"
         },
         {
-            "question": "Kizspy |  Which category of actuators inctudes mechanisms that utilize air pressure to control or move objects?",
+            "question": " Which category of actuators inctudes mechanisms that utilize air pressure to control or move objects?",
             "options": {
                 "A": "Electrical",
                 "B": "Mechanicat",
@@ -5148,7 +5148,7 @@
             "file_source": "Q26.webp"
         },
         {
-            "question": "Kizspy |  How many times does the loop() function run on every startup of the Arduino System? Al",
+            "question": " How many times does the loop() function run on every startup of the Arduino System? Al",
             "options": {
                 "B": "Depends upon the setup() function",
                 "C": "Infinitely till the power is supplied to the Arduino",
@@ -5157,7 +5157,7 @@
             "file_source": "Q18.webp"
         },
         {
-            "question": "Kizspy |  What does a fog extend cloud to?",
+            "question": " What does a fog extend cloud to?",
             "options": {
                 "A": "Application to process logic",
                 "B": "Storage of processed data",
@@ -5167,7 +5167,7 @@
             "file_source": "Q28.webp"
         },
         {
-            "question": "Kizspy |  What is the output of “pin1” if “pin2” is sent “1011” where 1 is 5V and 0 is 0V? int pin] = 12: Ht pin2 = 11, void setup() pinMode(pin1, OUTPUT}. pinMode(pin2, INPUT); Serial.begin(9600): } void loop) { if(digitalRead(pin2}==1) { digitaWrite(pin1 LOW); } else if(digitalRead(pin2)==0} { digitalWrite(pin1 HIGH); } }",
+            "question": " What is the output of “pin1” if “pin2” is sent “1011” where 1 is 5V and 0 is 0V? int pin] = 12: Ht pin2 = 11, void setup() pinMode(pin1, OUTPUT}. pinMode(pin2, INPUT); Serial.begin(9600): } void loop) { if(digitalRead(pin2}==1) { digitaWrite(pin1 LOW); } else if(digitalRead(pin2)==0} { digitalWrite(pin1 HIGH); } }",
             "options": {
                 "A": "1110",
                 "B": "0100",
@@ -5176,7 +5176,7 @@
             "file_source": "Q21.webp"
         },
         {
-            "question": "Kizspy |  Which layer of loT architecture involves sensors and devices that collect data?",
+            "question": " Which layer of loT architecture involves sensors and devices that collect data?",
             "options": {
                 "A": "Perception layer",
                 "B": "Network layer",
@@ -5186,7 +5186,7 @@
             "file_source": "Q48.webp"
         },
         {
-            "question": "Kizspy |  The first three color bands of a 4-band resistor are brown, green, and yellow. What is its value?",
+            "question": " The first three color bands of a 4-band resistor are brown, green, and yellow. What is its value?",
             "options": {
                 "A": "364 Ohm",
                 "B": "150k Ohm",
@@ -5195,7 +5195,7 @@
             "file_source": "Q37.webp"
         },
         {
-            "question": "Kizspy |  Which button in the ESP8266 is used to load the code again?",
+            "question": " Which button in the ESP8266 is used to load the code again?",
             "options": {
                 "A": "GND",
                 "B": "TX",
@@ -5204,7 +5204,7 @@
             "file_source": "Q16.webp"
         },
         {
-            "question": "Kizspy |  In the IR remote control, IR stands for what?",
+            "question": " In the IR remote control, IR stands for what?",
             "options": {
                 "A": "Indirect Radio",
                 "B": "Infrared",
@@ -5214,7 +5214,7 @@
             "file_source": "Q42.webp"
         },
         {
-            "question": "Kizspy |  In loT, what is the purpose of a Gateway?",
+            "question": " In loT, what is the purpose of a Gateway?",
             "options": {
                 "A": "To act as an intermediary for data transmission between different network protocols",
                 "B": "To store data collected from loT devices",
@@ -5224,7 +5224,7 @@
             "file_source": "Q35.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is an example of an toT application?",
+            "question": " Which of the following is an example of an toT application?",
             "options": {
                 "A": "Wearable device to monitor blood glucose level",
                 "B": "Manufacturing Bolt using CNC machine",
@@ -5233,7 +5233,7 @@
             "file_source": "Q24.webp"
         },
         {
-            "question": "Kizspy |  What kind of control system in which the output quantity has no effect upon the input quantity?",
+            "question": " What kind of control system in which the output quantity has no effect upon the input quantity?",
             "options": {
                 "A": "Open loop",
                 "B": "Closed toop",
@@ -5243,7 +5243,7 @@
             "file_source": "Q46.webp"
         },
         {
-            "question": "Kizspy |  How many errors are present in the code given below? 1 int pin1=12; 2. void setup() { 3 pinmode(pin1, IN): 4 Serial.begin(9600); 5. } 6. void loop(} { 7 int value=analogRead(pin1); 8 Serial.println{value); 9 } Aol",
+            "question": " How many errors are present in the code given below? 1 int pin1=12; 2. void setup() { 3 pinmode(pin1, IN): 4 Serial.begin(9600); 5. } 6. void loop(} { 7 int value=analogRead(pin1); 8 Serial.println{value); 9 } Aol",
             "options": {
                 "B": "2",
                 "D": "4"
@@ -5251,7 +5251,7 @@
             "file_source": "Q10.webp"
         },
         {
-            "question": "Kizspy |  An lOT device can most easily be differentiated from a standard computer based on",
+            "question": " An lOT device can most easily be differentiated from a standard computer based on",
             "options": {
                 "A": "Computational Performance",
                 "B": "Interface with the user and the world",
@@ -5261,7 +5261,7 @@
             "file_source": "Q27.webp"
         },
         {
-            "question": "Kizspy |  Given the nominal voltage of an AAA battery is 1.5 V. what is the nominal voltage of 5 AAA batteries connected in parallel? A 6V",
+            "question": " Given the nominal voltage of an AAA battery is 1.5 V. what is the nominal voltage of 5 AAA batteries connected in parallel? A 6V",
             "options": {
                 "B": "75V",
                 "D": "15V"
@@ -5269,7 +5269,7 @@
             "file_source": "Q44.webp"
         },
         {
-            "question": "Kizspy |  What is the type of USB port on Arduino Uno R3?",
+            "question": " What is the type of USB port on Arduino Uno R3?",
             "options": {
                 "A": "TypeA",
                 "B": "Type B",
@@ -5278,7 +5278,7 @@
             "file_source": "Q1.webp"
         },
         {
-            "question": "Kizspy |  When integrating loT devices with cloud platforms. what is the main programming challenge related to data flow?",
+            "question": " When integrating loT devices with cloud platforms. what is the main programming challenge related to data flow?",
             "options": {
                 "A": "Minimizing the physical size of data packets",
                 "B": "Ensuring real-time data synchronization across devices",
@@ -5288,7 +5288,7 @@
             "file_source": "Q30.webp"
         },
         {
-            "question": "Kizspy |  In a thin client setup, where is most of the software and data processing performed?",
+            "question": " In a thin client setup, where is most of the software and data processing performed?",
             "options": {
                 "A": "Locally on the thin client device.",
                 "B": "Ona central server or ud infrastructure",
@@ -5298,7 +5298,7 @@
             "file_source": "Q32.webp"
         },
         {
-            "question": "Kizspy |  What is the role of a gateway in an loT network, and how does it relate to routing?",
+            "question": " What is the role of a gateway in an loT network, and how does it relate to routing?",
             "options": {
                 "A": "Gateways are responsible for routing data packets within the local network",
                 "B": "Gateways serve as a central control hub for alt loT devices",
@@ -5308,7 +5308,7 @@
             "file_source": "Q29.webp"
         },
         {
-            "question": "Kizspy |  Is it possible to have multiple software serial ports (UART) with speeds up to 115200 bps.",
+            "question": " Is it possible to have multiple software serial ports (UART) with speeds up to 115200 bps.",
             "options": {
                 "A": "Yes, only one software serial port is possible.",
                 "B": "Yes, but the maximum speed is limited to 9600 bps",
@@ -5318,7 +5318,7 @@
             "file_source": "Q9.webp"
         },
         {
-            "question": "Kizspy |  Which software is used to upload the Arduino Sketches to the board?",
+            "question": " Which software is used to upload the Arduino Sketches to the board?",
             "options": {
                 "A": "Avrgce",
                 "B": "g++",
@@ -5327,7 +5327,7 @@
             "file_source": "Q17.webp"
         },
         {
-            "question": "Kizspy |  In an loT system, many devices are connected to the same set of wires. What is this connection mode?",
+            "question": " In an loT system, many devices are connected to the same set of wires. What is this connection mode?",
             "options": {
                 "A": "Train",
                 "B": "Bus",
@@ -5337,7 +5337,7 @@
             "file_source": "Q41.webp"
         },
         {
-            "question": "Kizspy |  In a software simulation environment (Tinkercad) for Arduino programming, which of the following options is typically used to write and run code for your Arduino projects?",
+            "question": " In a software simulation environment (Tinkercad) for Arduino programming, which of the following options is typically used to write and run code for your Arduino projects?",
             "options": {
                 "A": "Selecting the code option to start coding",
                 "B": "Using a physical Arduino board to write code.",
@@ -5347,7 +5347,7 @@
             "file_source": "Q19.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is NOT an advantage of loT?",
+            "question": " Which of the following is NOT an advantage of loT?",
             "options": {
                 "A": "Security",
                 "B": "Enhanced data collection",
@@ -5357,7 +5357,7 @@
             "file_source": "Q49.webp"
         },
         {
-            "question": "Kizspy |  Which sensor is LM35?",
+            "question": " Which sensor is LM35?",
             "options": {
                 "A": "Pressure sensor",
                 "B": "Humidity sensor",
@@ -5367,7 +5367,7 @@
             "file_source": "Q7.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is NOT a sensor in loT?",
+            "question": " Which of the following is NOT a sensor in loT?",
             "options": {
                 "A": "BMP280",
                 "B": "DHT11",
@@ -5377,7 +5377,7 @@
             "file_source": "Q8.webp"
         },
         {
-            "question": "Kizspy |  What is the operating voltage of Atmega328?",
+            "question": " What is the operating voltage of Atmega328?",
             "options": {
                 "A": "19V to5V",
                 "B": "18V to5.5V",
@@ -5387,7 +5387,7 @@
             "file_source": "Q2.webp"
         },
         {
-            "question": "Kizspy |  Why is it essential to focus on the unique value proposition of an loT product in the early planning stages of development and commercialization?",
+            "question": " Why is it essential to focus on the unique value proposition of an loT product in the early planning stages of development and commercialization?",
             "options": {
                 "A": "tthelps reduce the cost of production",
                 "B": "It allows for more efficient product distribution",
@@ -5397,7 +5397,7 @@
             "file_source": "Q40.webp"
         },
         {
-            "question": "Kizspy |  What are the 4 V's of Big Data, as described by IBM?",
+            "question": " What are the 4 V's of Big Data, as described by IBM?",
             "options": {
                 "A": "Volume, Velocity, Value, Variability",
                 "B": "Velocity, Versatility, Verification, Viscosity.",
@@ -6619,7 +6619,7 @@
     ],
     "iot102-su25-re.4664": [
         {
-            "question": "Kizspy |  What types of programming languages are commonly used for loT systems?",
+            "question": " What types of programming languages are commonly used for loT systems?",
             "options": {
                 "A": "JavaScript, HTML, and CSS",
                 "B": "Python, C++, Java, Arduino, and Raspberry Pi platforms",
@@ -6629,7 +6629,7 @@
             "file_source": "Q34.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is true about the Arduino Ethernet shield?",
+            "question": " Which of the following is true about the Arduino Ethernet shield?",
             "options": {
                 "A": "It connects the Arduino to a network through a wired Ethernet connection",
                 "B": "It allows the Arduino to communicate wirelessty over a tocal area network",
@@ -6639,7 +6639,7 @@
             "file_source": "Q39.webp"
         },
         {
-            "question": "Kizspy |  What happens to the LED's blink rate in the given code when the potentiometer is turned all the way to provide the maximum voltage to the analog pin? const int ledPin = 13; const int sensorPin = AO: int sensorValue = 0; void setup() { pinMode(tedPin, OUTPUT): Serial.begin(9600): } void loop() { SensorValue = analogRead(sensorPin) Senal.println(sensorValue); digitalWrite(ledPin, HIGH): delay(sensorVatue) digitalWrite(ledPin, LOW); delay (sensorVaiue): }",
+            "question": " What happens to the LED's blink rate in the given code when the potentiometer is turned all the way to provide the maximum voltage to the analog pin? const int ledPin = 13; const int sensorPin = AO: int sensorValue = 0; void setup() { pinMode(tedPin, OUTPUT): Serial.begin(9600): } void loop() { SensorValue = analogRead(sensorPin) Senal.println(sensorValue); digitalWrite(ledPin, HIGH): delay(sensorVatue) digitalWrite(ledPin, LOW); delay (sensorVaiue): }",
             "options": {
                 "A": "The LED blinks faster.",
                 "B": "The LED blinks slower",
@@ -6649,7 +6649,7 @@
             "file_source": "Q23.webp"
         },
         {
-            "question": "Kizspy |  How has the Internet of Things prompted new concerns over security issues?",
+            "question": " How has the Internet of Things prompted new concerns over security issues?",
             "options": {
                 "A": "Devices are equipped with security from the manufacturer.",
                 "B": "Devices are less likely to be compromised in today's age.",
@@ -6659,7 +6659,7 @@
             "file_source": "Q22.webp"
         },
         {
-            "question": "Kizspy |  What is the function of a photoresistor?",
+            "question": " What is the function of a photoresistor?",
             "options": {
                 "A": "It changes voltage according to light levet",
                 "B": "It increases or decreases current through a wire",
@@ -6669,7 +6669,7 @@
             "file_source": "Q45.webp"
         },
         {
-            "question": "Kizspy |  (a) C) Given a graph in the figure, the depth first traversal from node B is (visit nodes in ABC order):",
+            "question": " (a) C) Given a graph in the figure, the depth first traversal from node B is (visit nodes in ABC order):",
             "options": {
                 "A": "BADCE",
                 "B": "BAEDC",
@@ -6678,7 +6678,7 @@
             "file_source": "Q43.webp"
         },
         {
-            "question": "Kizspy |  How is the input voltage range of 0 to 5 volts converted to a digital value between 0 and 1023 in an Arduino microcontroller?",
+            "question": " How is the input voltage range of 0 to 5 volts converted to a digital value between 0 and 1023 in an Arduino microcontroller?",
             "options": {
                 "A": "By using an external circuit",
                 "B": "By using a digital-to-anatog converter (DAC)",
@@ -6688,7 +6688,7 @@
             "file_source": "Q11.webp"
         },
         {
-            "question": "Kizspy |  Is it possible to have multiple software serial ports (UART) with speeds up to 115200 bps.",
+            "question": " Is it possible to have multiple software serial ports (UART) with speeds up to 115200 bps.",
             "options": {
                 "A": "Yes, only one software serial port is possible.",
                 "B": "Yes, but the maximum speed is limited to 9600 bps",
@@ -6698,7 +6698,7 @@
             "file_source": "Q4.webp"
         },
         {
-            "question": "Kizspy |  What type of device could aliow a vehicle to place a show a warning on the dashboard, which might also notify the car’s manufacturer?",
+            "question": " What type of device could aliow a vehicle to place a show a warning on the dashboard, which might also notify the car’s manufacturer?",
             "options": {
                 "A": "Digital network",
                 "B": "Smart phone",
@@ -6708,7 +6708,7 @@
             "file_source": "Q12.webp"
         },
         {
-            "question": "Kizspy |  What is the other name of hardware address?",
+            "question": " What is the other name of hardware address?",
             "options": {
                 "A": "MAC address",
                 "B": "IP address",
@@ -6718,7 +6718,7 @@
             "file_source": "Q47.webp"
         },
         {
-            "question": "Kizspy |  The digital pin D2 of Arduino Uno generates a square wave. making an LED on for 1 second and off for 4 seconds. If the LED's anode is connected to 5 V and the LED's cathode is connected to pin D2, what is the duty cycte of this square wave?",
+            "question": " The digital pin D2 of Arduino Uno generates a square wave. making an LED on for 1 second and off for 4 seconds. If the LED's anode is connected to 5 V and the LED's cathode is connected to pin D2, what is the duty cycte of this square wave?",
             "options": {
                 "A": "20%",
                 "B": "25%",
@@ -6728,7 +6728,7 @@
             "file_source": "Q25.webp"
         },
         {
-            "question": "Kizspy |  Which of the following loT network topologies provides the highest reliability?",
+            "question": " Which of the following loT network topologies provides the highest reliability?",
             "options": {
                 "A": "Star topology",
                 "B": "Mesh topology",
@@ -6738,7 +6738,7 @@
             "file_source": "Q36.webp"
         },
         {
-            "question": "Kizspy |  A narrow pipe in a water system is analogous to what concept in an electrical circuit?",
+            "question": " A narrow pipe in a water system is analogous to what concept in an electrical circuit?",
             "options": {
                 "A": "Resistance",
                 "B": "Voltage",
@@ -6748,7 +6748,7 @@
             "file_source": "Q26.webp"
         },
         {
-            "question": "Kizspy |  How does the veracity of big data impact loT applications?",
+            "question": " How does the veracity of big data impact loT applications?",
             "options": {
                 "A": "By increasing the data transmission range",
                 "B": "By improving the energy efficiency of devices",
@@ -6758,7 +6758,7 @@
             "file_source": "Q20.webp"
         },
         {
-            "question": "Kizspy |  loT devices create more significant security challenges for networks due to alt of these concerns EXCEPT which?",
+            "question": " loT devices create more significant security challenges for networks due to alt of these concerns EXCEPT which?",
             "options": {
                 "A": "They do not have security alerts",
                 "B": "They are always on.",
@@ -6768,7 +6768,7 @@
             "file_source": "Q21.webp"
         },
         {
-            "question": "Kizspy |  Who was coined the term “Internet of Things\"?",
+            "question": " Who was coined the term “Internet of Things\"?",
             "options": {
                 "A": "Kevin Ashton",
                 "B": "John Wright",
@@ -6778,7 +6778,7 @@
             "file_source": "Q48.webp"
         },
         {
-            "question": "Kizspy |  What is the purpose of the following Arduino code? void setup() { ; Serial.begin(9600): void setup() { Serial.write(40}: }",
+            "question": " What is the purpose of the following Arduino code? void setup() { ; Serial.begin(9600): void setup() { Serial.write(40}: }",
             "options": {
                 "A": "Send a signal to pin 40 on the Arduino board",
                 "B": "Send a octal number of 40 through the Serial pins",
@@ -6788,7 +6788,7 @@
             "file_source": "Q16.webp"
         },
         {
-            "question": "Kizspy |  What type of network does the Wi-Fi shield allow the Arduino to connect to?",
+            "question": " What type of network does the Wi-Fi shield allow the Arduino to connect to?",
             "options": {
                 "A": "A Bluetooth network",
                 "B": "Awired Ethernet network",
@@ -6798,7 +6798,7 @@
             "file_source": "Q42.webp"
         },
         {
-            "question": "Kizspy |  Which function is used to enable an interrupt in Arduino UNO?",
+            "question": " Which function is used to enable an interrupt in Arduino UNO?",
             "options": {
                 "A": "enableinterrupt()",
                 "B": "attachinterruptQ",
@@ -6808,7 +6808,7 @@
             "file_source": "Q50.webp"
         },
         {
-            "question": "Kizspy |  Which of the following loT deployment models involves direct communication between nearby devices without relying on a centralized infrastructure?",
+            "question": " Which of the following loT deployment models involves direct communication between nearby devices without relying on a centralized infrastructure?",
             "options": {
                 "A": "Cloud based IoT",
                 "B": "Peer-to-peer loT",
@@ -6818,7 +6818,7 @@
             "file_source": "Q35.webp"
         },
         {
-            "question": "Kizspy |  Which of the following best describes the rote of sensors in the context of loT?",
+            "question": " Which of the following best describes the rote of sensors in the context of loT?",
             "options": {
                 "A": "Sensors are used to create data signatures for various devices",
                 "B": "Sensors collect and transmit data about the physical environment",
@@ -6828,7 +6828,7 @@
             "file_source": "Q24.webp"
         },
         {
-            "question": "Kizspy |  A part of an Arduino sketch is as follows: digitafWrite(13_ HIGH): delay(1000); digitalWrite(13. LOW); detay( 1000); How long is the built-in LED on?",
+            "question": " A part of an Arduino sketch is as follows: digitafWrite(13_ HIGH): delay(1000); digitalWrite(13. LOW); detay( 1000); How long is the built-in LED on?",
             "options": {
                 "A": "1000 seconds",
                 "B": "100 seconds",
@@ -6838,7 +6838,7 @@
             "file_source": "Q46.webp"
         },
         {
-            "question": "Kizspy |  What is the correct syntax to output a string like: \"I like foT” in C program?",
+            "question": " What is the correct syntax to output a string like: \"I like foT” in C program?",
             "options": {
                 "A": "System .out printline(‘l like loT\");",
                 "B": "Console writeLine(‘l like loT\");",
@@ -6847,7 +6847,7 @@
             "file_source": "Q10.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is NOT related to Arduino IDE software?",
+            "question": " Which of the following is NOT related to Arduino IDE software?",
             "options": {
                 "A": "Serial monitor",
                 "B": "Upload",
@@ -6857,7 +6857,7 @@
             "file_source": "Q27.webp"
         },
         {
-            "question": "Kizspy |  What are properties of a tree",
+            "question": " What are properties of a tree",
             "options": {
                 "A": "One node is marked as Root node",
                 "B": "Every node other than the root is associated with one parent node",
@@ -6867,7 +6867,7 @@
             "file_source": "Q44.webp"
         },
         {
-            "question": "Kizspy |  What factors should be considered when selecting a communication medium in a network?",
+            "question": " What factors should be considered when selecting a communication medium in a network?",
             "options": {
                 "A": "The distance a signal needs to travel",
                 "B": "The environment the signal will travel in",
@@ -6877,7 +6877,7 @@
             "file_source": "Q32.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is not a fundamental component of an lof system?",
+            "question": " Which of the following is not a fundamental component of an lof system?",
             "options": {
                 "A": "Sensors",
                 "B": "Connectivity",
@@ -6887,7 +6887,7 @@
             "file_source": "Q29.webp"
         },
         {
-            "question": "Kizspy |  What is PWM (Pulse Width Modulation) primarity used for in Arduino projects?",
+            "question": " What is PWM (Pulse Width Modulation) primarity used for in Arduino projects?",
             "options": {
                 "A": "To enhance digital signal strength",
                 "B": "To achieve analog-like results from digitat outputs",
@@ -6897,7 +6897,7 @@
             "file_source": "Q9.webp"
         },
         {
-            "question": "Kizspy |  Which of the following is an example of an toT application?",
+            "question": " Which of the following is an example of an toT application?",
             "options": {
                 "A": "Wearable device to monitor blood glucose level",
                 "B": "Manufacturing Bolt using CNC machine"
@@ -6905,7 +6905,7 @@
             "file_source": "Q17.webp"
         },
         {
-            "question": "Kizspy |  What type of sensor detects motion or presence using infrared light?",
+            "question": " What type of sensor detects motion or presence using infrared light?",
             "options": {
                 "A": "Halt effect sensor",
                 "B": "Photoresistor",
@@ -6915,7 +6915,7 @@
             "file_source": "Q41.webp"
         },
         {
-            "question": "Kizspy |  What is the function of a Digital to Analog Converter?",
+            "question": " What is the function of a Digital to Analog Converter?",
             "options": {
                 "A": "to generate an analog voltage from digital signals",
                 "B": "to allow analog current to be controlled by a digital number",
@@ -6925,7 +6925,7 @@
             "file_source": "Q49.webp"
         },
         {
-            "question": "Kizspy |  What type of sensor is the LM35?",
+            "question": " What type of sensor is the LM35?",
             "options": {
                 "A": "Pressure sensor",
                 "B": "Humidity sensor",
@@ -6935,7 +6935,7 @@
             "file_source": "Q7.webp"
         },
         {
-            "question": "Kizspy |  What does the analogRead(} function return when the potentiometer is turned ail the way to connect with the +5 volts? AO",
+            "question": " What does the analogRead(} function return when the potentiometer is turned ail the way to connect with the +5 volts? AO",
             "options": {
                 "B": "Between 1 and 1022",
                 "C": "1023",
@@ -6944,7 +6944,7 @@
             "file_source": "Q8.webp"
         },
         {
-            "question": "Kizspy |  What does the RX LED on an Arduino board indicate?",
+            "question": " What does the RX LED on an Arduino board indicate?",
             "options": {
                 "A": "The Arduino is transmitting data",
                 "B": "The Arduino is receiving data",
@@ -6954,7 +6954,7 @@
             "file_source": "Q40.webp"
         },
         {
-            "question": "Kizspy |  What role do embedded sensors play in these loT systems?",
+            "question": " What role do embedded sensors play in these loT systems?",
             "options": {
                 "A": "They enhance power generation.",
                 "B": "They store excess energy",
@@ -6964,7 +6964,7 @@
             "file_source": "Q33.webp"
         },
         {
-            "question": "Kizspy |  Which communication medium is most affected by environmental conditions like interference?",
+            "question": " Which communication medium is most affected by environmental conditions like interference?",
             "options": {
                 "A": "Fibre optic cables",
                 "B": "Copper cables",
@@ -6974,7 +6974,7 @@
             "file_source": "Q31.webp"
         },
         {
-            "question": "Kizspy |  How many pins are there in a servo motor? (Choose 1 answer} A 2",
+            "question": " How many pins are there in a servo motor? (Choose 1 answer} A 2",
             "options": {
                 "B": "3",
                 "D": "5"
