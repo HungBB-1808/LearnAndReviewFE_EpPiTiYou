@@ -85,6 +85,38 @@ export const AdminDashboard = () => {
         }
     }
 
+    const handleExport = () => {
+        const dataStr = JSON.stringify(questionDB, null, 2)
+        const blob = new Blob([dataStr], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `EduFU_Backup_${new Date().toISOString().split('T')[0]}.json`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
+    const handleImport = (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (relevent) => {
+            try {
+                const imported = JSON.parse(relevent.target.result)
+                // Use a simple confirm if they want to overwrite
+                if(window.confirm("This will replace your current memory database. Continue?")) {
+                    // Update the whole DB in store
+                    useAppStore.setState({ questionDB: imported })
+                    alert("Import successful!")
+                }
+            } catch (err) {
+                alert("Invalid JSON file!")
+            }
+        }
+        reader.readAsText(file)
+    }
+
     if (!isAdmin) {
         return (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-10 h-full flex items-center justify-center relative">
@@ -134,6 +166,15 @@ export const AdminDashboard = () => {
                 </div>
                 
                 <div className="flex gap-4">
+                    <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
+                        <button onClick={handleExport} className="px-4 py-2 rounded-xl text-xs font-black text-primary hover:bg-primary/10 transition-all flex items-center gap-2 uppercase tracking-widest border border-transparent hover:border-primary/20">
+                            <span className="material-symbols-outlined text-[16px]">download</span> Export Database
+                        </button>
+                        <label className="px-4 py-2 rounded-xl text-xs font-black text-tertiary hover:bg-tertiary/10 transition-all flex items-center gap-2 uppercase tracking-widest cursor-pointer border border-transparent hover:border-tertiary/20">
+                            <span className="material-symbols-outlined text-[16px]">upload</span> Import Backup
+                            <input type="file" className="hidden" accept=".json" onChange={handleImport} />
+                        </label>
+                    </div>
                     <div className="glass-panel px-6 py-3 rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-error/10 hover:border-error/30 transition-all border border-transparent" onClick={() => { setIsAdmin(false); navigate('/subjects') }}>
                         <span className="text-sm font-bold text-white group-hover:text-error transition-colors uppercase tracking-widest">Logout Admin</span>
                         <span className="material-symbols-outlined text-error">logout</span>
