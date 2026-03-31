@@ -108,9 +108,9 @@ export const ExamResult = () => {
                         className="space-y-6 overflow-hidden"
                     >
                         {questions.map((q, i) => {
-                            const uAns = answers[i]
-                            const cAns = getCorrectAnswerFor(q.id).join(', ')
-                            const isCorrect = cAns.includes(uAns)
+                            const uAnsRaw = (answers[i] || "").split(',').filter(Boolean).sort()
+                            const cAnsRaw = getCorrectAnswerFor(q.id).sort()
+                            const isCorrect = uAnsRaw.join(',') === cAnsRaw.join(',')
                             
                             return (
                                 <div key={i} className={`glass-card p-6 rounded-2xl border-l-4 ${isCorrect ? 'border-l-green-500' : 'border-l-error'}`}>
@@ -124,10 +124,10 @@ export const ExamResult = () => {
                                         </span>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 ml-12">
-                                        {['A','B','C','D'].map(opt => {
+                                        {Object.keys(q.options).sort().map(opt => {
                                             if (!q.options[opt]) return null
-                                            const isSelected = uAns === opt
-                                            const isActualCorrect = cAns.includes(opt)
+                                            const isSelected = uAnsRaw.includes(opt)
+                                            const isActualCorrect = cAnsRaw.includes(opt)
                                             
                                             let borderClass = 'border-white/5 bg-surface-container-highest/20 text-white/50'
                                             let iconCode = null
