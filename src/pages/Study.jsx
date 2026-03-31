@@ -89,13 +89,13 @@ export const StudySession = () => {
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
-                            {['A','B','C','D'].map(opt => {
+                            {Object.keys(q.options).sort().map(opt => {
                                 if (!q.options[opt]) return null
                                 const isCorrect = corrects.includes(opt)
                                 return (
                                     <div key={opt} className={`p-6 rounded-2xl flex items-center gap-4 transition-all ${isCorrect ? 'border border-green-500/50 bg-green-500/10 shadow-[0_0_20px_rgba(34,197,94,0.1)]' : 'border border-white/10 bg-white/5 opacity-70'}`}>
-                                        <span className={`w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full ${isCorrect ? 'bg-green-500 text-black font-black' : 'bg-white/10 text-white'}`}>{opt}</span>
-                                        <span className={`text-sm font-medium ${isCorrect ? 'text-white' : 'text-white/60'}`}>{q.options[opt]}</span>
+                                        <span className={`w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full text-sm ${isCorrect ? 'bg-green-500 text-black font-black' : 'bg-white/10 text-white'}`}>{opt}</span>
+                                        <span className={`text-md font-bold ${isCorrect ? 'text-white' : 'text-white/60'}`}>{q.options[opt]}</span>
                                         {isCorrect && <span className="material-symbols-outlined text-green-400 ml-auto">check_circle</span>}
                                     </div>
                                 )

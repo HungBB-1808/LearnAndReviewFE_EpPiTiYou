@@ -116,9 +116,7 @@ export const useAppStore = create(
             for(let k in db) {
                 const idx = db[k].findIndex(q => q.id === qId);
                 if(idx !== -1) {
-                    const newArray = [...db[k]];
-                    newArray[idx] = { ...newArray[idx], question: newText, questionTextCleaned: formatQuestionText(newText) };
-                    db[k] = newArray;
+                    db[k][idx] = { ...db[k][idx], question: newText };
                     break;
                 }
             }
@@ -131,14 +129,29 @@ export const useAppStore = create(
             for(let k in db) {
                 const idx = db[k].findIndex(q => q.id === qId);
                 if(idx !== -1) {
-                    const newArray = [...db[k]];
-                    newArray[idx] = { ...newArray[idx], answer: [newAnswer.toUpperCase()] };
-                    db[k] = newArray;
+                    const ansArray = newAnswer.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+                    db[k][idx] = { ...db[k][idx], answer: ansArray };
                     break;
                 }
             }
             return { questionDB: db };
         });
+      },
+      updateOption: (qId, optKey, newText) => {
+          set(state => {
+              const db = { ...state.questionDB };
+              for(let k in db) {
+                  const idx = db[k].findIndex(q => q.id === qId);
+                  if (idx !== -1) {
+                      db[k][idx] = { 
+                          ...db[k][idx], 
+                          options: { ...db[k][idx].options, [optKey]: newText } 
+                      };
+                      break;
+                  }
+              }
+              return { questionDB: db };
+          });
       },
 
       // --- User State ---
@@ -179,12 +192,36 @@ export const useAppStore = create(
       updateSessionIndex: (index) => set(state => ({
           activeSession: { ...state.activeSession, currentIndex: index }
       })),
-      updateSessionAnswer: (index, ans) => set(state => ({
-          activeSession: {
-              ...state.activeSession,
-              answers: { ...state.activeSession.answers, [index]: ans }
+      updateSessionAnswer: (index, ans) => set(state => {
+          if (!state.activeSession) return state;
+          const currAns = state.activeSession.answers[index] || "";
+          const q = state.activeSession.questions[index];
+          const corrects = get().getCorrectAnswerFor(q.id);
+          
+          let nextAns = "";
+          if (ans === "LOCKED") {
+              // Lock current selection
+              nextAns = currAns || " "; // Space means answered but empty (all wrong)
+          } else if (corrects.length > 1) {
+              // Multiple choice toggle
+              const parts = currAns.split(',').filter(Boolean);
+              if (parts.includes(ans)) {
+                  nextAns = parts.filter(p => p !== ans).sort().join(',');
+              } else {
+                  nextAns = [...parts, ans].sort().join(',');
+              }
+          } else {
+              // Single choice
+              nextAns = ans;
           }
-      })),
+
+          return {
+              activeSession: {
+                  ...state.activeSession,
+                  answers: { ...state.activeSession.answers, [index]: nextAns }
+              }
+          };
+      }),
       updateSessionTime: (time) => set(state => ({
           activeSession: { ...state.activeSession, timeSpent: time }
       })),

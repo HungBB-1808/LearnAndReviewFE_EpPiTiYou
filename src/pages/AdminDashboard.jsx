@@ -16,9 +16,9 @@ export const AdminDashboard = () => {
     const [loginError, setLoginError] = useState('')
 
     // Edit Modal State
-    const [editingQ, setEditingQ] = useState(null)
     const [editQuestionText, setEditQuestionText] = useState('')
     const [editAnswerText, setEditAnswerText] = useState('')
+    const [editOptions, setEditOptions] = useState({ A: '', B: '', C: '', D: '', E: '' })
 
     const dbKeys = Object.keys(questionDB)
     const allSubjects = useMemo(() => {
@@ -68,6 +68,9 @@ export const AdminDashboard = () => {
         if (!editingQ) return
         updateQuestion(editingQ.id, editQuestionText)
         updateAnswer(editingQ.id, editAnswerText)
+        Object.entries(editOptions).forEach(([k, v]) => {
+            updateOption(editingQ.id, k, v)
+        })
         setEditingQ(null)
     }
 
@@ -267,7 +270,18 @@ export const AdminDashboard = () => {
                                         </td>
                                         <td className="px-8 py-5 text-right flex justify-end">
                                             <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-                                                <button onClick={() => { setEditingQ(q); setEditQuestionText(q.question); setEditAnswerText(cAns) }} className="p-2 hover:bg-primary/20 rounded-lg text-primary transition-all flex items-center gap-2 px-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" title="Edit Question & Answer">
+                                                <button onClick={() => { 
+                                                    setEditingQ(q)
+                                                    setEditQuestionText(q.question)
+                                                    setEditAnswerText(cAns)
+                                                    setEditOptions({
+                                                        A: q.options.A || '',
+                                                        B: q.options.B || '',
+                                                        C: q.options.C || '',
+                                                        D: q.options.D || '',
+                                                        E: q.options.E || ''
+                                                    })
+                                                }} className="p-2 hover:bg-primary/20 rounded-lg text-primary transition-all flex items-center gap-2 px-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" title="Edit Question & Answer">
                                                     <span className="material-symbols-outlined text-sm">edit</span> Edit node
                                                 </button>
                                             </div>
@@ -310,35 +324,40 @@ export const AdminDashboard = () => {
                             </h3>
                             <p className="text-on-surface-variant text-sm mb-6 flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div> Node ID: {editingQ.id}</p>
                             
-                            <div className="grid grid-cols-2 gap-6 flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 mb-6">
-                                <div className="flex flex-col h-full">
-                                    <label className="text-xs uppercase tracking-widest text-primary-fixed block mb-3 font-bold">Question Text</label>
-                                    <textarea 
-                                        className="w-full flex-1 bg-surface-container-highest/50 border border-white/10 rounded-xl p-5 text-white placeholder-white/30 focus:ring-2 focus:ring-primary/50 outline-none custom-scrollbar resize-none font-mono text-[13px] leading-relaxed" 
-                                        value={editQuestionText}
-                                        onChange={e => setEditQuestionText(e.target.value)}
-                                    ></textarea>
-                                </div>
-                                <div className="flex flex-col h-full bg-black/20 p-5 rounded-xl border border-white/5">
-                                    <label className="text-xs uppercase tracking-widest text-secondary block mb-3 font-bold">Answer Options Reference</label>
-                                    <div className="flex-1 space-y-3 mb-4 overflow-y-auto custom-scrollbar">
-                                        {['A','B','C','D'].map(opt => editingQ.options[opt] && (
-                                            <div key={opt} className={`p-3 rounded-lg border text-sm ${editAnswerText.includes(opt) ? 'border-green-500/50 bg-green-500/10 text-white' : 'border-white/10 bg-surface-container text-white/70'}`}>
-                                                <span className={`font-black mr-2 ${editAnswerText.includes(opt) ? 'text-green-400' : 'text-primary'}`}>{opt}.</span> 
-                                                <span>{editingQ.options[opt]}</span>
-                                            </div>
-                                        ))}
+                            <div className="grid grid-cols-2 gap-8 flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 mb-8 mt-4">
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="text-[10px] uppercase tracking-widest text-primary-fixed block mb-3 font-black">Question Mapping</label>
+                                        <textarea 
+                                            className="w-full h-40 bg-white/5 border border-white/10 rounded-xl p-5 text-white placeholder-white/30 focus:ring-2 focus:ring-primary/50 outline-none custom-scrollbar resize-none font-medium text-[14px] leading-relaxed" 
+                                            value={editQuestionText}
+                                            onChange={e => setEditQuestionText(e.target.value)}
+                                        ></textarea>
                                     </div>
                                     <div>
-                                        <label className="text-xs uppercase tracking-widest text-tertiary block mb-2 font-bold flex items-center gap-2">
-                                            Correct Key(s) <span className="text-[10px] text-white/30 font-normal normal-case">(e.g. A, B)</span>
+                                        <label className="text-[10px] uppercase tracking-widest text-tertiary block mb-3 font-black flex items-center gap-2">
+                                            Solution Key(s) <span className="text-[8px] text-white/30 font-normal normal-case">(Comma separated: A,B)</span>
                                         </label>
                                         <input 
-                                            className="w-full bg-surface-container border border-white/10 rounded-xl p-3 text-white focus:ring-2 focus:ring-tertiary/50 outline-none font-black tracking-widest" 
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:ring-2 focus:ring-tertiary/50 outline-none font-black tracking-widest text-lg" 
                                             value={editAnswerText}
                                             onChange={e => setEditAnswerText(e.target.value.toUpperCase())}
                                         />
                                     </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] uppercase tracking-widest text-secondary block mb-1 font-black">Option Content</label>
+                                    {['A','B','C','D','E'].map(opt => (
+                                        <div key={opt} className="relative group/opt">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded bg-primary/10 flex items-center justify-center text-[10px] font-black text-primary border border-primary/20">{opt}</div>
+                                            <input 
+                                                className={`w-full bg-white/5 border ${editAnswerText.includes(opt) ? 'border-green-500/30 ring-1 ring-green-500/20' : 'border-white/10'} rounded-xl pl-14 pr-4 py-3 text-sm text-white focus:ring-1 focus:ring-secondary/50 outline-none transition-all`}
+                                                value={editOptions[opt]}
+                                                placeholder={`Option ${opt} content...`}
+                                                onChange={e => setEditOptions({ ...editOptions, [opt]: e.target.value })}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 

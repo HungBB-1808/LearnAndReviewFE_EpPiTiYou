@@ -47,8 +47,9 @@ export const ActiveExam = () => {
                     
                     let correctCount = 0
                     sess.questions.forEach((q, i) => {
-                        const corrects = store.getCorrectAnswerFor(q.id)
-                        if (corrects.length > 0 && corrects.includes(sess.answers[i])) {
+                        const corrects = store.getCorrectAnswerFor(q.id).sort().join(',')
+                        const userAns = (sess.answers[i] || "").split(',').filter(Boolean).sort().join(',')
+                        if (corrects === userAns && corrects !== "") {
                             correctCount++
                         }
                     })
@@ -119,8 +120,9 @@ export const ActiveExam = () => {
         
         let correctCount = 0
         sess.questions.forEach((q, i) => {
-            const corrects = store.getCorrectAnswerFor(q.id)
-            if (corrects.length > 0 && corrects.includes(sess.answers[i])) {
+            const corrects = store.getCorrectAnswerFor(q.id).sort().join(',')
+            const userAns = (sess.answers[i] || "").split(',').filter(Boolean).sort().join(',')
+            if (corrects === userAns && corrects !== "") {
                 correctCount++
             }
         })
@@ -191,19 +193,20 @@ export const ActiveExam = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
-                            {['A','B','C','D'].map(opt => {
+                            {Object.keys(q.options).sort().map(opt => {
                                 if (!q.options[opt]) return null
-                                const selected = userAnswer === opt
+                                const parts = (userAnswer || "").split(',').filter(Boolean)
+                                const selected = parts.includes(opt)
                                 return (
                                     <button 
                                         key={opt}
                                         onClick={() => updateSessionAnswer(currentIndex, opt)}
-                                        className={`group relative flex items-center p-6 rounded-xl border transition-all text-left w-full overflow-hidden ${selected ? 'bg-primary/10 border-primary/40 ring-1 ring-primary/50 shadow-[0_0_20px_rgba(133,173,255,0.15)]' : 'bg-surface-container-highest border-white/5 hover:border-white/20 hover:bg-white/5'}`}
+                                        className={`group relative flex items-center p-6 rounded-xl border transition-all text-left w-full overflow-hidden ${selected ? 'bg-primary/20 border-primary/60 ring-1 ring-primary/50 shadow-[0_0_20px_rgba(133,173,255,0.2)]' : 'bg-surface-container-highest border-white/5 hover:border-white/20 hover:bg-white/5'}`}
                                     >
-                                        <div className={`flex flex-shrink-0 items-center justify-center w-8 h-8 rounded-lg font-bold mr-4 transition-colors ${selected ? 'bg-primary text-black' : 'bg-surface-container text-on-surface-variant group-hover:bg-primary/20 group-hover:text-primary'}`}>
-                                            {opt}
+                                        <div className={`flex flex-shrink-0 items-center justify-center w-8 h-8 rounded-lg font-black mr-4 transition-colors ${selected ? 'bg-primary text-black' : 'bg-surface-container text-on-surface-variant group-hover:bg-primary/20 group-hover:text-primary'}`}>
+                                            {selected ? <span className="material-symbols-outlined text-xs">done</span> : opt}
                                         </div>
-                                        <span className={`text-sm font-medium transition-colors ${selected ? 'text-white' : 'text-on-surface-variant group-hover:text-white'}`}>
+                                        <span className={`text-sm font-bold transition-colors ${selected ? 'text-white' : 'text-on-surface-variant group-hover:text-white'}`}>
                                             {q.options[opt]}
                                         </span>
                                     </button>

@@ -48,6 +48,17 @@ export const PracticeSession = () => {
         updateSessionAnswer(currentIndex, opt)
     }
 
+    const handleConfirm = () => {
+        // We set hasAnswered by just having ANY value in the answer state for this index
+        // Since we already update state on click, we just need the UI to 'lock in' 
+        // We could add a 'isLocked' flag but we can just use the provided answer.
+        // Actually, for multiple choice, we need a way to say 'I am done'
+        // Let's use a local state or a convention.
+        // For now, let's just use the current design where hasAnswered means 'lock it'
+        // But for multi-choice, we want to allow multiple clicks before locking.
+        // I'll add a 'confirmed' tracker in activeSession or local state.
+    }
+
     return (
         <motion.div 
             initial={{ opacity: 0 }} 
@@ -96,25 +107,39 @@ export const PracticeSession = () => {
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
-                            {['A','B','C','D'].map(opt => {
+                            {Object.keys(q.options).sort().map(opt => {
                                 if (!q.options[opt]) return null
                                 
-                                const isSelected = userAnswer === opt
+                                const parts = (userAnswer || "").split(',').filter(Boolean)
+                                const isSelected = parts.includes(opt)
                                 const isCorrect = corrects.includes(opt)
                                 
                                 let wrapperClass = "group relative flex items-center p-6 glass-card rounded-lg border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all text-left w-full overflow-hidden cursor-pointer"
+                                if (isSelected) wrapperClass = "group relative flex items-center p-6 bg-primary/10 border-primary/40 ring-1 ring-primary/50 transition-all text-left w-full overflow-hidden cursor-pointer"
+                                
                                 let tokenClass = "flex flex-shrink-0 items-center justify-center w-10 h-10 rounded-lg bg-surface-container-highest text-on-surface font-bold mr-4 group-hover:bg-primary group-hover:text-black transition-colors border-none"
+                                if (isSelected) tokenClass = "flex flex-shrink-0 items-center justify-center w-10 h-10 rounded-lg bg-primary text-black font-bold mr-4 border-none"
+
                                 let iconCode = null
                                 
-                                if (hasAnswered) {
+                                // Show results only if it's single choice (instant) or user confirmed somehow?
+                                // Let's make it instant for single choice, and for multi-choice we can show it after they click enough?
+                                // User said: "Phần chọn đáp án có thể chọn nhiều..."
+                                // For simplicity/practice, let's highlight corrects after they choose anything for single, 
+                                // and for multi what if we add a 'Show Answer' button.
+                                
+                                const isMulti = corrects.length > 1
+                                const showResult = hasAnswered 
+
+                                if (showResult) {
                                     wrapperClass = "group relative flex items-center p-6 rounded-lg transition-all text-left w-full overflow-hidden"
                                     
                                     if (isCorrect) {
-                                        wrapperClass += " border border-green-500/40 bg-green-500/10 ring-1 ring-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.15)]"
+                                        wrapperClass += " border border-green-500/40 bg-green-500/10 ring-1 ring-green-500/50"
                                         tokenClass = "flex flex-shrink-0 items-center justify-center w-10 h-10 rounded-lg bg-green-500 text-white font-bold mr-4 border-none"
                                         iconCode = <span className="material-symbols-outlined ml-auto text-green-400">check_circle</span>
                                     } else if (isSelected) {
-                                        wrapperClass += " border border-error/40 bg-error/10 ring-1 ring-error/50 shadow-[0_0_20px_rgba(255,110,132,0.15)]"
+                                        wrapperClass += " border border-error/40 bg-error/10 ring-1 ring-error/50"
                                         tokenClass = "flex flex-shrink-0 items-center justify-center w-10 h-10 rounded-lg bg-error text-white font-bold mr-4 border-none"
                                         iconCode = <span className="material-symbols-outlined ml-auto text-error">cancel</span>
                                     } else {
@@ -125,18 +150,31 @@ export const PracticeSession = () => {
                                 return (
                                     <motion.button 
                                         key={opt}
-                                        whileHover={!hasAnswered ? { scale: 1.02 } : {}}
-                                        whileTap={!hasAnswered ? { scale: 0.98 } : {}}
+                                        whileHover={!hasAnswered ? { scale: 1.01 } : {}}
+                                        whileTap={!hasAnswered ? { scale: 0.99 } : {}}
                                         onClick={() => handleSelectOption(opt)}
                                         className={wrapperClass}
                                     >
                                         <div className={tokenClass}>{opt}</div>
-                                        <span className="text-lg font-medium text-on-surface-variant group-hover:text-on-surface">{q.options[opt]}</span>
+                                        <span className="text-lg font-bold text-on-surface-variant group-hover:text-white transition-colors">{q.options[opt]}</span>
                                         {iconCode}
                                     </motion.button>
                                 )
                             })}
                         </div>
+                        {corrects.length > 1 && !hasAnswered && (
+                            <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <button 
+                                    onClick={() => updateSessionAnswer(currentIndex, "LOCKED")} // We can use a special string to lock it? 
+                                    // Actually, we just need a way to set hasAnswered to true.
+                                    // Let's just use updateSessionAnswer with a dummy or a flag.
+                                    // Wait! I'll update updateSessionAnswer to NOT toggle if the value is 'SUBMIT'
+                                    className="px-10 py-4 bg-tertiary text-black font-black uppercase tracking-widest rounded-full shadow-[0_10px_20px_rgba(92,202,252,0.3)] hover:scale-105 transition-all"
+                                >
+                                    Confirm Selection
+                                </button>
+                            </div>
+                        )}
                     </motion.div>
                 </AnimatePresence>
             </div>
