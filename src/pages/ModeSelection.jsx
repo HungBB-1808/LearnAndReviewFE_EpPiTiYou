@@ -173,11 +173,11 @@ export const ModeSelection = () => {
                                 )}
                                 <div>
                                     <label className="block text-xs uppercase tracking-widest text-tertiary mb-3 flex items-center justify-between">
-                                        Source Filter <span className="text-[10px] text-white/40 normal-case">(Select terms or Bookmarks)</span>
+                                        Source Filter <span className="text-[10px] text-white/40 normal-case">(Select specific terms or Bookmarks)</span>
                                     </label>
-                                    <div className="grid grid-cols-2 gap-3 text-sm text-white/80 max-h-32 overflow-y-auto custom-scrollbar p-1 mb-2">
+                                    <div className="grid grid-cols-1 gap-3 text-sm text-white/80 max-h-48 overflow-y-auto custom-scrollbar p-1 mb-2">
                                         {availableTerms.map(t => (
-                                            <label key={t} className="flex items-center gap-2 cursor-pointer">
+                                            <label key={t} className="flex items-center gap-4 cursor-pointer p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all border border-white/5 group">
                                                 <input 
                                                     type="checkbox" 
                                                     checked={selectedTerms.includes(t)}
@@ -185,15 +185,15 @@ export const ModeSelection = () => {
                                                         if (e.target.checked) setSelectedTerms([...selectedTerms, t])
                                                         else setSelectedTerms(selectedTerms.filter(x => x !== t))
                                                     }}
-                                                    className="rounded bg-black/40 border-white/20 text-primary w-4 h-4 cursor-pointer accent-primary" 
+                                                    className="rounded bg-black/40 border-white/20 text-primary w-5 h-5 cursor-pointer accent-primary" 
                                                 /> 
-                                                <span>{t}</span>
+                                                <span className="text-base font-bold text-white group-hover:text-primary transition-colors">{t.toUpperCase()}</span>
                                             </label>
                                         ))}
                                     </div>
-                                    <label className="flex items-center gap-2 mt-2 p-3 bg-primary/10 border border-primary/20 rounded-lg cursor-pointer hover:bg-primary/20 transition-colors">
-                                        <input type="checkbox" checked={bookmarksOnly} onChange={e => setBookmarksOnly(e.target.checked)} className="rounded bg-black/40 border-white/20 text-primary w-5 h-5 cursor-pointer accent-primary" /> 
-                                        <span className="text-primary-fixed font-bold tracking-tight">Saved / Bookmarked Only</span>
+                                    <label className="flex items-center gap-3 mt-4 p-4 bg-primary/10 border border-primary/20 rounded-xl cursor-pointer hover:bg-primary/20 transition-colors group">
+                                        <input type="checkbox" checked={bookmarksOnly} onChange={e => setBookmarksOnly(e.target.checked)} className="rounded bg-black/40 border-white/20 text-primary w-6 h-6 cursor-pointer accent-primary" /> 
+                                        <span className="text-primary-fixed font-black tracking-tight text-lg group-hover:scale-[1.02] transition-transform">SAVED / BOOKMARKED ONLY</span>
                                     </label>
                                 </div>
                             </div>

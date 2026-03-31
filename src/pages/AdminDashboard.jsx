@@ -4,7 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
 
 export const AdminDashboard = () => {
-    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, getCorrectAnswerFor, isAdmin, setIsAdmin, toggleSubjectLock, isSubjectLocked } = useAppStore()
+    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, updateOption, getCorrectAnswerFor, isAdmin, setIsAdmin, toggleSubjectLock, isSubjectLocked } = useAppStore()
     const navigate = useNavigate()
     const [filterSubject, setFilterSubject] = useState('ALL')
     const [filterKey, setFilterKey] = useState('ALL')
@@ -16,6 +16,7 @@ export const AdminDashboard = () => {
     const [loginError, setLoginError] = useState('')
 
     // Edit Modal State
+    const [editingQ, setEditingQ] = useState(null)
     const [editQuestionText, setEditQuestionText] = useState('')
     const [editAnswerText, setEditAnswerText] = useState('')
     const [editOptions, setEditOptions] = useState({ A: '', B: '', C: '', D: '', E: '' })
