@@ -72,6 +72,7 @@ export const AdminDashboard = () => {
         Object.entries(editOptions).forEach(([k, v]) => {
             updateOption(editingQ.id, k, v)
         })
+        alert("Question updated successfully! It will now be available in all learning modes.")
         setEditingQ(null)
     }
 

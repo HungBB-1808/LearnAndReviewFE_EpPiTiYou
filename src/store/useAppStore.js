@@ -213,20 +213,21 @@ export const useAppStore = create(
           const q = state.activeSession.questions[index];
           const corrects = get().getCorrectAnswerFor(q.id);
           
+          const currParts = currAns.split(',').filter(Boolean);
           let nextAns = "";
+          
           if (ans === "LOCKED") {
-              // Lock current selection
-              nextAns = currAns || " "; // Space means answered but empty (all wrong)
-          } else if (corrects.length > 1) {
-              // Multiple choice toggle
-              const parts = currAns.split(',').filter(Boolean);
-              if (parts.includes(ans)) {
-                  nextAns = parts.filter(p => p !== ans).sort().join(',');
+              nextAns = currAns || " ";
+          } else if (corrects.length > 1 || currParts.length > 1 || (currParts.length === 1 && currParts[0] !== ans && corrects.some(c => c === ans && c !== currParts[0]))) {
+              // Be more permissive with toggling:
+              // If it's officially multi-choice, OR if user already has >1 selected, OR if they are clicking a second valid-looking choice
+              if (currParts.includes(ans)) {
+                  nextAns = currParts.filter(p => p !== ans).sort().join(',');
               } else {
-                  nextAns = [...parts, ans].sort().join(',');
+                  nextAns = [...currParts, ans].sort().join(',');
               }
           } else {
-              // Single choice
+              // Single choice behavior: overwrite
               nextAns = ans;
           }
 
