@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { supabase } from '../lib/supabase'
 
 const formatQuestionText = (text) => {
     if (!text) return "";
@@ -24,12 +25,68 @@ export const useAppStore = create(
   persist(
     (set, get) => ({
       // --- Data DB ---
-      questionDB: {}, // the master loaded JSON
-      isDataLoaded: false,
+      // --- Cloud Sync (Supabase) ---
+      syncToCloud: async () => {
+        if (!get().isAdmin) return;
+        try {
+            const db = get().questionDB;
+            const payload = [];
+            
+            Object.entries(db).forEach(([key, qList]) => {
+                qList.forEach(q => {
+                    payload.push({
+                        id: q.id,
+                        parent_key: key,
+                        content: q
+                    });
+                });
+            });
+
+            const { error } = await supabase
+                .from('questions')
+                .upsert(payload, { onConflict: 'id' });
+
+            if (error) throw error;
+            console.log("Sync to Supabase complete!");
+            return true;
+        } catch (e) {
+            console.error("Cloud Sync Failed:", e);
+            return false;
+        }
+      },
+
+      loadFromCloud: async () => {
+        try {
+            const { data, error } = await supabase
+                .from('questions')
+                .select('*');
+            
+            if (error) throw error;
+            if (!data || data.length === 0) return null;
+
+            const newDB = {};
+            data.forEach(row => {
+                if (!newDB[row.parent_key]) newDB[row.parent_key] = [];
+                newDB[row.parent_key].push(row.content);
+            });
+            return newDB;
+        } catch (e) {
+            console.warn("Could not load from Cloud, using local files:", e);
+            return null;
+        }
+      },
 
       loadInitialData: async () => {
-        // Force reload to pick up new files or changes
         try {
+            // Priority 1: Supabase Cloud
+            const cloudDB = await get().loadFromCloud();
+            if (cloudDB) {
+                set({ questionDB: { ...get().questionDB, ...cloudDB }, isDataLoaded: true });
+                console.log("Loaded context from Supabase Cloud");
+                return;
+            }
+
+            // Priority 2: Static JSON files
             const files = [`/FE_Data_IOT102_Final.json?v=${Date.now()}`, `/FE_Data_SSG104_Final.json?v=${Date.now()}`];
             const allCleanData = {};
 
@@ -55,11 +112,8 @@ export const useAppStore = create(
                 }
             }
             
-            // Merge with existing questionDB to preserve admin edits
-            // We put state.questionDB on the RIGHT so user edits win
             set(state => {
                 const combined = { ...allCleanData, ...state.questionDB };
-                // Also clean any leftover Kizspy markers in the existing state
                 Object.keys(combined).forEach(k => {
                     combined[k] = combined[k].map(q => {
                         const txt = formatQuestionText(q.question);
@@ -69,7 +123,7 @@ export const useAppStore = create(
                 return { questionDB: combined, isDataLoaded: true };
             });
         } catch (e) {
-            console.error("Failed to load initial JSON:", e);
+            console.error("Failed to load initial data:", e);
         }
       },
 
@@ -125,48 +179,78 @@ export const useAppStore = create(
       },
       
       // --- Admin / Editors ---
-      updateQuestion: (qId, newText) => {
+      updateQuestion: async (qId, newText) => {
+        let parentKey = null;
+        let localQ = null;
+        
         set(state => {
             const db = { ...state.questionDB };
             for(let k in db) {
                 const idx = db[k].findIndex(q => q.id === qId);
                 if(idx !== -1) {
+                    parentKey = k;
                     db[k][idx] = { ...db[k][idx], question: newText, questionTextCleaned: newText };
+                    localQ = db[k][idx];
                     break;
                 }
             }
             return { questionDB: db };
         });
+
+        // Cloud Push
+        if (get().isAdmin && parentKey && localQ) {
+            await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+        }
       },
-      updateAnswer: (qId, newAnswer) => {
+      updateAnswer: async (qId, newAnswer) => {
+        let parentKey = null;
+        let localQ = null;
+        
         set(state => {
             const db = { ...state.questionDB };
             for(let k in db) {
                 const idx = db[k].findIndex(q => q.id === qId);
                 if(idx !== -1) {
+                    parentKey = k;
                     const ansArray = newAnswer.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
                     db[k][idx] = { ...db[k][idx], answer: ansArray };
+                    localQ = db[k][idx];
                     break;
                 }
             }
             return { questionDB: db };
         });
+
+        // Cloud Push
+        if (get().isAdmin && parentKey && localQ) {
+            await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+        }
       },
-      updateOption: (qId, optKey, newText) => {
+      updateOption: async (qId, optKey, newText) => {
+          let parentKey = null;
+          let localQ = null;
+          
           set(state => {
               const db = { ...state.questionDB };
               for(let k in db) {
                   const idx = db[k].findIndex(q => q.id === qId);
                   if (idx !== -1) {
+                      parentKey = k;
                       db[k][idx] = { 
                           ...db[k][idx], 
                           options: { ...db[k][idx].options, [optKey]: newText } 
                       };
+                      localQ = db[k][idx];
                       break;
                   }
               }
               return { questionDB: db };
           });
+
+          // Cloud Push
+          if (get().isAdmin && parentKey && localQ) {
+              await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+          }
       },
 
       // --- User State ---

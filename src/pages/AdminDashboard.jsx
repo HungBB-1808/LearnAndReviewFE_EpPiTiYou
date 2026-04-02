@@ -168,6 +168,16 @@ export const AdminDashboard = () => {
                 
                 <div className="flex gap-4">
                     <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
+                        <button 
+                            onClick={async () => {
+                                const ok = await useAppStore.getState().syncToCloud()
+                                if(ok) alert("Global database updated! All users will now see your current changes.")
+                                else alert("Sync failed. Please check your Supabase configuration.")
+                            }} 
+                            className="px-4 py-2 rounded-xl text-xs font-black text-white bg-primary/20 hover:bg-primary/40 transition-all flex items-center gap-2 uppercase tracking-widest border border-primary/20"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">cloud_upload</span> Push All To Cloud
+                        </button>
                         <button onClick={handleExport} className="px-4 py-2 rounded-xl text-xs font-black text-primary hover:bg-primary/10 transition-all flex items-center gap-2 uppercase tracking-widest border border-transparent hover:border-primary/20">
                             <span className="material-symbols-outlined text-[16px]">download</span> Export Database
                         </button>
