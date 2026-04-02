@@ -30,17 +30,19 @@ export const useAppStore = create(
         if (!get().isAdmin) return;
         try {
             const db = get().questionDB;
-            const payload = [];
+            const uniquePayload = new Map();
             
             Object.entries(db).forEach(([key, qList]) => {
                 qList.forEach(q => {
-                    payload.push({
+                    uniquePayload.set(q.id, {
                         id: q.id,
                         parent_key: key,
                         content: q
                     });
                 });
             });
+
+            const payload = Array.from(uniquePayload.values());
 
             const { error } = await supabase
                 .from('questions')
