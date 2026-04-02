@@ -32,24 +32,35 @@ export const useAppStore = create(
             const db = get().questionDB;
             const uniquePayload = new Map();
             
+            // 1. Deduplicate by ID
             Object.entries(db).forEach(([key, qList]) => {
                 qList.forEach(q => {
-                    uniquePayload.set(q.id, {
-                        id: q.id,
-                        parent_key: key,
-                        content: q
-                    });
+                    if (q.id) {
+                        uniquePayload.set(q.id.toLowerCase(), {
+                            id: q.id,
+                            parent_key: key,
+                            content: q
+                        });
+                    }
                 });
             });
 
-            const payload = Array.from(uniquePayload.values());
+            const allPayloads = Array.from(uniquePayload.values());
+            console.log(`Syncing ${allPayloads.length} unique questions to cloud...`);
 
-            const { error } = await supabase
-                .from('questions')
-                .upsert(payload, { onConflict: 'id' });
+            // 2. Batch processing (100 per request) to prevent 500 errors
+            const CHUNK_SIZE = 100;
+            for (let i = 0; i < allPayloads.length; i += CHUNK_SIZE) {
+                const chunk = allPayloads.slice(i, i + CHUNK_SIZE);
+                const { error } = await supabase
+                    .from('questions')
+                    .upsert(chunk, { onConflict: 'id' });
+                
+                if (error) throw error;
+                console.log(`Chunk ${Math.floor(i/CHUNK_SIZE) + 1} synced...`);
+            }
 
-            if (error) throw error;
-            console.log("Sync to Supabase complete!");
+            console.log("Global Sync complete!");
             return true;
         } catch (e) {
             console.error("Cloud Sync Failed:", e);
