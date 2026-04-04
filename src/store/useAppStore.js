@@ -28,8 +28,13 @@ export const useAppStore = create(
       // --- Cloud Sync (Supabase) ---
       syncToCloud: async () => {
         try {
-            const { useAuthStore } = require('./useAuthStore');
-            if (!useAuthStore.getState().isAdmin()) return;
+            // Get useAuthStore dynamically to avoid circular dependency problems
+            const useAuthStoreModule = await import('./useAuthStore');
+            const authStore = useAuthStoreModule.useAuthStore;
+            if (!authStore.getState().isAdmin()) {
+                console.error("User is not an authorized Admin to push data.");
+                return false;
+            }
 
             const db = get().questionDB;
             const uniquePayload = new Map();
@@ -93,17 +98,9 @@ export const useAppStore = create(
 
       loadInitialData: async () => {
         try {
-            // Priority 1: Supabase Cloud
-            const cloudDB = await get().loadFromCloud();
-            if (cloudDB) {
-                set({ questionDB: { ...get().questionDB, ...cloudDB }, isDataLoaded: true });
-                console.log("Loaded context from Supabase Cloud");
-                return;
-            }
-
-            // Priority 2: Static JSON files
+            // Step 1: Load all Static JSON files first (The massive base database)
             const files = [`/FE_Data_IOT102_Final.json?v=${Date.now()}`, `/FE_Data_SSG104_Final.json?v=${Date.now()}`];
-            const allCleanData = {};
+            const baseDB = {};
 
             for (const file of files) {
                 try {
@@ -112,7 +109,7 @@ export const useAppStore = create(
                     const rawData = await response.json();
                     
                     Object.keys(rawData).forEach(key => {
-                        allCleanData[key] = rawData[key].map(q => {
+                        baseDB[key] = rawData[key].map(q => {
                             const cleaned = formatQuestionText(q.question);
                             return {
                                 ...q,
@@ -126,17 +123,38 @@ export const useAppStore = create(
                     console.warn(`Could not load ${file}:`, err);
                 }
             }
+
+            // Step 2: Fetch Cloud Data (The specific Admin edits)
+            const cloudDB = await get().loadFromCloud();
             
             set(state => {
-                const combined = { ...allCleanData, ...state.questionDB };
-                Object.keys(combined).forEach(k => {
-                    combined[k] = combined[k].map(q => {
-                        const txt = formatQuestionText(q.question);
-                        return { ...q, question: txt, questionTextCleaned: txt };
+                const finalDB = { ...baseDB };
+                
+                // If we have cloud data, merge it into our base
+                if (cloudDB) {
+                    Object.keys(cloudDB).forEach(key => {
+                        if (!finalDB[key]) {
+                            finalDB[key] = cloudDB[key];
+                        } else {
+                            // Merge questions by ID: Cloud versions win
+                            const cloudMap = new Map(cloudDB[key].map(q => [q.id, q]));
+                            finalDB[key] = finalDB[key].map(baseQ => {
+                                return cloudMap.has(baseQ.id) ? cloudMap.get(baseQ.id) : baseQ;
+                            });
+                            // Add any brand new questions from cloud that aren't in base
+                            const baseIds = new Set(finalDB[key].map(q => q.id));
+                            cloudDB[key].forEach(cloudQ => {
+                                if (!baseIds.has(cloudQ.id)) finalDB[key].push(cloudQ);
+                            });
+                        }
                     });
-                });
-                return { questionDB: combined, isDataLoaded: true };
+                }
+
+                return { questionDB: finalDB, isDataLoaded: true };
             });
+            
+            if (cloudDB) console.log("Successfully merged Cloud edits with Base database.");
+            else console.log("Loaded context from original JSON files.");
         } catch (e) {
             console.error("Failed to load initial data:", e);
         }
@@ -214,8 +232,9 @@ export const useAppStore = create(
 
         // Cloud Push
         try {
-            const { useAuthStore } = require('./useAuthStore');
-            if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+            const useAuthStoreModule = await import('./useAuthStore');
+            const authStore = useAuthStoreModule.useAuthStore;
+            if (authStore.getState().isAdmin() && parentKey && localQ) {
                 await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
             }
         } catch(e) {}
@@ -241,8 +260,9 @@ export const useAppStore = create(
 
         // Cloud Push
         try {
-            const { useAuthStore } = require('./useAuthStore');
-            if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+            const useAuthStoreModule = await import('./useAuthStore');
+            const authStore = useAuthStoreModule.useAuthStore;
+            if (authStore.getState().isAdmin() && parentKey && localQ) {
                 await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
             }
         } catch(e) {}
@@ -270,8 +290,9 @@ export const useAppStore = create(
 
           // Cloud Push
           try {
-              const { useAuthStore } = require('./useAuthStore');
-              if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+              const useAuthStoreModule = await import('./useAuthStore');
+              const authStore = useAuthStoreModule.useAuthStore;
+              if (authStore.getState().isAdmin() && parentKey && localQ) {
                   await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
               }
           } catch(e) {}
@@ -287,7 +308,7 @@ export const useAppStore = create(
       setSelectedSubject: (sub) => set({ selectedSubject: sub }),
       setExamSettings: (settings) => set({ examSettings: settings }),
       
-      toggleBookmark: (qId) => {
+      toggleBookmark: async (qId) => {
           const exists = get().bookmarks.some(b => b.id === qId);
           const action = exists ? 'remove' : 'add';
           
@@ -298,13 +319,14 @@ export const useAppStore = create(
 
           // Cloud sync for logged-in users
           try {
-              const { useAuthStore } = require('./useAuthStore');
-              useAuthStore.getState().saveBookmarkToCloud(qId, action);
+              const useAuthStoreModule = await import('./useAuthStore');
+              const authStore = useAuthStoreModule.useAuthStore;
+              authStore.getState().saveBookmarkToCloud(qId, action);
           } catch(e) {}
       },
       isBookmarked: (qId) => get().bookmarks.some(b => b.id === qId),
       
-      saveExamResult: (result) => {
+      saveExamResult: async (result) => {
           const fullResult = { ...result, date: new Date().toISOString(), subject: get().selectedSubject };
           set(state => ({
               examHistory: [...state.examHistory, fullResult]
@@ -312,8 +334,9 @@ export const useAppStore = create(
 
           // Cloud sync for logged-in users
           try {
-              const { useAuthStore } = require('./useAuthStore');
-              useAuthStore.getState().saveExamToCloud(fullResult);
+              const useAuthStoreModule = await import('./useAuthStore');
+              const authStore = useAuthStoreModule.useAuthStore;
+              authStore.getState().saveExamToCloud(fullResult);
           } catch(e) {}
       },
 
