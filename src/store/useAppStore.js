@@ -2,9 +2,12 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
 
+// We import useAuthStore at the TOP level - no dynamic import needed.
+// This is safe because useAuthStore has no dependency on useAppStore.
+import { useAuthStore } from './useAuthStore'
+
 const formatQuestionText = (text) => {
     if (!text) return "";
-    // Remove "Kizspy |" and typical OCR garbage
     let clean = text.replace(/Kizspy\s*\|\s*/gi, '')
                     .replace(/^.*?and\s*[_]+\s*(?:n?swer)?\s*\|?\s*\|?\s*/i, '')
                     .trim();
@@ -24,25 +27,33 @@ const generateHash = (str) => {
 export const useAppStore = create(
   persist(
     (set, get) => ({
-      // --- Data DB ---
+      // ============================================
+      // DATA: Question Database
+      // ============================================
+      questionDB: {},
+      isDataLoaded: false,
+
       // --- Cloud Sync (Supabase) ---
       syncToCloud: async () => {
         try {
-            // Get useAuthStore dynamically to avoid circular dependency problems
-            const useAuthStoreModule = await import('./useAuthStore');
-            const authStore = useAuthStoreModule.useAuthStore;
-            if (!authStore.getState().isAdmin()) {
-                console.error("User is not an authorized Admin to push data.");
+            const isAdmin = useAuthStore.getState().isAdmin();
+            if (!isAdmin) {
+                console.error("syncToCloud: Not an admin. Aborting.");
                 return false;
             }
 
             const db = get().questionDB;
+            if (!db || Object.keys(db).length === 0) {
+                console.warn("syncToCloud: questionDB is empty. Nothing to sync.");
+                return false;
+            }
+
             const uniquePayload = new Map();
             
-            // 1. Deduplicate by ID
             Object.entries(db).forEach(([key, qList]) => {
+                if (!Array.isArray(qList)) return;
                 qList.forEach(q => {
-                    if (q.id) {
+                    if (q && q.id) {
                         uniquePayload.set(q.id.toLowerCase(), {
                             id: q.id,
                             parent_key: key,
@@ -53,24 +64,34 @@ export const useAppStore = create(
             });
 
             const allPayloads = Array.from(uniquePayload.values());
-            console.log(`Syncing ${allPayloads.length} unique questions to cloud...`);
+            console.log(`syncToCloud: Syncing ${allPayloads.length} unique questions...`);
 
-            // 2. Batch processing (100 per request) to prevent 500 errors
+            if (allPayloads.length === 0) {
+                console.warn("syncToCloud: No valid questions found.");
+                return false;
+            }
+
+            // Batch processing (100 per request) to prevent 500 errors
             const CHUNK_SIZE = 100;
+            let successCount = 0;
             for (let i = 0; i < allPayloads.length; i += CHUNK_SIZE) {
                 const chunk = allPayloads.slice(i, i + CHUNK_SIZE);
                 const { error } = await supabase
                     .from('questions')
                     .upsert(chunk, { onConflict: 'id' });
                 
-                if (error) throw error;
-                console.log(`Chunk ${Math.floor(i/CHUNK_SIZE) + 1} synced...`);
+                if (error) {
+                    console.error(`syncToCloud: Chunk ${Math.floor(i/CHUNK_SIZE) + 1} failed:`, error);
+                    throw error;
+                }
+                successCount += chunk.length;
+                console.log(`syncToCloud: ${successCount}/${allPayloads.length} synced...`);
             }
 
-            console.log("Global Sync complete!");
+            console.log("syncToCloud: Complete!");
             return true;
         } catch (e) {
-            console.error("Cloud Sync Failed:", e);
+            console.error("syncToCloud: FAILED:", e.message || e);
             return false;
         }
       },
@@ -91,21 +112,24 @@ export const useAppStore = create(
             });
             return newDB;
         } catch (e) {
-            console.warn("Could not load from Cloud, using local files:", e);
+            console.warn("loadFromCloud: Failed, will use local files:", e.message || e);
             return null;
         }
       },
 
       loadInitialData: async () => {
         try {
-            // Step 1: Load all Static JSON files first (The massive base database)
-            const files = [`/FE_Data_IOT102_Final.json?v=${Date.now()}`, `/FE_Data_SSG104_Final.json?v=${Date.now()}`];
+            // Step 1: Always load static JSON files first (the full base database)
+            const files = [
+                `/FE_Data_IOT102_Final.json?v=${Date.now()}`,
+                `/FE_Data_SSG104_Final.json?v=${Date.now()}`
+            ];
             const baseDB = {};
 
             for (const file of files) {
                 try {
                     const response = await fetch(file);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const rawData = await response.json();
                     
                     Object.keys(rawData).forEach(key => {
@@ -120,50 +144,60 @@ export const useAppStore = create(
                         });
                     });
                 } catch (err) {
-                    console.warn(`Could not load ${file}:`, err);
+                    console.warn(`loadInitialData: Could not load ${file}:`, err.message);
                 }
             }
 
-            // Step 2: Fetch Cloud Data (The specific Admin edits)
-            const cloudDB = await get().loadFromCloud();
+            // Step 2: Try to fetch cloud edits to merge on top
+            let cloudDB = null;
+            try {
+                cloudDB = await get().loadFromCloud();
+            } catch (e) {
+                console.warn("loadInitialData: Cloud load failed, using base only.");
+            }
             
-            set(state => {
-                const finalDB = { ...baseDB };
-                
-                // If we have cloud data, merge it into our base
-                if (cloudDB) {
-                    Object.keys(cloudDB).forEach(key => {
-                        if (!finalDB[key]) {
-                            finalDB[key] = cloudDB[key];
-                        } else {
-                            // Merge questions by ID: Cloud versions win
-                            const cloudMap = new Map(cloudDB[key].map(q => [q.id, q]));
-                            finalDB[key] = finalDB[key].map(baseQ => {
-                                return cloudMap.has(baseQ.id) ? cloudMap.get(baseQ.id) : baseQ;
-                            });
-                            // Add any brand new questions from cloud that aren't in base
-                            const baseIds = new Set(finalDB[key].map(q => q.id));
-                            cloudDB[key].forEach(cloudQ => {
-                                if (!baseIds.has(cloudQ.id)) finalDB[key].push(cloudQ);
-                            });
-                        }
-                    });
-                }
+            // Step 3: Merge - base first, cloud edits override by question ID
+            const finalDB = { ...baseDB };
+            
+            if (cloudDB) {
+                Object.keys(cloudDB).forEach(key => {
+                    if (!finalDB[key]) {
+                        // Entirely new key from cloud
+                        finalDB[key] = cloudDB[key];
+                    } else {
+                        // Merge: cloud versions win for matching IDs
+                        const cloudMap = new Map(cloudDB[key].map(q => [q.id, q]));
+                        finalDB[key] = finalDB[key].map(baseQ => {
+                            return cloudMap.has(baseQ.id) ? cloudMap.get(baseQ.id) : baseQ;
+                        });
+                        // Add new questions from cloud that aren't in base
+                        const baseIds = new Set(finalDB[key].map(q => q.id));
+                        cloudDB[key].forEach(cloudQ => {
+                            if (!baseIds.has(cloudQ.id)) finalDB[key].push(cloudQ);
+                        });
+                    }
+                });
+                console.log("loadInitialData: Merged cloud edits with base database.");
+            } else {
+                console.log("loadInitialData: Using base JSON files only.");
+            }
 
-                return { questionDB: finalDB, isDataLoaded: true };
-            });
-            
-            if (cloudDB) console.log("Successfully merged Cloud edits with Base database.");
-            else console.log("Loaded context from original JSON files.");
+            set({ questionDB: finalDB, isDataLoaded: true });
         } catch (e) {
-            console.error("Failed to load initial data:", e);
+            console.error("loadInitialData: FAILED:", e);
+            // Fallback: at least mark as loaded so UI doesn't hang
+            set({ isDataLoaded: true });
         }
       },
 
-      // --- Selectors for Data ---
+      // ============================================
+      // SELECTORS: Data Access
+      // ============================================
       getUniqueSubjects: () => {
           const subjects = new Set();
-          Object.keys(get().questionDB).forEach(k => {
+          const db = get().questionDB;
+          if (!db) return [];
+          Object.keys(db).forEach(k => {
               const match = k.match(/^([a-z]{3}\d{3})/i);
               const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase();
               if (base) subjects.add(base);
@@ -176,7 +210,7 @@ export const useAppStore = create(
               const match = k.match(/^([a-z]{3}\d{3})/i);
               const base = match ? match[1].toUpperCase() : k.split('-')[0].trim().toUpperCase();
               if (base === subjectPrefix.toUpperCase()) {
-                  terms.add(k); // We now keep the full original key as the "semester" indentifier
+                  terms.add(k);
               }
           });
           return Array.from(terms);
@@ -204,14 +238,15 @@ export const useAppStore = create(
         const q = get().getQuestionById(id);
         if(!q) return ['A'];
         if(q.answer) {
-            // Robust join if array, then split by comma
             const ansRaw = Array.isArray(q.answer) ? q.answer.join(',') : q.answer;
             if (ansRaw) return ansRaw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
         }
-        return ['A']; // Fallback like vanilla
+        return ['A'];
       },
       
-      // --- Admin / Editors ---
+      // ============================================
+      // ADMIN: Edit Operations
+      // ============================================
       updateQuestion: async (qId, newText) => {
         let parentKey = null;
         let localQ = null;
@@ -230,14 +265,12 @@ export const useAppStore = create(
             return { questionDB: db };
         });
 
-        // Cloud Push
-        try {
-            const useAuthStoreModule = await import('./useAuthStore');
-            const authStore = useAuthStoreModule.useAuthStore;
-            if (authStore.getState().isAdmin() && parentKey && localQ) {
+        // Cloud Push for admin
+        if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+            try {
                 await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-            }
-        } catch(e) {}
+            } catch(e) { console.warn("Cloud push failed for updateQuestion:", e); }
+        }
       },
       updateAnswer: async (qId, newAnswer) => {
         let parentKey = null;
@@ -258,14 +291,11 @@ export const useAppStore = create(
             return { questionDB: db };
         });
 
-        // Cloud Push
-        try {
-            const useAuthStoreModule = await import('./useAuthStore');
-            const authStore = useAuthStoreModule.useAuthStore;
-            if (authStore.getState().isAdmin() && parentKey && localQ) {
+        if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+            try {
                 await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-            }
-        } catch(e) {}
+            } catch(e) { console.warn("Cloud push failed for updateAnswer:", e); }
+        }
       },
       updateOption: async (qId, optKey, newText) => {
           let parentKey = null;
@@ -288,17 +318,16 @@ export const useAppStore = create(
               return { questionDB: db };
           });
 
-          // Cloud Push
-          try {
-              const useAuthStoreModule = await import('./useAuthStore');
-              const authStore = useAuthStoreModule.useAuthStore;
-              if (authStore.getState().isAdmin() && parentKey && localQ) {
+          if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+              try {
                   await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-              }
-          } catch(e) {}
+              } catch(e) { console.warn("Cloud push failed for updateOption:", e); }
+          }
       },
 
-      // --- User State ---
+      // ============================================
+      // USER STATE
+      // ============================================
       selectedSubject: null,
       examSettings: { timeLimit: 30, questionCount: 40 },
       bookmarks: [],
@@ -308,7 +337,7 @@ export const useAppStore = create(
       setSelectedSubject: (sub) => set({ selectedSubject: sub }),
       setExamSettings: (settings) => set({ examSettings: settings }),
       
-      toggleBookmark: async (qId) => {
+      toggleBookmark: (qId) => {
           const exists = get().bookmarks.some(b => b.id === qId);
           const action = exists ? 'remove' : 'add';
           
@@ -317,26 +346,22 @@ export const useAppStore = create(
               return { bookmarks: [...state.bookmarks, { id: qId, date: new Date().toISOString() }] };
           });
 
-          // Cloud sync for logged-in users
+          // Cloud sync for logged-in users (fire and forget)
           try {
-              const useAuthStoreModule = await import('./useAuthStore');
-              const authStore = useAuthStoreModule.useAuthStore;
-              authStore.getState().saveBookmarkToCloud(qId, action);
+              useAuthStore.getState().saveBookmarkToCloud(qId, action);
           } catch(e) {}
       },
       isBookmarked: (qId) => get().bookmarks.some(b => b.id === qId),
       
-      saveExamResult: async (result) => {
+      saveExamResult: (result) => {
           const fullResult = { ...result, date: new Date().toISOString(), subject: get().selectedSubject };
           set(state => ({
               examHistory: [...state.examHistory, fullResult]
           }));
 
-          // Cloud sync for logged-in users
+          // Cloud sync for logged-in users (fire and forget)
           try {
-              const useAuthStoreModule = await import('./useAuthStore');
-              const authStore = useAuthStoreModule.useAuthStore;
-              authStore.getState().saveExamToCloud(fullResult);
+              useAuthStore.getState().saveExamToCloud(fullResult);
           } catch(e) {}
       },
 
@@ -347,8 +372,10 @@ export const useAppStore = create(
       }),
       isSubjectLocked: (subject) => get().lockedSubjects.includes(subject),
 
-      // --- Active Exam / Session State ---
-      activeSession: null, // { mode: 'exam' | 'practice' | 'study', questions: [], answers: {}, currentIndex: 0, timeSpent: 0 }
+      // ============================================
+      // EXAM SESSION STATE
+      // ============================================
+      activeSession: null,
       startSession: (mode, questions) => set({
           activeSession: { mode, questions, answers: {}, currentIndex: 0, timeSpent: 0 }
       }),
@@ -367,15 +394,12 @@ export const useAppStore = create(
           if (ans === "LOCKED") {
               nextAns = currAns || " ";
           } else if (corrects.length > 1 || currParts.length > 1 || (currParts.length === 1 && currParts[0] !== ans && corrects.some(c => c === ans && c !== currParts[0]))) {
-              // Be more permissive with toggling:
-              // If it's officially multi-choice, OR if user already has >1 selected, OR if they are clicking a second valid-looking choice
               if (currParts.includes(ans)) {
                   nextAns = currParts.filter(p => p !== ans).sort().join(',');
               } else {
                   nextAns = [...currParts, ans].sort().join(',');
               }
           } else {
-              // Single choice behavior: overwrite
               nextAns = ans;
           }
 
