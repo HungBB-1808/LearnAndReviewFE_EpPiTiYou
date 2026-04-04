@@ -1,5 +1,5 @@
+import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
 import { MainLayout } from './components/layout/MainLayout'
 import { SubjectSelection } from './pages/SubjectSelection'
 import { ModeSelection } from './pages/ModeSelection'
@@ -10,8 +10,37 @@ import { ExamResult } from './pages/ExamResult'
 import { ExamHistory } from './pages/ExamHistory'
 import { Bookmarks } from './pages/Bookmarks'
 import { AdminDashboard } from './pages/AdminDashboard'
+import { LoginPage } from './pages/LoginPage'
+import { useAuthStore } from './store/useAuthStore'
 
 function App() {
+  const { user, isGuest, isLoading, initialize } = useAuthStore()
+
+  useEffect(() => {
+    initialize()
+  }, [initialize])
+
+  // Show a centered spinner while checking auth state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <p className="text-on-surface-variant text-sm font-medium animate-pulse">Loading EduFU...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If not logged in AND not a guest, show the Login page
+  if (!user && !isGuest) {
+    return (
+      <HashRouter>
+        <LoginPage />
+      </HashRouter>
+    )
+  }
+
   return (
     <HashRouter>
       <Routes>

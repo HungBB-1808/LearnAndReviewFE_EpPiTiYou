@@ -27,8 +27,10 @@ export const useAppStore = create(
       // --- Data DB ---
       // --- Cloud Sync (Supabase) ---
       syncToCloud: async () => {
-        if (!get().isAdmin) return;
         try {
+            const { useAuthStore } = require('./useAuthStore');
+            if (!useAuthStore.getState().isAdmin()) return;
+
             const db = get().questionDB;
             const uniquePayload = new Map();
             
@@ -211,9 +213,12 @@ export const useAppStore = create(
         });
 
         // Cloud Push
-        if (get().isAdmin && parentKey && localQ) {
-            await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-        }
+        try {
+            const { useAuthStore } = require('./useAuthStore');
+            if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+                await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+            }
+        } catch(e) {}
       },
       updateAnswer: async (qId, newAnswer) => {
         let parentKey = null;
@@ -235,9 +240,12 @@ export const useAppStore = create(
         });
 
         // Cloud Push
-        if (get().isAdmin && parentKey && localQ) {
-            await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-        }
+        try {
+            const { useAuthStore } = require('./useAuthStore');
+            if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+                await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+            }
+        } catch(e) {}
       },
       updateOption: async (qId, optKey, newText) => {
           let parentKey = null;
@@ -261,33 +269,53 @@ export const useAppStore = create(
           });
 
           // Cloud Push
-          if (get().isAdmin && parentKey && localQ) {
-              await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
-          }
+          try {
+              const { useAuthStore } = require('./useAuthStore');
+              if (useAuthStore.getState().isAdmin() && parentKey && localQ) {
+                  await supabase.from('questions').upsert({ id: qId, parent_key: parentKey, content: localQ });
+              }
+          } catch(e) {}
       },
 
       // --- User State ---
       selectedSubject: null,
-      isAdmin: false,
       examSettings: { timeLimit: 30, questionCount: 40 },
       bookmarks: [],
       examHistory: [],
       lockedSubjects: [],
 
       setSelectedSubject: (sub) => set({ selectedSubject: sub }),
-      setIsAdmin: (val) => set({ isAdmin: val }),
       setExamSettings: (settings) => set({ examSettings: settings }),
       
-      toggleBookmark: (qId) => set(state => {
-          const exists = state.bookmarks.some(b => b.id === qId);
-          if (exists) return { bookmarks: state.bookmarks.filter(b => b.id !== qId) };
-          return { bookmarks: [...state.bookmarks, { id: qId, date: new Date().toISOString() }] };
-      }),
+      toggleBookmark: (qId) => {
+          const exists = get().bookmarks.some(b => b.id === qId);
+          const action = exists ? 'remove' : 'add';
+          
+          set(state => {
+              if (exists) return { bookmarks: state.bookmarks.filter(b => b.id !== qId) };
+              return { bookmarks: [...state.bookmarks, { id: qId, date: new Date().toISOString() }] };
+          });
+
+          // Cloud sync for logged-in users
+          try {
+              const { useAuthStore } = require('./useAuthStore');
+              useAuthStore.getState().saveBookmarkToCloud(qId, action);
+          } catch(e) {}
+      },
       isBookmarked: (qId) => get().bookmarks.some(b => b.id === qId),
       
-      saveExamResult: (result) => set(state => ({
-          examHistory: [...state.examHistory, { ...result, date: new Date().toISOString(), subject: state.selectedSubject }]
-      })),
+      saveExamResult: (result) => {
+          const fullResult = { ...result, date: new Date().toISOString(), subject: get().selectedSubject };
+          set(state => ({
+              examHistory: [...state.examHistory, fullResult]
+          }));
+
+          // Cloud sync for logged-in users
+          try {
+              const { useAuthStore } = require('./useAuthStore');
+              useAuthStore.getState().saveExamToCloud(fullResult);
+          } catch(e) {}
+      },
 
       toggleSubjectLock: (subject) => set(state => {
           const lk = [...state.lockedSubjects];
@@ -338,28 +366,20 @@ export const useAppStore = create(
       updateSessionTime: (time) => set(state => ({
           activeSession: { ...state.activeSession, timeSpent: time }
       })),
-      clearSession: () => set({ activeSession: null }),
-      userLogout: () => set(state => ({
-          bookmarks: [],
-          examHistory: [],
-          activeSession: null,
-          isAdmin: false,
-          selectedSubject: null
-      }))
+      clearSession: () => set({ activeSession: null })
 
     }),
     {
       name: 'edufu-storage',
       partialize: (state) => ({ 
           selectedSubject: state.selectedSubject,
-          isAdmin: state.isAdmin,
           examSettings: state.examSettings,
           bookmarks: state.bookmarks,
           examHistory: state.examHistory,
           lockedSubjects: state.lockedSubjects,
           questionDB: state.questionDB,
           isDataLoaded: state.isDataLoaded,
-          activeSession: state.activeSession // so if they refresh during exam, it persists!
+          activeSession: state.activeSession
       }),
     }
   )

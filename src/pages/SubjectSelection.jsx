@@ -83,17 +83,6 @@ export const SubjectSelection = () => {
                     )
                 })}
 
-                <div 
-                    onClick={() => navigate('/admin')}
-                    className="glass-card rounded-xl p-8 flex flex-col h-[320px] relative overflow-hidden group border-dashed border-white/20 hover:bg-white/5 cursor-pointer flex items-center justify-center transition-all hover:scale-[1.02]"
-                >
-                    <div className="m-auto flex flex-col items-center gap-4 text-center pointer-events-none">
-                        <div className="w-16 h-16 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <span className="material-symbols-outlined text-white/40">add</span>
-                        </div>
-                        <p className="text-white/40 font-bold">Request / Add Subject</p>
-                    </div>
-                </div>
             </div>
         </motion.div>
     )

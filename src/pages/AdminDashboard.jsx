@@ -1,19 +1,16 @@
 import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
+import { useAuthStore } from '../store/useAuthStore'
 import { useNavigate } from 'react-router-dom'
 
 export const AdminDashboard = () => {
-    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, updateOption, getCorrectAnswerFor, isAdmin, setIsAdmin, toggleSubjectLock, isSubjectLocked } = useAppStore()
+    const { questionDB, isDataLoaded, updateQuestion, updateAnswer, updateOption, getCorrectAnswerFor, toggleSubjectLock, isSubjectLocked } = useAppStore()
+    const { isAdmin, signOut, getDisplayName } = useAuthStore()
     const navigate = useNavigate()
     const [filterSubject, setFilterSubject] = useState('ALL')
     const [filterKey, setFilterKey] = useState('ALL')
     const [searchTerm, setSearchTerm] = useState('')
-    
-    // Login State
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [loginError, setLoginError] = useState('')
 
     // Edit Modal State
     const [editingQ, setEditingQ] = useState(null)
@@ -76,15 +73,7 @@ export const AdminDashboard = () => {
         setEditingQ(null)
     }
 
-    const handleLogin = (e) => {
-        e.preventDefault()
-        if (username === 'HungBB' && password === '091104Hb@') {
-            setIsAdmin(true)
-            setLoginError('')
-        } else {
-            setLoginError('Invalid Administrator credentials')
-        }
-    }
+    // Admin access is now controlled by Supabase Auth + email whitelist
 
     const handleExport = () => {
         const dataStr = JSON.stringify(questionDB, null, 2)
@@ -118,36 +107,24 @@ export const AdminDashboard = () => {
         reader.readAsText(file)
     }
 
-    if (!isAdmin) {
+    if (!isAdmin()) {
         return (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-10 h-full flex items-center justify-center relative">
                 <div className="glass-panel p-10 rounded-[2rem] w-full max-w-md border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] relative overflow-hidden ring-1 ring-white/5">
                     <div className="absolute top-0 right-0 w-48 h-48 bg-error/10 blur-3xl rounded-full pointer-events-none"></div>
                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/10 blur-3xl rounded-full pointer-events-none"></div>
                     
-                    <div className="text-center mb-10 relative z-10">
+                    <div className="text-center relative z-10">
                         <div className="w-20 h-20 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-6 border border-error/20 shadow-[0_0_20px_rgba(255,110,132,0.15)] relative isolate">
                             <div className="absolute inset-0 rounded-full bg-error/20 blur-xl -z-10"></div>
-                            <span className="material-symbols-outlined text-4xl">admin_panel_settings</span>
+                            <span className="material-symbols-outlined text-4xl">shield_lock</span>
                         </div>
-                        <h2 className="text-3xl font-black text-white tracking-tight">Access Portal</h2>
-                        <p className="text-on-surface-variant text-sm mt-2 font-medium">Restricted Area. Authorized personnel only.</p>
-                    </div>
-
-                    <form onSubmit={handleLogin} className="space-y-5 relative z-10">
-                        {loginError && <p className="text-error text-xs font-bold text-center bg-error/10 py-3 rounded-xl border border-error/20 uppercase tracking-widest">{loginError}</p>}
-                        <div>
-                            <label className="text-xs uppercase tracking-widest text-primary font-bold mb-2 block ml-2">Username</label>
-                            <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-surface-container/50 border border-white/5 hover:border-white/20 rounded-2xl p-4 text-white placeholder-white/20 focus:ring-2 focus:ring-primary/50 outline-none transition-all" placeholder="Enter admin ID" required />
-                        </div>
-                        <div>
-                            <label className="text-xs uppercase tracking-widest text-primary font-bold mb-2 block ml-2">Password</label>
-                            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-surface-container/50 border border-white/5 hover:border-white/20 rounded-2xl p-4 text-white placeholder-white/20 focus:ring-2 focus:ring-primary/50 outline-none transition-all" placeholder="••••••••" required />
-                        </div>
-                        <button type="submit" className="w-full py-4 mt-8 bg-gradient-to-r from-error to-error-dim text-white font-black uppercase tracking-widest text-sm rounded-2xl hover:scale-[1.02] shadow-[0_10px_20px_rgba(255,110,132,0.3)] transition-all flex items-center justify-center gap-3">
-                            <span className="material-symbols-outlined text-sm">lock_open</span> Authenticate
+                        <h2 className="text-3xl font-black text-white tracking-tight mb-2">Access Denied</h2>
+                        <p className="text-on-surface-variant text-sm font-medium mb-8">This area is restricted to authorized administrators only. Your Google account is not on the admin whitelist.</p>
+                        <button onClick={() => navigate('/subjects')} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-2xl transition-all">
+                            Back to Learning
                         </button>
-                    </form>
+                    </div>
                 </div>
             </motion.div>
         )
@@ -186,9 +163,9 @@ export const AdminDashboard = () => {
                             <input type="file" className="hidden" accept=".json" onChange={handleImport} />
                         </label>
                     </div>
-                    <div className="glass-panel px-6 py-3 rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-error/10 hover:border-error/30 transition-all border border-transparent" onClick={() => { setIsAdmin(false); navigate('/subjects') }}>
-                        <span className="text-sm font-bold text-white group-hover:text-error transition-colors uppercase tracking-widest">Logout Admin</span>
-                        <span className="material-symbols-outlined text-error">logout</span>
+                    <div className="glass-panel px-6 py-3 rounded-xl flex items-center gap-4 group cursor-pointer hover:bg-error/10 hover:border-error/30 transition-all border border-transparent" onClick={() => navigate('/subjects')}>
+                        <span className="text-sm font-bold text-white group-hover:text-error transition-colors uppercase tracking-widest">Back to Portal</span>
+                        <span className="material-symbols-outlined text-error">arrow_back</span>
                     </div>
                 </div>
             </header>
