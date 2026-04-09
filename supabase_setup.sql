@@ -42,6 +42,13 @@ create table if not exists bookmarks (
   unique(user_id, question_id)
 );
 
+-- 5. App Settings Table (global admin settings like locked subjects)
+create table if not exists app_settings (
+  key text primary key,
+  value jsonb not null,
+  updated_at timestamp with time zone default now()
+);
+
 -- =============================================
 -- Row Level Security Policies
 -- =============================================
@@ -77,3 +84,8 @@ create policy "Users can delete own bookmarks" on bookmarks for delete using (au
 create index if not exists idx_questions_parent_key on questions(parent_key);
 create index if not exists idx_exam_history_user on exam_history(user_id);
 create index if not exists idx_bookmarks_user on bookmarks(user_id);
+
+-- App Settings: Everyone can read, only authenticated users can write
+alter table app_settings enable row level security;
+create policy "Anyone can read settings" on app_settings for select using (true);
+create policy "Authenticated users can modify settings" on app_settings for all using (auth.role() = 'authenticated');

@@ -162,15 +162,12 @@ export const useAppStore = create(
             if (cloudDB) {
                 Object.keys(cloudDB).forEach(key => {
                     if (!finalDB[key]) {
-                        // Entirely new key from cloud
                         finalDB[key] = cloudDB[key];
                     } else {
-                        // Merge: cloud versions win for matching IDs
                         const cloudMap = new Map(cloudDB[key].map(q => [q.id, q]));
                         finalDB[key] = finalDB[key].map(baseQ => {
                             return cloudMap.has(baseQ.id) ? cloudMap.get(baseQ.id) : baseQ;
                         });
-                        // Add new questions from cloud that aren't in base
                         const baseIds = new Set(finalDB[key].map(q => q.id));
                         cloudDB[key].forEach(cloudQ => {
                             if (!baseIds.has(cloudQ.id)) finalDB[key].push(cloudQ);
@@ -182,10 +179,24 @@ export const useAppStore = create(
                 console.log("loadInitialData: Using base JSON files only.");
             }
 
+            // Step 4: Load locked subjects from cloud (global admin setting)
+            try {
+                const { data } = await supabase
+                    .from('app_settings')
+                    .select('value')
+                    .eq('key', 'locked_subjects')
+                    .single();
+                if (data && data.value) {
+                    set({ lockedSubjects: data.value });
+                    console.log("loadInitialData: Loaded locked subjects from cloud:", data.value);
+                }
+            } catch (e) {
+                console.warn("loadInitialData: Could not load locked subjects from cloud.");
+            }
+
             set({ questionDB: finalDB, isDataLoaded: true });
         } catch (e) {
             console.error("loadInitialData: FAILED:", e);
-            // Fallback: at least mark as loaded so UI doesn't hang
             set({ isDataLoaded: true });
         }
       },
@@ -365,11 +376,27 @@ export const useAppStore = create(
           } catch(e) {}
       },
 
-      toggleSubjectLock: (subject) => set(state => {
-          const lk = [...state.lockedSubjects];
-          if(lk.includes(subject)) return { lockedSubjects: lk.filter(s => s !== subject) };
-          return { lockedSubjects: [...lk, subject] };
-      }),
+      toggleSubjectLock: async (subject) => {
+          const lk = [...get().lockedSubjects];
+          let newLocked;
+          if (lk.includes(subject)) {
+              newLocked = lk.filter(s => s !== subject);
+          } else {
+              newLocked = [...lk, subject];
+          }
+          set({ lockedSubjects: newLocked });
+
+          // Persist to Supabase cloud so ALL users see the lock status
+          try {
+              await supabase.from('app_settings').upsert(
+                  { key: 'locked_subjects', value: newLocked },
+                  { onConflict: 'key' }
+              );
+              console.log('toggleSubjectLock: Saved to cloud:', newLocked);
+          } catch (e) {
+              console.warn('toggleSubjectLock: Cloud save failed:', e);
+          }
+      },
       isSubjectLocked: (subject) => get().lockedSubjects.includes(subject),
 
       // ============================================

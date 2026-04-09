@@ -83,8 +83,20 @@ export const useAuthStore = create((set, get) => ({
   signOut: async () => {
     await supabase.auth.signOut()
     set({ user: null, profile: null, isGuest: false })
-    // Clear local storage for guest-like clean state
-    localStorage.removeItem('edufu-storage')
+    // Clear user-specific data but preserve admin settings (like lockedSubjects)
+    try {
+      const stored = JSON.parse(localStorage.getItem('edufu-storage') || '{}')
+      if (stored.state) {
+        // Keep lockedSubjects and questionDB, clear personal data
+        stored.state.bookmarks = []
+        stored.state.examHistory = []
+        stored.state.activeSession = null
+        stored.state.selectedSubject = null
+        localStorage.setItem('edufu-storage', JSON.stringify(stored))
+      }
+    } catch(e) {
+      localStorage.removeItem('edufu-storage')
+    }
     window.location.reload()
   },
 
