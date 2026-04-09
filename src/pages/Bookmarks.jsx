@@ -123,15 +123,36 @@ export const Bookmarks = () => {
                                                 
                                                 <h4 className="text-lg font-bold text-white mb-6 pr-12 leading-relaxed">{q.questionTextCleaned || q.question}</h4>
                                                 
-                                                <div className="mt-auto p-5 rounded-xl bg-white/5 border border-white/5 flex items-start gap-4">
-                                                    <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-green-400 text-[14px]">done_all</span>
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-1">Correct Answer</p>
-                                                        {corrects.map(c => (
-                                                            <p key={c} className="text-sm font-bold text-green-400/90">{c}. {q.options[c]}</p>
-                                                        ))}
+                                                <div className="mt-auto space-y-2">
+                                                    <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">All Options</p>
+                                                    <div className="grid gap-2">
+                                                        {q.options && Object.entries(q.options).sort(([a],[b]) => a.localeCompare(b)).map(([key, value]) => {
+                                                            const isCorrect = corrects.includes(key.toUpperCase())
+                                                            return (
+                                                                <div 
+                                                                    key={key}
+                                                                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                                                                        isCorrect 
+                                                                        ? 'bg-green-500/10 border-green-500/30' 
+                                                                        : 'bg-white/[0.02] border-white/5'
+                                                                    }`}
+                                                                >
+                                                                    <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
+                                                                        isCorrect 
+                                                                        ? 'bg-green-500/20 text-green-400' 
+                                                                        : 'bg-white/5 text-white/40'
+                                                                    }`}>
+                                                                        {key.toUpperCase()}
+                                                                    </span>
+                                                                    <span className={`text-sm ${isCorrect ? 'font-bold text-green-400' : 'text-white/60'}`}>
+                                                                        {value}
+                                                                    </span>
+                                                                    {isCorrect && (
+                                                                        <span className="material-symbols-outlined text-green-400 text-[16px] ml-auto" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        })}
                                                     </div>
                                                 </div>
                                             </motion.div>
