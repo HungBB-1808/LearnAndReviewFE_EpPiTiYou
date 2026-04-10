@@ -343,6 +343,8 @@ export const useAppStore = create(
       examSettings: { timeLimit: 30, questionCount: 40 },
       bookmarks: [],
       examHistory: [],
+      language: 'en',
+      setLanguage: (lang) => set({ language: lang }),
       lockedSubjects: [],
 
       setSelectedSubject: (sub) => set({ selectedSubject: sub }),
@@ -453,7 +455,8 @@ export const useAppStore = create(
           lockedSubjects: state.lockedSubjects,
           questionDB: state.questionDB,
           isDataLoaded: state.isDataLoaded,
-          activeSession: state.activeSession
+          activeSession: state.activeSession,
+          language: state.language
       }),
     }
   )

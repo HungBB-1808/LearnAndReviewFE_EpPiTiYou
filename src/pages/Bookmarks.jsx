@@ -12,7 +12,6 @@ const translations = {
         all: 'All',
         review: 'Review',
         allOptions: 'All Options',
-        language: 'Language',
     },
     vi: {
         title: 'Câu Hỏi Đã Lưu',
@@ -22,22 +21,15 @@ const translations = {
         all: 'Tất cả',
         review: 'Ôn tập',
         allOptions: 'Tất Cả Đáp Án',
-        language: 'Ngôn ngữ',
     }
 }
 
 export const Bookmarks = () => {
-    const { bookmarks, questionDB, toggleBookmark, getCorrectAnswerFor, startSession } = useAppStore()
+    const { bookmarks, questionDB, toggleBookmark, getCorrectAnswerFor, startSession, language } = useAppStore()
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('ALL')
-    const [lang, setLang] = useState(() => localStorage.getItem('edufu-lang') || 'en')
 
-    const t = translations[lang]
-
-    const handleLangChange = (newLang) => {
-        setLang(newLang)
-        localStorage.setItem('edufu-lang', newLang)
-    }
+    const t = translations[language] || translations.en
 
     // Find and group questions from DB
     const subjects = useMemo(() => {
@@ -79,30 +71,6 @@ export const Bookmarks = () => {
                         {t.title}
                     </h2>
                     <p className="text-on-surface-variant max-w-md">{t.subtitle}</p>
-                </div>
-
-                {/* Language Toggle */}
-                <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
-                    <button
-                        onClick={() => handleLangChange('en')}
-                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-                            lang === 'en' 
-                            ? 'bg-primary text-black shadow-[0_6px_16px_rgba(0,188,212,0.3)]' 
-                            : 'text-white/40 hover:text-white'
-                        }`}
-                    >
-                        🇺🇸 EN
-                    </button>
-                    <button
-                        onClick={() => handleLangChange('vi')}
-                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-                            lang === 'vi' 
-                            ? 'bg-primary text-black shadow-[0_6px_16px_rgba(0,188,212,0.3)]' 
-                            : 'text-white/40 hover:text-white'
-                        }`}
-                    >
-                        🇻🇳 VI
-                    </button>
                 </div>
             </div>
 
