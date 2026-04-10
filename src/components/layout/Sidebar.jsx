@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
 import { useAuthStore } from '../../store/useAuthStore'
+import { getTranslations } from '../../lib/translations'
 import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
@@ -9,6 +10,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
   const { pathname } = useLocation()
   const { user, isGuest, getDisplayName, getAvatarUrl, isAdmin } = useAuthStore()
   const { language, setLanguage } = useAppStore()
+  const t = getTranslations(language)
   const avatarUrl = getAvatarUrl()
   const displayName = getDisplayName()
   
@@ -18,9 +20,9 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
   }, [pathname, setIsOpen])
 
   const links = [
-    { to: "/subjects", icon: "book", label: "Subjects" },
-    { to: "/history", icon: "history", label: "Exam History" },
-    { to: "/bookmarks", icon: "bookmark", label: "Bookmarks" },
+    { to: "/subjects", icon: "book", label: t.sidebar.subjects },
+    { to: "/history", icon: "history", label: t.sidebar.examHistory },
+    { to: "/bookmarks", icon: "bookmark", label: t.sidebar.bookmarks },
   ]
 
   const isActive = (path) => pathname.startsWith(path)
@@ -62,7 +64,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
 
         {/* Language Toggle */}
         <div className="my-6 px-2">
-            <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 px-4">Language</p>
+            <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 px-4">{t.sidebar.language}</p>
             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                 <button
                     onClick={() => setLanguage('en')}
@@ -97,7 +99,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
             )}>
                 {isActive("/admin") && <motion.div layoutId="activeNav" className="absolute left-0 w-1 h-8 rounded-r bg-error"></motion.div>}
                 <span className="material-symbols-outlined transition-colors">admin_panel_settings</span>
-                Admin Access
+                {t.sidebar.adminAccess}
             </Link>
           </>
         )}
@@ -119,7 +121,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
             <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate">{displayName}</p>
                 <p className={`text-[10px] truncate uppercase tracking-widest font-black transition-colors ${isAdmin() ? 'text-error' : isGuest ? 'text-yellow-400/80' : 'text-on-surface-variant'}`}>
-                    {isAdmin() ? 'Administrator' : isGuest ? 'Guest Mode' : 'Student'}
+                    {isAdmin() ? t.sidebar.administrator : isGuest ? t.sidebar.guestMode : t.sidebar.student}
                 </p>
             </div>
         </div>

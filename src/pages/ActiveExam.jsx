@@ -2,10 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
+import { getTranslations } from '../lib/translations'
 
 export const ActiveExam = () => {
-    const { activeSession, selectedSubject, updateSessionIndex, updateSessionAnswer, updateSessionTime, examSettings, getCorrectAnswerFor, saveExamResult } = useAppStore()
+    const { activeSession, selectedSubject, updateSessionIndex, updateSessionAnswer, updateSessionTime, examSettings, getCorrectAnswerFor, saveExamResult, language } = useAppStore()
     const navigate = useNavigate()
+    const t = getTranslations(language)
     const [timeLeft, setTimeLeft] = useState(examSettings.timeLimit * 60)
     const timerRef = useRef()
     const sessionStartRef = useRef(Date.now())
@@ -166,9 +168,9 @@ export const ActiveExam = () => {
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="w-2 h-2 rounded-full bg-error animate-pulse"></span>
-                                <span className="text-[10px] text-error font-black uppercase tracking-widest">Live Exam Session</span>
+                                <span className="text-[10px] text-error font-black uppercase tracking-widest">{t.exam.liveExam}</span>
                             </div>
-                            <h2 className="text-3xl font-bold text-white tracking-tight">{selectedSubject} Mock Exam</h2>
+                            <h2 className="text-3xl font-bold text-white tracking-tight">{selectedSubject} {t.exam.mockExam}</h2>
                         </div>
                         <div className={`px-6 py-3 rounded-2xl border ${isWarning ? 'bg-error/20 border-error/50 text-error animate-pulse' : 'bg-surface-container-highest border-white/10 text-white'} flex items-center gap-3 backdrop-blur-md`}>
                             <span className="material-symbols-outlined">{isWarning ? 'warning' : 'schedule'}</span>
@@ -221,9 +223,9 @@ export const ActiveExam = () => {
                             disabled={currentIndex === 0} 
                             className="px-8 py-4 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            <span className="material-symbols-outlined text-sm">arrow_back</span> Previous
+                            <span className="material-symbols-outlined text-sm">arrow_back</span> {t.exam.previous}
                         </button>
-                        <p className="text-sm font-medium text-on-surface-variant">Question {currentIndex + 1} of {questions.length}</p>
+                        <p className="text-sm font-medium text-on-surface-variant">{t.exam.questionOf(currentIndex + 1, questions.length)}</p>
                         <button 
                             onClick={() => {
                                 if (currentIndex < questions.length - 1) updateSessionIndex(currentIndex + 1)
@@ -231,7 +233,7 @@ export const ActiveExam = () => {
                             }} 
                             className="px-8 py-4 rounded-full bg-error hover:bg-error-dim text-white font-black shadow-[0_10px_20px_rgba(255,110,132,0.3)] transition-all flex items-center gap-2 active:scale-95"
                         >
-                            {currentIndex === questions.length - 1 ? 'Finish Exam' : 'Next Question'}
+                            {currentIndex === questions.length - 1 ? t.exam.finishExam : t.exam.nextQuestion}
                             {currentIndex !== questions.length - 1 && <span className="material-symbols-outlined text-sm">arrow_forward</span>}
                         </button>
                     </footer>
@@ -240,8 +242,8 @@ export const ActiveExam = () => {
 
             <aside className="w-80 bg-surface-container/80 backdrop-blur-xl border-l border-white/5 p-6 flex flex-col h-full z-20 shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
                 <div className="mb-6 flex justify-between items-center">
-                    <h3 className="text-white font-bold tracking-tight">Question Navigator</h3>
-                    <span className="text-[10px] font-black uppercase text-on-surface-variant bg-white/5 px-2 py-1 rounded">Grid View</span>
+                    <h3 className="text-white font-bold tracking-tight">{t.exam.questionNav}</h3>
+                    <span className="text-[10px] font-black uppercase text-on-surface-variant bg-white/5 px-2 py-1 rounded">{t.exam.gridView}</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2 overflow-y-auto custom-scrollbar pr-2 flex-1 content-start">
                     {questions.map((_, i) => {
@@ -264,15 +266,15 @@ export const ActiveExam = () => {
                 </div>
                 <div className="mt-6 pt-6 border-t border-white/5 space-y-4">
                     <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 text-on-surface-variant"><div className="w-3 h-3 rounded-full bg-error/20 border border-error/20"></div> Answered</div>
+                        <div className="flex items-center gap-2 text-on-surface-variant"><div className="w-3 h-3 rounded-full bg-error/20 border border-error/20"></div> {t.exam.answered}</div>
                         <span className="font-bold text-white">{Object.keys(activeSession.answers).length}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 text-on-surface-variant"><div className="w-3 h-3 rounded-full bg-surface-container-highest border border-white/5"></div> Unanswered</div>
+                        <div className="flex items-center gap-2 text-on-surface-variant"><div className="w-3 h-3 rounded-full bg-surface-container-highest border border-white/5"></div> {t.exam.unanswered}</div>
                         <span className="font-bold text-white">{questions.length - Object.keys(activeSession.answers).length}</span>
                     </div>
-                    <button onClick={() => { if(window.confirm('Submitting early! Are you sure?')) handleSubmit() }} className="w-full py-4 mt-4 rounded-xl border border-error/30 text-error font-bold hover:bg-error/10 transition-colors uppercase tracking-widest text-xs tracking-widest flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-sm">publish</span> Submit Exam
+                    <button onClick={() => { if(window.confirm(t.exam.submitConfirm)) handleSubmit() }} className="w-full py-4 mt-4 rounded-xl border border-error/30 text-error font-bold hover:bg-error/10 transition-colors uppercase tracking-widest text-xs tracking-widest flex items-center justify-center gap-2">
+                        <span className="material-symbols-outlined text-sm">publish</span> {t.exam.submitExam}
                     </button>
                 </div>
             </aside>

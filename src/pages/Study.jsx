@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '../components/shared/ProgressBar'
+import { getTranslations } from '../lib/translations'
 
 export const StudySession = () => {
-    const { activeSession, selectedSubject, getCorrectAnswerFor, toggleBookmark, isBookmarked, updateSessionIndex } = useAppStore()
+    const { activeSession, selectedSubject, getCorrectAnswerFor, toggleBookmark, isBookmarked, updateSessionIndex, language } = useAppStore()
     const navigate = useNavigate()
+    const t = getTranslations(language)
 
     useEffect(() => {
         if (!activeSession || activeSession.mode !== 'study') {
@@ -56,7 +58,7 @@ export const StudySession = () => {
                         <span className="w-12 h-[2px] bg-primary/30"></span>
                     </div>
                     <h1 className="text-4xl font-black text-white flex items-center gap-4">
-                        Câu hỏi <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">{currentIndex + 1} / {questions.length}</span>
+                        {t.study.question} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">{currentIndex + 1} / {questions.length}</span>
                         <button onClick={() => toggleBookmark(q.id)} className="ml-2 text-white/30 hover:text-yellow-400 transition-colors">
                             <span className="material-symbols-outlined" style={{ fontVariationSettings: `'FILL' ${bookmarked ? 1 : 0}` }}>bookmark</span>
                         </button>
@@ -64,10 +66,10 @@ export const StudySession = () => {
                 </div>
                 <div className="flex gap-4">
                     <button className="px-6 py-3 rounded-xl bg-white/5 text-white/50 font-bold hover:bg-white/10 hover:text-white transition-all flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">flag</span> Report
+                        <span className="material-symbols-outlined text-sm">flag</span> {t.study.report}
                     </button>
                     <button onClick={() => navigate('/mode')} className="px-6 py-3 rounded-xl border border-error/50 text-error font-bold hover:bg-error/10 transition-all flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">exit_to_app</span> Exit
+                        <span className="material-symbols-outlined text-sm">exit_to_app</span> {t.study.exit}
                     </button>
                 </div>
             </div>

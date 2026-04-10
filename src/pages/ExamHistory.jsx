@@ -1,9 +1,11 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
+import { getTranslations } from '../lib/translations'
 
 export const ExamHistory = () => {
-    const { examHistory } = useAppStore()
+    const { examHistory, language } = useAppStore()
+    const t = getTranslations(language)
 
     const formatTimeSpent = (secs) => {
         const m = Math.floor(secs / 60)
@@ -20,16 +22,16 @@ export const ExamHistory = () => {
         >
             <div className="flex justify-between items-end mb-12">
                 <div className="space-y-2">
-                    <h2 className="text-4xl font-black tracking-tight text-white">Performance Log</h2>
-                    <p className="text-on-surface-variant max-w-md">Review your past mock exams to track progress over time.</p>
+                    <h2 className="text-4xl font-black tracking-tight text-white">{t.history.title}</h2>
+                    <p className="text-on-surface-variant max-w-md">{t.history.subtitle}</p>
                 </div>
             </div>
 
             {examHistory.length === 0 ? (
                 <div className="glass-panel p-20 rounded-[2rem] flex flex-col items-center justify-center text-center">
                     <span className="material-symbols-outlined text-6xl text-white/20 mb-4">history</span>
-                    <h3 className="text-2xl font-bold text-white mb-2">No History Yet</h3>
-                    <p className="text-on-surface-variant">Complete a mock exam to see your results here.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">{t.history.noHistory}</h3>
+                    <p className="text-on-surface-variant">{t.history.noHistoryDesc}</p>
                 </div>
             ) : (
                 <div className="grid gap-6">
@@ -40,11 +42,11 @@ export const ExamHistory = () => {
                                     {exam.score.toFixed(1)}
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-bold text-white mb-1">{exam.subject} Mock Exam</h4>
+                                    <h4 className="text-lg font-bold text-white mb-1">{exam.subject} {t.history.mockExam}</h4>
                                     <p className="text-sm text-on-surface-variant flex items-center gap-4">
                                         <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">calendar_today</span> {new Date(exam.date).toLocaleDateString()}</span>
                                         <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">timer</span> {formatTimeSpent(exam.timeSpent)}</span>
-                                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">fact_check</span> {exam.correct}/{exam.total} Correct</span>
+                                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">fact_check</span> {exam.correct}/{exam.total} {t.history.correct}</span>
                                     </p>
                                 </div>
                             </div>

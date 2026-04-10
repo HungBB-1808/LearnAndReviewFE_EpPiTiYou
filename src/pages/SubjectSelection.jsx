@@ -2,10 +2,12 @@ import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
+import { getTranslations } from '../lib/translations'
 
 export const SubjectSelection = () => {
-    const { getUniqueSubjects, isSubjectLocked, setSelectedSubject, loadInitialData, isDataLoaded } = useAppStore()
+    const { getUniqueSubjects, isSubjectLocked, setSelectedSubject, loadInitialData, isDataLoaded, language } = useAppStore()
     const navigate = useNavigate()
+    const t = getTranslations(language)
 
     useEffect(() => {
         loadInitialData()
@@ -40,7 +42,7 @@ export const SubjectSelection = () => {
                             key={sub}
                             onClick={() => {
                                 if (locked) {
-                                    alert('Khóa học này đang tạm thời bị khóa bởi Admin.')
+                                    alert(t.subjects.lockedAlert)
                                 } else {
                                     setSelectedSubject(sub)
                                     navigate('/mode')
@@ -53,7 +55,7 @@ export const SubjectSelection = () => {
                             {locked && (
                                 <div className="absolute inset-0 bg-black/40 z-10 flex flex-col items-center justify-center backdrop-blur-sm transition-all">
                                     <span className="material-symbols-outlined text-5xl text-white/50 mb-2">lock</span>
-                                    <span className="text-white/80 font-black uppercase tracking-widest text-xs">Locked by Admin</span>
+                                    <span className="text-white/80 font-black uppercase tracking-widest text-xs">{t.subjects.lockedByAdmin}</span>
                                 </div>
                             )}
 
@@ -66,8 +68,8 @@ export const SubjectSelection = () => {
                                     </div>
                                     {locked && <span className="material-symbols-outlined text-xs text-error">lock</span>}
                                 </div>
-                                <h3 className="text-2xl font-bold leading-tight text-white mb-2">{sub} Module</h3>
-                                <p className="text-on-surface-variant text-sm line-clamp-2">Master the fundamentals and advanced topics of {sub}.</p>
+                                <h3 className="text-2xl font-bold leading-tight text-white mb-2">{sub} {t.subjects.module}</h3>
+                                <p className="text-on-surface-variant text-sm line-clamp-2">{t.subjects.masterDesc(sub)}</p>
                             </div>
                             
                             <div className="mt-8 z-20">
@@ -75,7 +77,7 @@ export const SubjectSelection = () => {
                                     disabled={locked}
                                     className={`w-full py-4 bg-white/5 ${locked ? '' : 'hover:bg-white/10 active:scale-95'} border border-white/10 text-white font-bold rounded-full backdrop-blur-md transition-all flex items-center justify-center gap-2`}
                                 >
-                                    Start Learning 
+                                    {t.subjects.startLearning} 
                                     <span className="material-symbols-outlined text-sm">{locked ? 'lock' : 'arrow_forward'}</span>
                                 </button>
                             </div>

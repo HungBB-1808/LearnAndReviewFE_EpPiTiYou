@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppStore } from '../store/useAppStore'
+import { getTranslations } from '../lib/translations'
 
 export const ExamResult = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
-    const { selectedSubject, getCorrectAnswerFor } = useAppStore()
+    const { selectedSubject, getCorrectAnswerFor, language } = useAppStore()
     const [viewAnswers, setViewAnswers] = useState(false)
+    const t = getTranslations(language)
 
     useEffect(() => {
         if (!state) navigate('/subjects')
@@ -31,21 +33,21 @@ export const ExamResult = () => {
         >
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h2 className="text-4xl font-black text-white tracking-tight mb-2">Performance Analytics</h2>
+                    <h2 className="text-4xl font-black text-white tracking-tight mb-2">{t.result.performanceAnalytics}</h2>
                     <p className="text-on-surface-variant flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                        {selectedSubject} Module Final Report
+                        {selectedSubject} {t.result.moduleReport}
                     </p>
                 </div>
                 <div className="flex gap-4">
                     <button onClick={() => navigate('/history')} className="px-6 py-3 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all font-bold">
-                        View History
+                        {t.result.viewHistory}
                     </button>
                     <button onClick={() => navigate('/subjects')} className="px-6 py-3 rounded-full border border-primary/30 text-primary font-bold hover:bg-primary/10 transition-colors">
-                        Back to Subjects
+                        {t.result.backToSubjects}
                     </button>
                     <button onClick={() => navigate('/mode')} className="px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary-dim text-black font-black shadow-[0_10px_30px_rgba(0,112,235,0.3)] hover:scale-105 transition-transform">
-                        Try Again
+                        {t.result.tryAgain}
                     </button>
                 </div>
             </div>
@@ -53,7 +55,7 @@ export const ExamResult = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="glass-card p-8 rounded-[2rem] flex flex-col items-center justify-center relative overflow-hidden ring-2 ring-primary/20">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full"></div>
-                    <span className="text-[10px] font-black uppercase text-primary tracking-widest mb-2 z-10">Total Score</span>
+                    <span className="text-[10px] font-black uppercase text-primary tracking-widest mb-2 z-10">{t.result.totalScore}</span>
                     <span className="text-7xl font-black text-white z-10">{score.toFixed(1)}<span className="text-2xl text-white/30">/10</span></span>
                     <span className="text-sm font-medium text-white/50 mt-4 px-4 py-1 bg-white/5 rounded-full z-10 border border-white/5">Percentile: 85th</span>
                 </motion.div>
@@ -64,9 +66,9 @@ export const ExamResult = () => {
                             <span className="material-symbols-outlined">task_alt</span>
                         </div>
                         <div>
-                            <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest">Accuracy Details</span>
+                            <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest">{t.result.accuracyDetails}</span>
                             <div className="text-3xl font-bold text-white mt-1">
-                                {correct} <span className="text-sm text-white/30 font-medium">/ {total} Correct</span>
+                                {correct} <span className="text-sm text-white/30 font-medium">/ {total} {t.result.correct}</span>
                             </div>
                         </div>
                     </div>
@@ -81,11 +83,11 @@ export const ExamResult = () => {
                             <span className="material-symbols-outlined">timer</span>
                         </div>
                         <div>
-                            <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest">Time Efficiency</span>
+                            <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest">{t.result.timeEfficiency}</span>
                             <div className="text-3xl font-bold text-white mt-1">{formatTimeSpent(timeSpent)}</div>
                         </div>
                     </div>
-                    <p className="text-xs text-white/40">Avg. {(timeSpent / total).toFixed(1)}s per question</p>
+                    <p className="text-xs text-white/40">{t.result.avgPerQuestion((timeSpent / total).toFixed(1))}</p>
                 </div>
             </div>
 
@@ -94,7 +96,7 @@ export const ExamResult = () => {
                   onClick={() => setViewAnswers(!viewAnswers)} 
                   className="px-8 py-4 rounded-full bg-surface-container border border-white/5 text-white/80 hover:text-white transition-all font-medium flex items-center gap-2"
                 >
-                    {viewAnswers ? 'Hide Review' : 'Review Answers'}
+                    {viewAnswers ? t.result.hideReview : t.result.reviewAnswers}
                     <span className="material-symbols-outlined text-sm">{viewAnswers ? 'expand_less' : 'expand_more'}</span>
                 </button>
             </div>
@@ -120,7 +122,7 @@ export const ExamResult = () => {
                                             <h4 className="text-lg font-medium text-white max-w-2xl">{q.questionTextCleaned || q.question}</h4>
                                         </div>
                                         <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isCorrect ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-error/10 text-error border border-error/20'}`}>
-                                            {isCorrect ? 'Correct' : 'Incorrect'}
+                                            {isCorrect ? t.result.correctLabel : t.result.incorrectLabel}
                                         </span>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 ml-12">

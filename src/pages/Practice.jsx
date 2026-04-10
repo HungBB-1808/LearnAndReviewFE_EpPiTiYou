@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
 import { ProgressBar } from '../components/shared/ProgressBar'
+import { getTranslations } from '../lib/translations'
 
 export const PracticeSession = () => {
-    const { activeSession, selectedSubject, getCorrectAnswerFor, toggleBookmark, isBookmarked, updateSessionIndex, updateSessionAnswer } = useAppStore()
+    const { activeSession, selectedSubject, getCorrectAnswerFor, toggleBookmark, isBookmarked, updateSessionIndex, updateSessionAnswer, language } = useAppStore()
     const navigate = useNavigate()
+    const t = getTranslations(language)
 
     useEffect(() => {
         if (!activeSession || activeSession.mode !== 'practice') {
@@ -48,17 +50,6 @@ export const PracticeSession = () => {
         updateSessionAnswer(currentIndex, opt)
     }
 
-    const handleConfirm = () => {
-        // We set hasAnswered by just having ANY value in the answer state for this index
-        // Since we already update state on click, we just need the UI to 'lock in' 
-        // We could add a 'isLocked' flag but we can just use the provided answer.
-        // Actually, for multiple choice, we need a way to say 'I am done'
-        // Let's use a local state or a convention.
-        // For now, let's just use the current design where hasAnswered means 'lock it'
-        // But for multi-choice, we want to allow multiple clicks before locking.
-        // I'll add a 'confirmed' tracker in activeSession or local state.
-    }
-
     return (
         <motion.div 
             initial={{ opacity: 0 }} 
@@ -74,7 +65,7 @@ export const PracticeSession = () => {
                         <span className="w-12 h-[2px] bg-tertiary/30"></span>
                     </div>
                     <h1 className="text-4xl font-black text-white flex items-center gap-4">
-                        Luyện tập <span className="text-[0.6em] text-cyan-400 align-middle ml-4 bg-white/10 px-4 py-2 rounded-full border border-white/5">{currentIndex + 1} / {questions.length}</span>
+                        {t.practice.practice} <span className="text-[0.6em] text-cyan-400 align-middle ml-4 bg-white/10 px-4 py-2 rounded-full border border-white/5">{currentIndex + 1} / {questions.length}</span>
                         <button onClick={() => toggleBookmark(q.id)} className="ml-2 text-white/30 hover:text-yellow-400 transition-colors">
                             <span className="material-symbols-outlined" style={{ fontVariationSettings: `'FILL' ${bookmarked ? 1 : 0}` }}>bookmark</span>
                         </button>
@@ -82,10 +73,10 @@ export const PracticeSession = () => {
                 </div>
                 <div className="flex gap-4">
                     <button className="px-6 py-3 rounded-xl bg-white/5 text-white/50 font-bold hover:bg-white/10 hover:text-white transition-all flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">flag</span> Report
+                        <span className="material-symbols-outlined text-sm">flag</span> {t.practice.report}
                     </button>
                     <button onClick={() => navigate('/mode')} className="px-6 py-3 rounded-xl border border-error/50 text-error font-bold hover:bg-error/10 transition-all flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">exit_to_app</span> Exit
+                        <span className="material-symbols-outlined text-sm">exit_to_app</span> {t.practice.exit}
                     </button>
                 </div>
             </div>
@@ -156,13 +147,10 @@ export const PracticeSession = () => {
                         {corrects.length > 1 && !hasAnswered && (
                             <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <button 
-                                    onClick={() => updateSessionAnswer(currentIndex, "LOCKED")} // We can use a special string to lock it? 
-                                    // Actually, we just need a way to set hasAnswered to true.
-                                    // Let's just use updateSessionAnswer with a dummy or a flag.
-                                    // Wait! I'll update updateSessionAnswer to NOT toggle if the value is 'SUBMIT'
+                                    onClick={() => updateSessionAnswer(currentIndex, "LOCKED")}
                                     className="px-10 py-4 bg-tertiary text-black font-black uppercase tracking-widest rounded-full shadow-[0_10px_20px_rgba(92,202,252,0.3)] hover:scale-105 transition-all"
                                 >
-                                    Confirm Selection
+                                    {t.practice.confirmSelection}
                                 </button>
                             </div>
                         )}
