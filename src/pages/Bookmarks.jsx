@@ -1,12 +1,43 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '../store/useAppStore'
 import { useNavigate } from 'react-router-dom'
+
+const translations = {
+    en: {
+        title: 'Saved Questions',
+        subtitle: 'Your personalized collection categorized by subject for efficient learning.',
+        noBookmarks: 'No Bookmarks',
+        noBookmarksDesc: 'Questions you star during study or practice will appear here.',
+        all: 'All',
+        review: 'Review',
+        allOptions: 'All Options',
+        language: 'Language',
+    },
+    vi: {
+        title: 'Câu Hỏi Đã Lưu',
+        subtitle: 'Bộ sưu tập cá nhân được phân loại theo môn học để ôn tập hiệu quả.',
+        noBookmarks: 'Chưa Có Bookmark',
+        noBookmarksDesc: 'Các câu hỏi bạn đánh dấu sao trong khi học hoặc luyện tập sẽ xuất hiện ở đây.',
+        all: 'Tất cả',
+        review: 'Ôn tập',
+        allOptions: 'Tất Cả Đáp Án',
+        language: 'Ngôn ngữ',
+    }
+}
 
 export const Bookmarks = () => {
     const { bookmarks, questionDB, toggleBookmark, getCorrectAnswerFor, startSession } = useAppStore()
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('ALL')
+    const [lang, setLang] = useState(() => localStorage.getItem('edufu-lang') || 'en')
+
+    const t = translations[lang]
+
+    const handleLangChange = (newLang) => {
+        setLang(newLang)
+        localStorage.setItem('edufu-lang', newLang)
+    }
 
     // Find and group questions from DB
     const subjects = useMemo(() => {
@@ -45,17 +76,41 @@ export const Bookmarks = () => {
                 <div className="space-y-2">
                     <h2 className="text-4xl font-black tracking-tight text-white flex items-center gap-4">
                         <span className="material-symbols-outlined text-4xl text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
-                        Saved Questions
+                        {t.title}
                     </h2>
-                    <p className="text-on-surface-variant max-w-md">Your personalized collection categorized by subject for efficient learning.</p>
+                    <p className="text-on-surface-variant max-w-md">{t.subtitle}</p>
+                </div>
+
+                {/* Language Toggle */}
+                <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
+                    <button
+                        onClick={() => handleLangChange('en')}
+                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                            lang === 'en' 
+                            ? 'bg-primary text-black shadow-[0_6px_16px_rgba(0,188,212,0.3)]' 
+                            : 'text-white/40 hover:text-white'
+                        }`}
+                    >
+                        🇺🇸 EN
+                    </button>
+                    <button
+                        onClick={() => handleLangChange('vi')}
+                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                            lang === 'vi' 
+                            ? 'bg-primary text-black shadow-[0_6px_16px_rgba(0,188,212,0.3)]' 
+                            : 'text-white/40 hover:text-white'
+                        }`}
+                    >
+                        🇻🇳 VI
+                    </button>
                 </div>
             </div>
 
             {totalCount === 0 ? (
                 <div className="glass-panel p-20 rounded-[2rem] flex flex-col items-center justify-center text-center">
                     <span className="material-symbols-outlined text-6xl text-white/20 mb-4">bookmark_border</span>
-                    <h3 className="text-2xl font-bold text-white mb-2">No Bookmarks</h3>
-                    <p className="text-on-surface-variant">Questions you star during study or practice will appear here.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">{t.noBookmarks}</h3>
+                    <p className="text-on-surface-variant">{t.noBookmarksDesc}</p>
                 </div>
             ) : (
                 <div className="space-y-12">
@@ -65,7 +120,7 @@ export const Bookmarks = () => {
                             onClick={() => setActiveTab('ALL')}
                             className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'ALL' ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
                         >
-                            All ({totalCount})
+                            {t.all} ({totalCount})
                         </button>
                         {Object.entries(subjects).map(([subject, qList]) => (
                             <button 
@@ -91,7 +146,7 @@ export const Bookmarks = () => {
                                     onClick={() => handleReviewSubject(qList)}
                                     className="px-6 py-2 rounded-full bg-white/5 text-white text-xs font-bold hover:bg-white/10 border border-white/10 transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                    <span className="material-symbols-outlined text-xs">play_arrow</span> Review {subject}
+                                    <span className="material-symbols-outlined text-xs">play_arrow</span> {t.review} {subject}
                                 </button>
                             </div>
 
@@ -124,7 +179,7 @@ export const Bookmarks = () => {
                                                 <h4 className="text-lg font-bold text-white mb-6 pr-12 leading-relaxed">{q.questionTextCleaned || q.question}</h4>
                                                 
                                                 <div className="mt-auto space-y-2">
-                                                    <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">All Options</p>
+                                                    <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3">{t.allOptions}</p>
                                                     <div className="grid gap-2">
                                                         {q.options && Object.entries(q.options).sort(([a],[b]) => a.localeCompare(b)).map(([key, value]) => {
                                                             const isCorrect = corrects.includes(key.toUpperCase())
