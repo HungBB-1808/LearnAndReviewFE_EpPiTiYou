@@ -22,32 +22,53 @@ export const EOSExam = () => {
     const [vol, setVol] = useState(8)
     const avatarUrl = getAvatarUrl()
 
-    // Enter fullscreen on mount
+    const eosRootRef = useRef(null)
+    const isExitingRef = useRef(false)
+
+    // Enter fullscreen on mount, exit EOS test if fullscreen is exited
     useEffect(() => {
         const enterFullscreen = async () => {
             try {
-                if (document.documentElement.requestFullscreen) {
-                    await document.documentElement.requestFullscreen()
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    await document.documentElement.webkitRequestFullscreen()
-                } else if (document.documentElement.msRequestFullscreen) {
-                    await document.documentElement.msRequestFullscreen()
+                const el = eosRootRef.current || document.documentElement
+                if (el.requestFullscreen) {
+                    await el.requestFullscreen()
+                } else if (el.webkitRequestFullscreen) {
+                    await el.webkitRequestFullscreen()
                 }
             } catch (e) {
                 console.warn('Fullscreen request failed:', e)
             }
         }
-        enterFullscreen()
+
+        // Small delay to let the DOM render first
+        const timer = setTimeout(enterFullscreen, 100)
+
+        const handleFullscreenChange = () => {
+            // If fullscreen was exited and we didn't initiate it (submit/exit)
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !isExitingRef.current) {
+                // User pressed Esc or exited fullscreen — leave EOS
+                isExitingRef.current = true
+                clearInterval(timerRef.current)
+                navigate('/mode')
+            }
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange)
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
 
         return () => {
+            clearTimeout(timer)
+            document.removeEventListener('fullscreenchange', handleFullscreenChange)
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+            // Exit fullscreen on unmount
             try {
-                if (document.fullscreenElement) {
-                    document.exitFullscreen()
-                } else if (document.webkitFullscreenElement) {
-                    document.webkitExitFullscreen()
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    isExitingRef.current = true
+                    document.exitFullscreen?.() || document.webkitExitFullscreen?.()
                 }
             } catch (e) { /* ignore */ }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -113,6 +134,7 @@ export const EOSExam = () => {
     const progressPercent = (answeredCount / questions.length) * 100
 
     const handleSubmit = () => {
+        isExitingRef.current = true
         clearInterval(timerRef.current)
         timerRef.current = null
         const store = useAppStore.getState()
@@ -174,7 +196,7 @@ export const EOSExam = () => {
     const btnGray = { background: '#d1d5db', border: '1px solid #4b5563', fontSize: 10, height: 20, padding: '0 6px', cursor: 'pointer' }
 
     return (
-        <div style={{ fontFamily: 'sans-serif', fontSize: 14, height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#d4d0c8', color: '#000', userSelect: 'none' }}>
+        <div ref={eosRootRef} style={{ fontFamily: 'sans-serif', fontSize: 14, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#d4d0c8', color: '#000', userSelect: 'none', zIndex: 9999 }}>
 
             {/* ===== HEADER — exact match to eos.html ===== */}
             <header style={{ background: '#d4d0c8', padding: 8, borderBottom: '1px solid #9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', height: 160 }}>
@@ -403,7 +425,7 @@ export const EOSExam = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', paddingRight: 8 }}>
                     <button
-                        onClick={() => { if (window.confirm('Exit the exam? Your progress will be lost.')) { clearInterval(timerRef.current); navigate('/mode') } }}
+                        onClick={() => { if (window.confirm('Exit the exam? Your progress will be lost.')) { isExitingRef.current = true; clearInterval(timerRef.current); navigate('/mode') } }}
                         style={{ background: '#e5e7eb', border: '1px solid #4b5563', padding: '2px 24px', fontSize: 12, cursor: 'pointer' }}
                     >Exit</button>
                 </div>

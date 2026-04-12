@@ -45,6 +45,7 @@ function App() {
   return (
     <HashRouter>
       <Routes>
+        <Route path="/eos-exam" element={<EOSExam />} />
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/subjects" replace />} />
           <Route path="subjects" element={<SubjectSelection />} />
@@ -52,7 +53,6 @@ function App() {
           <Route path="study" element={<StudySession />} />
           <Route path="practice" element={<PracticeSession />} />
           <Route path="exam" element={<ActiveExam />} />
-          <Route path="eos-exam" element={<EOSExam />} />
           <Route path="result" element={<ExamResult />} />
           <Route path="history" element={<ExamHistory />} />
           <Route path="bookmarks" element={<Bookmarks />} />
