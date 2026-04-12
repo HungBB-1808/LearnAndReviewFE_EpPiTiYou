@@ -6,6 +6,7 @@ import { ModeSelection } from './pages/ModeSelection'
 import { StudySession } from './pages/Study'
 import { PracticeSession } from './pages/Practice'
 import { ActiveExam } from './pages/ActiveExam'
+import { EOSExam } from './pages/EOSExam'
 import { ExamResult } from './pages/ExamResult'
 import { ExamHistory } from './pages/ExamHistory'
 import { Bookmarks } from './pages/Bookmarks'
@@ -51,6 +52,7 @@ function App() {
           <Route path="study" element={<StudySession />} />
           <Route path="practice" element={<PracticeSession />} />
           <Route path="exam" element={<ActiveExam />} />
+          <Route path="eos-exam" element={<EOSExam />} />
           <Route path="result" element={<ExamResult />} />
           <Route path="history" element={<ExamHistory />} />
           <Route path="bookmarks" element={<Bookmarks />} />

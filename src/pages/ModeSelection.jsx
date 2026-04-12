@@ -8,6 +8,7 @@ export const ModeSelection = () => {
     const { selectedSubject, getSemestersForSubject, getAllQuestionsForSubject, startSession, bookmarks, language } = useAppStore()
     const navigate = useNavigate()
     const [modalMode, setModalMode] = useState(null) // 'study' | 'practice' | 'exam'
+    const [examStyle, setExamStyle] = useState(null) // null | 'edufu' | 'eos'
     const t = getTranslations(language)
     
     // Modal State
@@ -74,12 +75,13 @@ export const ModeSelection = () => {
         }
 
         setModalMode(null)
+        setExamStyle(null)
 
         if (modalMode === 'exam') {
             const limit = Math.min(questionCount, pool.length)
             useAppStore.getState().setExamSettings({ timeLimit, questionCount: limit })
             startSession('exam', pool.slice(0, limit))
-            navigate('/exam')
+            navigate(examStyle === 'eos' ? '/eos-exam' : '/exam')
         } else {
             startSession(modalMode, pool)
             navigate(`/${modalMode}`)
@@ -165,6 +167,34 @@ export const ModeSelection = () => {
                             <div className="space-y-6 mb-8">
                                 {modalMode === 'exam' && (
                                     <>
+                                        {/* Exam Style Chooser */}
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-widest text-error mb-3">Exam Interface</label>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setExamStyle('edufu')}
+                                                    className={`p-4 rounded-xl border-2 transition-all text-left ${examStyle === 'edufu' ? 'border-primary bg-primary/10 ring-1 ring-primary/30' : 'border-white/10 bg-white/5 hover:border-white/20'}`}
+                                                >
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="material-symbols-outlined text-primary text-lg">school</span>
+                                                        <span className="text-sm font-black text-white">EduFU</span>
+                                                    </div>
+                                                    <p className="text-[10px] text-white/50 leading-relaxed">Modern dark interface with sidebar navigator</p>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setExamStyle('eos')}
+                                                    className={`p-4 rounded-xl border-2 transition-all text-left ${examStyle === 'eos' ? 'border-error bg-error/10 ring-1 ring-error/30' : 'border-white/10 bg-white/5 hover:border-white/20'}`}
+                                                >
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="material-symbols-outlined text-error text-lg">computer</span>
+                                                        <span className="text-sm font-black text-white">EOS</span>
+                                                    </div>
+                                                    <p className="text-[10px] text-white/50 leading-relaxed">Classic EOS exam delivery system interface</p>
+                                                </button>
+                                            </div>
+                                        </div>
                                         <div>
                                             <label className="block text-xs uppercase tracking-widest text-primary-fixed mb-2">{t.mode.timeLimit}</label>
                                             <input type="number" min="15" max="60" value={timeLimit} onChange={e => setTimeLimit(Number(e.target.value))} className="w-full bg-surface-container-highest/50 border border-white/10 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary/50 outline-none transition-all" />
@@ -202,8 +232,13 @@ export const ModeSelection = () => {
                                 </div>
                             </div>
 
-                            <button onClick={handleLaunch} className={`w-full py-4 rounded-xl ${modalMode === 'exam' ? 'bg-gradient-to-r from-error to-error-dim shadow-[0_10px_20px_rgba(255,110,132,0.3)]' : 'bg-gradient-to-r from-primary to-primary-dim shadow-[0_10px_20px_rgba(133,173,255,0.3)] text-black'} text-white font-black hover:scale-[1.02] transition-all uppercase tracking-widest text-sm`}>
+                            <button 
+                                onClick={handleLaunch} 
+                                disabled={modalMode === 'exam' && !examStyle}
+                                className={`w-full py-4 rounded-xl ${modalMode === 'exam' ? 'bg-gradient-to-r from-error to-error-dim shadow-[0_10px_20px_rgba(255,110,132,0.3)]' : 'bg-gradient-to-r from-primary to-primary-dim shadow-[0_10px_20px_rgba(133,173,255,0.3)] text-black'} text-white font-black hover:scale-[1.02] transition-all uppercase tracking-widest text-sm disabled:opacity-40 disabled:hover:scale-100`}
+                            >
                                 {t.mode.launch} {modalMode === 'study' ? t.mode.studyMode : modalMode === 'practice' ? t.mode.practiceMode : t.mode.mockExam}
+                                {modalMode === 'exam' && examStyle && <span className="ml-2 normal-case text-[10px] opacity-70">({examStyle.toUpperCase()} Style)</span>}
                             </button>
                         </motion.div>
                     </motion.div>
