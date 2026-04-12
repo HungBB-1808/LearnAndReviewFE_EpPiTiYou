@@ -7,16 +7,48 @@ const BARCA_LOGO = 'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barc
 
 export const EOSExam = () => {
     const { activeSession, selectedSubject, updateSessionIndex, updateSessionAnswer, updateSessionTime, examSettings, getCorrectAnswerFor, saveExamResult } = useAppStore()
-    const { getDisplayName } = useAuthStore()
+    const { getDisplayName, getAvatarUrl } = useAuthStore()
     const navigate = useNavigate()
     const [timeLeft, setTimeLeft] = useState(examSettings.timeLimit * 60)
     const timerRef = useRef()
     const sessionStartRef = useRef(Date.now())
-    const [zoom, setZoom] = useState(100)
+    const [zoom, setZoom] = useState(10)
+    const [fontSize, setFontSize] = useState(10)
     const [leftPanelWidth, setLeftPanelWidth] = useState(30)
     const isResizing = useRef(false)
     const containerRef = useRef(null)
     const [wantFinish, setWantFinish] = useState(false)
+    const [wantFinishFooter, setWantFinishFooter] = useState(false)
+    const [vol, setVol] = useState(8)
+    const avatarUrl = getAvatarUrl()
+
+    // Enter fullscreen on mount
+    useEffect(() => {
+        const enterFullscreen = async () => {
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    await document.documentElement.requestFullscreen()
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    await document.documentElement.webkitRequestFullscreen()
+                } else if (document.documentElement.msRequestFullscreen) {
+                    await document.documentElement.msRequestFullscreen()
+                }
+            } catch (e) {
+                console.warn('Fullscreen request failed:', e)
+            }
+        }
+        enterFullscreen()
+
+        return () => {
+            try {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen()
+                } else if (document.webkitFullscreenElement) {
+                    document.webkitExitFullscreen()
+                }
+            } catch (e) { /* ignore */ }
+        }
+    }, [])
 
     useEffect(() => {
         if (!activeSession || activeSession.mode !== 'exam') {
@@ -76,11 +108,7 @@ export const EOSExam = () => {
     const selectedParts = (userAnswer || "").split(',').filter(Boolean)
     const corrects = getCorrectAnswerFor(q?.id)
     const numCorrectAnswers = corrects.length
-
-    // Calculate the dynamic options: A, B, C, D + E, F if needed
     const optionKeys = q?.options ? Object.keys(q.options).sort() : []
-
-    // Progress: how many questions have been answered
     const answeredCount = Object.keys(activeSession.answers).length
     const progressPercent = (answeredCount / questions.length) * 100
 
@@ -90,20 +118,16 @@ export const EOSExam = () => {
         const store = useAppStore.getState()
         const sess = store.activeSession
         if (!sess) return
-
         const passedSeconds = Math.floor((Date.now() - sessionStartRef.current) / 1000)
         const initialTimeSpent = sess.timeSpent - passedSeconds > 0 ? sess.timeSpent : 0
         const finalTimeSpent = initialTimeSpent + passedSeconds
         store.updateSessionTime(finalTimeSpent)
-
         let correctCount = 0
         sess.questions.forEach((q, i) => {
             const cAns = store.getCorrectAnswerFor(q.id).sort().join(',')
             const uAns = (sess.answers[i] || "").split(',').filter(Boolean).sort().join(',')
-            // Correct only when the exact right count & values match
             if (cAns === uAns && cAns !== "") correctCount++
         })
-
         const score = Number(((correctCount / sess.questions.length) * 10).toFixed(2))
         store.saveExamResult({ score, correct: correctCount, total: sess.questions.length, timeSpent: finalTimeSpent, questions: sess.questions, answers: sess.answers })
         navigate('/result', { state: { score, correct: correctCount, total: sess.questions.length, timeSpent: finalTimeSpent, questions: sess.questions, answers: sess.answers } })
@@ -121,7 +145,7 @@ export const EOSExam = () => {
         return `${m}:${s}`
     }
 
-    // Resizer handlers
+    // Resizer
     const onMouseDown = useCallback(() => { isResizing.current = true }, [])
     const onMouseMove = useCallback((e) => {
         if (!isResizing.current || !containerRef.current) return
@@ -143,197 +167,214 @@ export const EOSExam = () => {
 
     const studentId = getDisplayName()?.substring(0, 10) || 'DE123456'
 
+    /* ========== Inline styles to match eos.html exactly ========== */
+    const labelStyle = { fontSize: 11, fontWeight: 600, color: '#374151' }
+    const valueStyle = { fontSize: 11, color: '#111827', marginLeft: 4 }
+    const controlInputStyle = { border: '1px solid #9ca3af', padding: '0 4px', height: 20, fontSize: 11, outline: 'none', background: '#fff' }
+    const btnGray = { background: '#d1d5db', border: '1px solid #4b5563', fontSize: 10, height: 20, padding: '0 6px', cursor: 'pointer' }
+
     return (
-        <div className="font-sans text-sm h-screen flex flex-col overflow-hidden select-none" style={{ background: '#d4d0c8', color: '#000' }}>
-            {/* ===== HEADER ===== */}
-            <header className="p-2 border-b flex justify-between items-start" style={{ borderColor: '#999', background: '#d4d0c8', minHeight: 140 }}>
-                {/* Left: Exam Details */}
-                <div className="flex flex-col gap-0.5" style={{ width: 450 }}>
-                    <div className="flex items-center gap-4 mb-1">
-                        <label className="flex items-center text-[11px]">
-                            <input type="checkbox" className="mr-1 h-3 w-3" checked={wantFinish} onChange={e => setWantFinish(e.target.checked)} /> I want to finish the exam.
+        <div style={{ fontFamily: 'sans-serif', fontSize: 14, height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#d4d0c8', color: '#000', userSelect: 'none' }}>
+
+            {/* ===== HEADER — exact match to eos.html ===== */}
+            <header style={{ background: '#d4d0c8', padding: 8, borderBottom: '1px solid #9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', height: 160 }}>
+
+                {/* Left Section */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, width: 450 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 4 }}>
+                        <label style={{ display: 'flex', alignItems: 'center', fontSize: 11, cursor: 'pointer' }}>
+                            <input type="checkbox" style={{ marginRight: 4, width: 12, height: 12 }} checked={wantFinish} onChange={e => setWantFinish(e.target.checked)} />
+                            I want to finish the exam.
                         </label>
-                        <button
-                            onClick={() => { if (wantFinish) handleSubmit() }}
-                            disabled={!wantFinish}
-                            className="border px-3 py-0 text-[11px] shadow-sm active:shadow-inner"
-                            style={{ background: wantFinish ? '#f0ad4e' : '#ccc', borderColor: '#666', opacity: wantFinish ? 1 : 0.6 }}
-                        >Finish (Submit)</button>
+                        <button onClick={() => { if (wantFinish) handleSubmit() }} disabled={!wantFinish} style={{ ...btnGray, fontSize: 11, padding: '0 12px', opacity: wantFinish ? 1 : 0.5 }}>
+                            Finish (Submit)
+                        </button>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-16">Machine:</span>
-                            <span className="text-[11px] ml-1">EDU-FU-FPT</span>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 8px' }}>
+                        {/* Row 1 */}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 64 }}>Machine:</span>
+                            <span style={valueStyle}>EDU-FU-FPT</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-20">Exam Code:</span>
-                            <span className="text-[11px] ml-1">{selectedSubject || 'FDU_FU_TEST'}</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 80 }}>Exam Code:</span>
+                            <span style={valueStyle}>{selectedSubject || 'FDU_FU_TEST'}</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-16">Server:</span>
-                            <span className="text-[11px] ml-1">Edu_FU_EOS</span>
+                        {/* Row 2 */}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 64 }}>Server:</span>
+                            <span style={valueStyle}>Edu_FU_EOS_123456</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-20">Student:</span>
-                            <span className="text-[11px] ml-1">{studentId}</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 80 }}>Student:</span>
+                            <span style={valueStyle}>{studentId}</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-16">Duration:</span>
-                            <span className="text-[11px] font-bold ml-1">{examSettings.timeLimit} minutes</span>
+                        {/* Row 3 */}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 64 }}>Duration:</span>
+                            <span style={{ ...valueStyle, fontWeight: 700 }}>{examSettings.timeLimit} minutes</span>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-20">Q mark:</span>
-                            <span className="text-[11px] ml-1">1</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 80 }}>Open Code:</span>
+                            <input style={{ ...controlInputStyle, width: 96, marginRight: 4 }} type="text" defaultValue="12345" readOnly />
+                            <button style={{ ...btnGray, fontSize: 10 }}>Show Question</button>
                         </div>
-                        <div className="flex items-center">
-                            <span className="text-[11px] font-semibold text-gray-700 w-16">Total Marks:</span>
-                            <span className="text-[11px] font-bold ml-1">{questions.length}</span>
+                        {/* Row 4 */}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 64 }}>Q mark:</span>
+                            <span style={valueStyle}>1</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ ...labelStyle, width: 80 }}>Total Marks:</span>
+                            <span style={{ ...valueStyle, fontWeight: 700 }}>{questions.length}</span>
+                            <span style={{ ...labelStyle, marginLeft: 8 }}>Vol:</span>
+                            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 4, border: '1px solid #9ca3af', background: '#fff' }}>
+                                <input style={{ width: 32, fontSize: 11, padding: '0 4px', outline: 'none', border: 'none' }} type="text" value={vol} onChange={e => setVol(e.target.value)} />
+                                <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '1px solid #9ca3af' }}>
+                                    <button onClick={() => setVol(v => Number(v) + 1)} style={{ padding: '0 2px', fontSize: 8, lineHeight: 1, borderBottom: '1px solid #9ca3af', cursor: 'pointer', background: 'transparent', border: 'none', borderLeft: 'none', borderBottom: '1px solid #9ca3af' }}>▲</button>
+                                    <button onClick={() => setVol(v => Math.max(0, Number(v) - 1))} style={{ padding: '0 2px', fontSize: 8, lineHeight: 1, cursor: 'pointer', background: 'transparent', border: 'none' }}>▼</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Font & Size */}
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: 4 }}>
+                        <span style={{ ...labelStyle, width: 64 }}>Font:</span>
+                        <select style={{ ...controlInputStyle, width: 128 }} defaultValue="Microsoft Sans Serif">
+                            <option>Microsoft Sans Serif</option>
+                            <option>Arial</option>
+                            <option>Times New Roman</option>
+                        </select>
+                        <span style={{ ...labelStyle, marginLeft: 16 }}>Size:</span>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 4, border: '1px solid #9ca3af', background: '#fff' }}>
+                            <input style={{ width: 32, fontSize: 11, padding: '0 4px', outline: 'none', border: 'none' }} type="text" value={fontSize} onChange={e => setFontSize(Number(e.target.value) || 10)} />
+                            <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '1px solid #9ca3af' }}>
+                                <button onClick={() => setFontSize(s => s + 1)} style={{ padding: '0 2px', fontSize: 8, lineHeight: 1, borderBottom: '1px solid #9ca3af', cursor: 'pointer', background: 'transparent', border: 'none' }}>▲</button>
+                                <button onClick={() => setFontSize(s => Math.max(6, s - 1))} style={{ padding: '0 2px', fontSize: 8, lineHeight: 1, cursor: 'pointer', background: 'transparent', border: 'none' }}>▼</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Center: Profile & Timer */}
-                <div className="flex flex-col items-center justify-start flex-grow">
-                    <div className="relative mb-1">
-                        <div className="w-16 h-20 bg-white border p-0.5" style={{ borderColor: '#999' }}>
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', flexGrow: 1 }}>
+                    <div style={{ position: 'relative', marginBottom: 4 }}>
+                        <div style={{ width: 64, height: 80, background: '#fff', border: '1px solid #9ca3af', padding: 2 }}>
+                            {avatarUrl ? (
+                                <img src={avatarUrl} alt="Student" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                                <div style={{ width: '100%', height: '100%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                </div>
+                            )}
                         </div>
-                        <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                        <div style={{ position: 'absolute', right: -8, top: '50%', transform: 'translateY(-50%)', width: 12, height: 12, background: '#22c55e', borderRadius: '50%', border: '2px solid #fff' }}></div>
                     </div>
-                    <div className="text-5xl font-mono font-bold leading-none" style={{ color: '#003399' }}>{formatTime(timeLeft)}</div>
-                    <div className="text-[10px] font-semibold text-gray-700 mt-1 uppercase">Time Left</div>
+                    <div style={{ fontSize: 56, fontFamily: 'monospace', fontWeight: 700, color: '#1e3a8a', lineHeight: 1 }}>{formatTime(timeLeft)}</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: '#374151', marginTop: 4, textTransform: 'uppercase' }}>Time Left</div>
                 </div>
 
-                {/* Right: ID & Logo */}
-                <div className="flex flex-col items-end gap-1 pr-4" style={{ width: 150 }}>
-                    <div className="text-3xl font-bold text-gray-800 tracking-tight">{String(currentIndex + 1).padStart(2, '0')}/{questions.length}</div>
-                    <div className="w-16 h-20 flex items-center justify-center">
-                        <img src={BARCA_LOGO} alt="FC Barcelona" className="w-full h-full object-contain" />
+                {/* Right: ID & Barcelona Logo */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', width: 150, gap: 4, paddingRight: 16 }}>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: '#1f2937', letterSpacing: '-0.025em' }}>123456</div>
+                    <div style={{ width: 64, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src={BARCA_LOGO} alt="FC Barcelona Crest" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                 </div>
             </header>
 
-            {/* ===== TABS (for EOS look) ===== */}
-            <nav className="px-0.5 pt-1 flex gap-0.5 border-b" style={{ background: '#ccc', borderColor: '#999' }}>
-                <button className="px-3 py-1 text-[11px] bg-white border-t border-x font-bold" style={{ borderColor: '#999' }}>Multiple Choices</button>
+            {/* ===== TABS ===== */}
+            <nav style={{ background: '#ccc', padding: '4px 2px 0', display: 'flex', gap: 2, borderBottom: '1px solid #9ca3af' }}>
+                <button style={{ padding: '4px 12px', fontSize: 11, background: '#e5e7eb', borderTop: '1px solid #d1d5db', borderLeft: '1px solid #d1d5db', borderRight: '1px solid #d1d5db', borderBottom: 'none', cursor: 'pointer' }}>Reading</button>
+                <button style={{ padding: '4px 12px', fontSize: 11, background: '#fff', borderTop: '1px solid #9ca3af', borderLeft: '1px solid #9ca3af', borderRight: '1px solid #9ca3af', borderBottom: 'none', fontWeight: 700, cursor: 'pointer' }}>Multiple Choices</button>
+                <button style={{ padding: '4px 12px', fontSize: 11, background: '#e5e7eb', borderTop: '1px solid #d1d5db', borderLeft: '1px solid #d1d5db', borderRight: '1px solid #d1d5db', borderBottom: 'none', cursor: 'pointer' }}>Indicate Mistake</button>
+                <button style={{ padding: '4px 12px', fontSize: 11, background: '#e5e7eb', borderTop: '1px solid #d1d5db', borderLeft: '1px solid #d1d5db', borderRight: '1px solid #d1d5db', borderBottom: 'none', cursor: 'pointer' }}>Matching</button>
+                <button style={{ padding: '4px 12px', fontSize: 11, background: '#e5e7eb', borderTop: '1px solid #d1d5db', borderLeft: '1px solid #d1d5db', borderRight: '1px solid #d1d5db', borderBottom: 'none', cursor: 'pointer' }}>Fill Blank</button>
             </nav>
 
             {/* ===== MAIN CONTENT ===== */}
-            <main className="flex-grow flex overflow-hidden bg-white">
-                {/* Left sidebar: Answer checkboxes */}
-                <div className="border-r flex flex-col items-center py-4 bg-white shrink-0" style={{ borderColor: '#999', width: 120 }}>
-                    <span className="text-[11px] font-bold text-green-700 mb-4">Answer</span>
-                    <div className="flex flex-col gap-3">
+            <main style={{ flexGrow: 1, display: 'flex', overflow: 'hidden', background: '#fff' }}>
+
+                {/* Far Left Sidebar: Answer Selection */}
+                <div style={{ borderRight: '1px solid #9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 16, paddingBottom: 16, background: '#fff', flexShrink: 0, width: 120 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#15803d', marginBottom: 16 }}>Answer</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                         {optionKeys.map(opt => (
-                            <label key={opt} className="flex items-center gap-1.5 cursor-pointer hover:bg-blue-50 px-2 py-0.5 rounded transition-colors">
+                            <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
                                 <input
                                     type="checkbox"
-                                    className="w-3.5 h-3.5 accent-blue-600"
+                                    style={{ width: 14, height: 14 }}
                                     checked={selectedParts.includes(opt.toUpperCase())}
                                     onChange={() => handleOptionToggle(opt.toUpperCase())}
                                 />
-                                <span className="text-[11px] font-bold">{opt.toUpperCase()}</span>
+                                <span style={{ fontSize: 11, fontWeight: 700 }}>{opt.toUpperCase()}</span>
                             </label>
                         ))}
                     </div>
-                    <div className="flex gap-2 mt-6">
+                    <div style={{ display: 'flex', gap: 8, marginTop: 24 }}>
                         <button
                             onClick={() => { if (currentIndex > 0) updateSessionIndex(currentIndex - 1) }}
                             disabled={currentIndex === 0}
-                            className="border px-2 py-0 text-[10px] h-5 w-12 shadow-sm active:shadow-inner disabled:opacity-40"
-                            style={{ background: '#ccc', borderColor: '#666' }}
+                            style={{ ...btnGray, width: 48, opacity: currentIndex === 0 ? 0.4 : 1 }}
                         >Back</button>
                         <button
                             onClick={() => { if (currentIndex < questions.length - 1) updateSessionIndex(currentIndex + 1) }}
                             disabled={currentIndex === questions.length - 1}
-                            className="border px-2 py-0 text-[10px] h-5 w-12 shadow-sm active:shadow-inner disabled:opacity-40"
-                            style={{ background: '#ccc', borderColor: '#666' }}
+                            style={{ ...btnGray, width: 48, opacity: currentIndex === questions.length - 1 ? 0.4 : 1 }}
                         >Next</button>
                     </div>
                 </div>
 
-                {/* Question content with resizable split */}
-                <div className="flex-grow flex flex-col overflow-hidden">
+                {/* Question Content */}
+                <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     {/* Progress bar */}
-                    <div className="bg-white border-b px-2 py-1 flex items-center shrink-0" style={{ borderColor: '#ddd' }}>
-                        <span className="text-[11px] text-green-700 font-bold">
+                    <div style={{ background: '#fff', borderBottom: '1px solid #d1d5db', padding: '4px 8px', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: 11, color: '#15803d', fontWeight: 700 }}>
                             There are {questions.length} questions, and your progress of answering is
                         </span>
-                        <div className="w-40 h-3 bg-gray-200 border ml-2" style={{ borderColor: '#999' }}>
-                            <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+                        <div style={{ width: 160, height: 12, background: '#e5e7eb', border: '1px solid #9ca3af', marginLeft: 8 }}>
+                            <div style={{ width: `${progressPercent}%`, height: '100%', background: '#22c55e', transition: 'width 0.3s' }}></div>
                         </div>
-                        <span className="text-[10px] text-gray-600 ml-2">{answeredCount}/{questions.length}</span>
                     </div>
 
-                    {/* Resizable split view */}
-                    <div className="flex-grow flex overflow-hidden" ref={containerRef}>
-                        {/* Left: Number of answers info */}
-                        <div className="p-4 flex flex-col gap-4 overflow-y-auto" style={{ width: `${leftPanelWidth}%` }}>
-                            <div className="text-[11px] text-gray-800 font-bold">
+                    {/* Resizable Split Pane */}
+                    <div style={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }} ref={containerRef}>
+
+                        {/* Left: Instruction */}
+                        <div style={{ width: `${leftPanelWidth}%`, padding: 16, display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
+                            <div style={{ fontSize: 11, color: '#1f2937', fontWeight: 700 }}>
                                 Number of answers to select: {numCorrectAnswers}
                             </div>
-                            <div className="text-[11px] text-gray-600 italic">
+                            <div style={{ fontSize: 11, color: '#4b5563', fontStyle: 'italic' }}>
                                 (Choose {numCorrectAnswers} answer{numCorrectAnswers > 1 ? 's' : ''})
-                            </div>
-                            
-                            {/* Question navigator grid */}
-                            <div className="mt-4">
-                                <div className="text-[10px] font-bold text-gray-500 uppercase mb-2">Question Navigator</div>
-                                <div className="grid grid-cols-5 gap-1">
-                                    {questions.map((_, i) => {
-                                        const isCurrent = i === currentIndex
-                                        const isAnswered = !!activeSession.answers[i]
-                                        return (
-                                            <button
-                                                key={i}
-                                                onClick={() => updateSessionIndex(i)}
-                                                className="h-6 text-[10px] font-bold border transition-all"
-                                                style={{
-                                                    background: isCurrent ? '#003399' : isAnswered ? '#90ee90' : '#fff',
-                                                    color: isCurrent ? '#fff' : '#333',
-                                                    borderColor: '#999',
-                                                }}
-                                            >{i + 1}</button>
-                                        )
-                                    })}
-                                </div>
                             </div>
                         </div>
 
-                        {/* Resizer */}
+                        {/* Resizer Divider */}
                         <div
                             onMouseDown={onMouseDown}
-                            className="shrink-0 cursor-col-resize"
-                            style={{
-                                width: 4,
-                                background: '#d4d0c8',
-                                borderLeft: '1px solid #a0a0a0',
-                                borderRight: '1px solid #fff',
-                            }}
+                            style={{ width: 4, cursor: 'col-resize', background: '#d4d0c8', borderLeft: '1px solid #a0a0a0', borderRight: '1px solid #fff', flexShrink: 0, zIndex: 10 }}
                         ></div>
 
-                        {/* Right: Question display */}
-                        <div className="flex-grow flex flex-col overflow-hidden">
+                        {/* Right: Question Area */}
+                        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                             {/* Zoom controls */}
-                            <div className="bg-gray-100 border-b px-2 py-1 flex justify-end gap-1 shrink-0" style={{ borderColor: '#ddd' }}>
-                                <button onClick={() => setZoom(100)} className="border px-2 text-[10px] h-5" style={{ background: '#ccc', borderColor: '#666' }}>Real size</button>
-                                <button onClick={() => setZoom(z => Math.min(z + 15, 200))} className="border px-2 text-[10px] h-5" style={{ background: '#ccc', borderColor: '#666' }}>Zoom In</button>
-                                <button onClick={() => setZoom(z => Math.max(z - 15, 60))} className="border px-2 text-[10px] h-5" style={{ background: '#ccc', borderColor: '#666' }}>Zoom Out</button>
-                                <span className="text-[10px] text-gray-500 ml-2 self-center">{zoom}%</span>
+                            <div style={{ background: '#f3f4f6', borderBottom: '1px solid #d1d5db', padding: '4px 8px', display: 'flex', justifyContent: 'flex-end', gap: 4, flexShrink: 0 }}>
+                                <button onClick={() => setFontSize(10)} style={btnGray}>Real size</button>
+                                <button onClick={() => setFontSize(s => Math.min(s + 2, 30))} style={btnGray}>Zoom In</button>
+                                <button onClick={() => setFontSize(s => Math.max(6, s - 2))} style={btnGray}>Zoom Out</button>
                             </div>
-                            <div className="flex-grow p-4 overflow-y-auto">
-                                <div style={{ fontSize: `${zoom}%` }} className="text-gray-800 space-y-4 leading-normal transition-all">
-                                    <p className="font-medium">{q?.questionTextCleaned || q?.question}</p>
-                                    <div className="space-y-2 pl-4">
+                            {/* Question text */}
+                            <div style={{ flexGrow: 1, padding: 16, overflowY: 'auto' }}>
+                                <div style={{ fontSize: fontSize, color: '#1f2937', lineHeight: 1.6 }}>
+                                    <p>{q?.questionTextCleaned || q?.question}</p>
+                                    <div style={{ paddingLeft: 16, marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
                                         {optionKeys.map(opt => {
                                             if (!q.options[opt]) return null
-                                            const isSelected = selectedParts.includes(opt.toUpperCase())
                                             return (
-                                                <p key={opt} className={`${isSelected ? 'font-bold text-blue-800' : ''}`}>
-                                                    {opt.toUpperCase()}. {q.options[opt]}
-                                                </p>
+                                                <p key={opt}>{opt.toUpperCase()}. {q.options[opt]}</p>
                                             )
                                         })}
                                     </div>
@@ -345,26 +386,25 @@ export const EOSExam = () => {
             </main>
 
             {/* ===== FOOTER ===== */}
-            <footer className="border-t p-1 flex items-center justify-between" style={{ background: '#d4d0c8', borderColor: '#666', minHeight: 36 }}>
-                <div className="flex items-center gap-4">
-                    <label className="flex items-center text-[11px] ml-2">
-                        <input type="checkbox" className="mr-1 h-3 w-3" checked={wantFinish} onChange={e => setWantFinish(e.target.checked)} /> I want to finish the exam.
+            <footer style={{ background: '#d4d0c8', borderTop: '1px solid #4b5563', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 36 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: 11, marginLeft: 8, cursor: 'pointer' }}>
+                        <input type="checkbox" style={{ marginRight: 4, width: 12, height: 12 }} checked={wantFinishFooter} onChange={e => setWantFinishFooter(e.target.checked)} />
+                        I want to finish the exam.
                     </label>
                     <button
-                        onClick={() => { if (wantFinish) handleSubmit() }}
-                        disabled={!wantFinish}
-                        className="border px-6 py-0 text-xs font-bold shadow-sm"
-                        style={{ background: wantFinish ? '#f0ad4e' : '#ccc', borderColor: '#666', opacity: wantFinish ? 1 : 0.6 }}
+                        onClick={() => { if (wantFinishFooter) handleSubmit() }}
+                        disabled={!wantFinishFooter}
+                        style={{ background: wantFinishFooter ? '#f0ad4e' : '#d1d5db', border: '1px solid #4b5563', padding: '0 24px', fontSize: 12, fontWeight: 700, cursor: wantFinishFooter ? 'pointer' : 'default', opacity: wantFinishFooter ? 1 : 0.5 }}
                     >Finish</button>
                 </div>
-                <div className="font-bold text-xl italic tracking-wider text-center flex-grow" style={{ color: '#000080' }}>
+                <div style={{ color: '#000080', fontWeight: 700, fontSize: 20, fontStyle: 'italic', letterSpacing: '0.1em', textAlign: 'center', flexGrow: 1 }}>
                     USB RUNNING
                 </div>
-                <div className="flex items-center pr-2">
+                <div style={{ display: 'flex', alignItems: 'center', paddingRight: 8 }}>
                     <button
                         onClick={() => { if (window.confirm('Exit the exam? Your progress will be lost.')) { clearInterval(timerRef.current); navigate('/mode') } }}
-                        className="border px-6 py-0.5 text-xs"
-                        style={{ background: '#e0e0e0', borderColor: '#666' }}
+                        style={{ background: '#e5e7eb', border: '1px solid #4b5563', padding: '2px 24px', fontSize: 12, cursor: 'pointer' }}
                     >Exit</button>
                 </div>
             </footer>
