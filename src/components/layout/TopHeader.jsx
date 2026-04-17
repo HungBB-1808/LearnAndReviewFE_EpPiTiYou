@@ -17,7 +17,7 @@ export const TopHeader = ({ toggleSidebar }) => {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="h-20 border-b border-white/5 bg-surface-container-low/50 backdrop-blur-xl flex items-center justify-between px-8 sticky top-0 z-40"
+        className="h-16 md:h-20 border-b border-white/5 bg-surface-container-low/50 backdrop-blur-xl flex items-center justify-between px-4 md:px-8 sticky top-0 z-40"
     >
         <div className="flex items-center gap-6">
             <button 

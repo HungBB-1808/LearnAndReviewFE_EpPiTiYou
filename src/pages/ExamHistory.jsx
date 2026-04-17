@@ -18,11 +18,11 @@ export const ExamHistory = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
-            className="p-10 max-w-6xl mx-auto"
+            className="p-4 md:p-10 max-w-6xl mx-auto"
         >
             <div className="flex justify-between items-end mb-12">
                 <div className="space-y-2">
-                    <h2 className="text-4xl font-black tracking-tight text-white">{t.history.title}</h2>
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white">{t.history.title}</h2>
                     <p className="text-on-surface-variant max-w-md">{t.history.subtitle}</p>
                 </div>
             </div>
@@ -36,14 +36,14 @@ export const ExamHistory = () => {
             ) : (
                 <div className="grid gap-6">
                     {[...examHistory].reverse().map((exam, i) => (
-                        <div key={i} className="glass-card p-6 rounded-2xl flex items-center justify-between group hover:-translate-y-1 transition-transform cursor-pointer">
-                            <div className="flex items-center gap-6">
+                        <div key={i} className="glass-card p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between group hover:-translate-y-1 transition-transform cursor-pointer gap-3">
+                            <div className="flex items-center gap-4 md:gap-6">
                                 <div className={`w-16 h-16 rounded-full flex items-center justify-center font-black text-2xl ${exam.score >= 8 ? 'bg-green-500/20 text-green-400' : exam.score >= 5 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-error/20 text-error'}`}>
                                     {exam.score.toFixed(1)}
                                 </div>
                                 <div>
                                     <h4 className="text-lg font-bold text-white mb-1">{exam.subject} {t.history.mockExam}</h4>
-                                    <p className="text-sm text-on-surface-variant flex items-center gap-4">
+                                    <p className="text-xs md:text-sm text-on-surface-variant flex flex-wrap items-center gap-2 md:gap-4">
                                         <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">calendar_today</span> {new Date(exam.date).toLocaleDateString()}</span>
                                         <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">timer</span> {formatTimeSpent(exam.timeSpent)}</span>
                                         <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">fact_check</span> {exam.correct}/{exam.total} {t.history.correct}</span>

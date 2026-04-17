@@ -94,47 +94,47 @@ export const ModeSelection = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="p-10 min-h-[80vh] flex flex-col justify-center"
+            className="p-4 md:p-10 min-h-[80vh] flex flex-col justify-center"
         >
             <div className="text-center mb-16 space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
                     <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
                     <span className="text-sm font-bold tracking-widest text-on-surface-variant uppercase">{t.mode.courseId}: {selectedSubject}</span>
                 </div>
-                <h2 className="text-6xl font-black tracking-tighter text-white">{t.mode.selectPath} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t.mode.pathHighlight}</span></h2>
+                <h2 className="text-3xl md:text-6xl font-black tracking-tighter text-white">{t.mode.selectPath} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t.mode.pathHighlight}</span></h2>
                 <p className="text-on-surface-variant max-w-2xl mx-auto text-lg">{t.mode.description(selectedSubject)}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto w-full">
                 {/* Study Card */}
-                <div onClick={() => setModalMode('study')} className="glass-card p-10 rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(133,173,255,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-primary/30">
-                    <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-8 isolate relative group-hover:scale-110 transition-transform">
+                <div onClick={() => setModalMode('study')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(133,173,255,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-primary/30">
+                    <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
                         <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <span className="material-symbols-outlined text-5xl text-primary">menu_book</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-4">{t.mode.studyMode}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">{t.mode.studyMode}</h3>
                     <p className="text-on-surface-variant mb-8 line-clamp-3">{t.mode.studyDesc}</p>
                     <button className="mt-auto w-full py-4 rounded-xl bg-white/5 text-primary font-bold hover:bg-primary/20 transition-colors uppercase tracking-widest text-sm">{t.mode.configureSetup}</button>
                 </div>
 
                 {/* Practice Card */}
-                <div onClick={() => setModalMode('practice')} className="glass-card p-10 rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(92,202,252,0.2)] transition-all duration-300 group border-t-2 border-t-tertiary ring-1 ring-white/5">
-                    <div className="w-24 h-24 rounded-full bg-tertiary/10 flex items-center justify-center mb-8 isolate relative group-hover:scale-110 transition-transform">
+                <div onClick={() => setModalMode('practice')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(92,202,252,0.2)] transition-all duration-300 group border-t-2 border-t-tertiary ring-1 ring-white/5">
+                    <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-tertiary/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
                         <div className="absolute inset-0 bg-tertiary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <span className="material-symbols-outlined text-5xl text-tertiary">psychology</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-4">{t.mode.practiceMode}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">{t.mode.practiceMode}</h3>
                     <p className="text-on-surface-variant mb-8 line-clamp-3">{t.mode.practiceDesc}</p>
                     <button className="mt-auto w-full py-4 rounded-xl bg-gradient-to-r from-tertiary to-tertiary-dim text-black font-black shadow-[0_10px_20px_rgba(92,202,252,0.3)] hover:scale-[1.02] transition-transform uppercase tracking-widest text-sm">{t.mode.configureSetup}</button>
                 </div>
 
                 {/* Exam Card */}
-                <div onClick={() => setModalMode('exam')} className="glass-card p-10 rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(255,110,132,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-error/30 relative overflow-hidden">
+                <div onClick={() => setModalMode('exam')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(255,110,132,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-error/30 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-error/10 blur-3xl rounded-full pointer-events-none group-hover:bg-error/20 transition-colors"></div>
-                    <div className="w-24 h-24 rounded-full bg-error/10 flex items-center justify-center mb-8 isolate relative group-hover:scale-110 transition-transform">
+                    <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-error/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
                         <span className="material-symbols-outlined text-5xl text-error">timer</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-4">{t.mode.mockExam}</h3>
+                    <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">{t.mode.mockExam}</h3>
                     <p className="text-on-surface-variant mb-8 line-clamp-3">{t.mode.examDesc}</p>
                     <button className="mt-auto w-full py-4 rounded-xl bg-white/5 text-error font-bold hover:bg-error/20 transition-colors uppercase tracking-widest text-sm">{t.mode.configureSetup}</button>
                 </div>
@@ -154,7 +154,7 @@ export const ModeSelection = () => {
                             animate={{ y: 0, scale: 1 }}
                             exit={{ y: 20, scale: 0.95 }}
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                            className="glass-panel p-10 rounded-xl max-w-md w-full border border-white/20 shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] relative"
+                            className="glass-panel p-6 md:p-10 rounded-xl max-w-md w-full border border-white/20 shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] relative max-h-[90vh] overflow-y-auto"
                         >
                             <button className="absolute top-4 right-4 text-white/50 hover:text-white bg-white/5 p-2 rounded-full transition-colors" onClick={() => setModalMode(null)}>
                                 <span className="material-symbols-outlined">close</span>
@@ -184,12 +184,20 @@ export const ModeSelection = () => {
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    onClick={() => setExamStyle('eos')}
+                                                    onClick={() => {
+                                                        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768
+                                                        if (isMobile) {
+                                                            alert('⚠️ EOS Exam interface is only available on desktop devices (PC/Laptop). Please use a computer to access this mode.')
+                                                            return
+                                                        }
+                                                        setExamStyle('eos')
+                                                    }}
                                                     className={`p-4 rounded-xl border-2 transition-all text-left ${examStyle === 'eos' ? 'border-error bg-error/10 ring-1 ring-error/30' : 'border-white/10 bg-white/5 hover:border-white/20'}`}
                                                 >
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <span className="material-symbols-outlined text-error text-lg">computer</span>
                                                         <span className="text-sm font-black text-white">EOS</span>
+                                                        <span className="text-[8px] text-white/30 md:hidden">🖥️ Desktop only</span>
                                                     </div>
                                                     <p className="text-[10px] text-white/50 leading-relaxed">Classic EOS exam delivery system interface</p>
                                                 </button>

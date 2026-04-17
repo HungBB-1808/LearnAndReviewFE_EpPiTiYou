@@ -48,27 +48,27 @@ export const StudySession = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="p-10 flex flex-col h-full overflow-hidden"
+            className="p-4 md:p-10 flex flex-col h-full overflow-hidden"
         >
-            <div className="flex justify-between items-end mb-8">
-                <div className="space-y-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 md:mb-8 gap-4">
+                <div className="space-y-2 md:space-y-4">
                     <div className="flex items-center gap-4 text-primary font-black tracking-widest uppercase text-xs">
                         <span className="w-12 h-[2px] bg-primary/30"></span>
                         {selectedSubject}
                         <span className="w-12 h-[2px] bg-primary/30"></span>
                     </div>
-                    <h1 className="text-4xl font-black text-white flex items-center gap-4">
+                    <h1 className="text-2xl md:text-4xl font-black text-white flex items-center gap-2 md:gap-4">
                         {t.study.question} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">{currentIndex + 1} / {questions.length}</span>
                         <button onClick={() => toggleBookmark(q.id)} className="ml-2 text-white/30 hover:text-yellow-400 transition-colors">
                             <span className="material-symbols-outlined" style={{ fontVariationSettings: `'FILL' ${bookmarked ? 1 : 0}` }}>bookmark</span>
                         </button>
                     </h1>
                 </div>
-                <div className="flex gap-4">
-                    <button className="px-6 py-3 rounded-xl bg-white/5 text-white/50 font-bold hover:bg-white/10 hover:text-white transition-all flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">flag</span> {t.study.report}
+                <div className="flex gap-2 md:gap-4 w-full md:w-auto">
+                    <button className="px-4 md:px-6 py-2 md:py-3 rounded-xl bg-white/5 text-white/50 font-bold hover:bg-white/10 hover:text-white transition-all flex items-center gap-2 text-xs md:text-sm">
+                        <span className="material-symbols-outlined text-sm">flag</span> <span className="hidden md:inline">{t.study.report}</span>
                     </button>
-                    <button onClick={() => navigate('/mode')} className="px-6 py-3 rounded-xl border border-error/50 text-error font-bold hover:bg-error/10 transition-all flex items-center gap-2">
+                    <button onClick={() => navigate('/mode')} className="px-4 md:px-6 py-2 md:py-3 rounded-xl border border-error/50 text-error font-bold hover:bg-error/10 transition-all flex items-center gap-2 text-xs md:text-sm">
                         <span className="material-symbols-outlined text-sm">exit_to_app</span> {t.study.exit}
                     </button>
                 </div>
@@ -76,7 +76,7 @@ export const StudySession = () => {
 
             <ProgressBar current={currentIndex + 1} total={questions.length} />
 
-            <div className="flex-1 glass-panel rounded-[2rem] p-10 flex flex-col min-h-0 bg-surface-container-high relative overflow-y-auto custom-scrollbar">
+            <div className="flex-1 glass-panel rounded-2xl md:rounded-[2rem] p-4 md:p-10 flex flex-col min-h-0 bg-surface-container-high relative overflow-y-auto custom-scrollbar">
                 <AnimatePresence mode="wait">
                     <motion.div 
                         key={q.id}
@@ -86,7 +86,7 @@ export const StudySession = () => {
                         transition={{ duration: 0.3 }}
                         className="flex flex-col h-full relative"
                     >
-                        <h2 className="text-2xl font-medium leading-relaxed text-white mb-10 max-w-4xl">
+                        <h2 className="text-lg md:text-2xl font-medium leading-relaxed text-white mb-6 md:mb-10 max-w-4xl">
                             {q.questionTextCleaned || q.question}
                         </h2>
 
@@ -107,8 +107,8 @@ export const StudySession = () => {
                 </AnimatePresence>
             </div>
 
-            <footer className="flex justify-between items-center mt-8 relative z-50">
-                <button onClick={handlePrev} disabled={currentIndex === 0} className="w-16 h-16 rounded-full bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center text-white/50 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+            <footer className="flex justify-between items-center mt-4 md:mt-8 relative z-50">
+                <button onClick={handlePrev} disabled={currentIndex === 0} className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 hover:bg-white/10 flex flex-col items-center justify-center text-white/50 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                     <span className="material-symbols-outlined">arrow_back</span>
                 </button>
                 <div className="flex space-x-2">
@@ -116,7 +116,7 @@ export const StudySession = () => {
                         <div key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-primary w-8' : 'bg-white/10'}`}></div>
                     )).slice(Math.max(0, currentIndex - 2), Math.min(questions.length, currentIndex + 3))}
                 </div>
-                <button onClick={handleNext} disabled={currentIndex === questions.length - 1} className="w-16 h-16 rounded-full bg-primary hover:bg-primary-dim text-black shadow-[0_5px_20px_rgba(133,173,255,0.3)] flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                <button onClick={handleNext} disabled={currentIndex === questions.length - 1} className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary hover:bg-primary-dim text-black shadow-[0_5px_20px_rgba(133,173,255,0.3)] flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                     <span className="material-symbols-outlined">arrow_forward</span>
                 </button>
             </footer>

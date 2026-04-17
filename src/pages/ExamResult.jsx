@@ -29,34 +29,34 @@ export const ExamResult = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-10 max-w-5xl mx-auto"
+            className="p-4 md:p-10 max-w-5xl mx-auto"
         >
-            <div className="flex justify-between items-center mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-4">
                 <div>
-                    <h2 className="text-4xl font-black text-white tracking-tight mb-2">{t.result.performanceAnalytics}</h2>
+                    <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight mb-2">{t.result.performanceAnalytics}</h2>
                     <p className="text-on-surface-variant flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                         {selectedSubject} {t.result.moduleReport}
                     </p>
                 </div>
-                <div className="flex gap-4">
-                    <button onClick={() => navigate('/history')} className="px-6 py-3 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all font-bold">
+                <div className="flex flex-wrap gap-2 md:gap-4 w-full md:w-auto">
+                    <button onClick={() => navigate('/history')} className="px-4 md:px-6 py-2 md:py-3 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all font-bold text-xs md:text-sm">
                         {t.result.viewHistory}
                     </button>
-                    <button onClick={() => navigate('/subjects')} className="px-6 py-3 rounded-full border border-primary/30 text-primary font-bold hover:bg-primary/10 transition-colors">
+                    <button onClick={() => navigate('/subjects')} className="px-4 md:px-6 py-2 md:py-3 rounded-full border border-primary/30 text-primary font-bold hover:bg-primary/10 transition-colors text-xs md:text-sm">
                         {t.result.backToSubjects}
                     </button>
-                    <button onClick={() => navigate('/mode')} className="px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary-dim text-black font-black shadow-[0_10px_30px_rgba(0,112,235,0.3)] hover:scale-105 transition-transform">
+                    <button onClick={() => navigate('/mode')} className="px-4 md:px-6 py-2 md:py-3 rounded-full bg-gradient-to-r from-primary to-primary-dim text-black font-black shadow-[0_10px_30px_rgba(0,112,235,0.3)] hover:scale-105 transition-transform text-xs md:text-sm">
                         {t.result.tryAgain}
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="glass-card p-8 rounded-[2rem] flex flex-col items-center justify-center relative overflow-hidden ring-2 ring-primary/20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
+                <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="glass-card p-6 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col items-center justify-center relative overflow-hidden ring-2 ring-primary/20">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full"></div>
                     <span className="text-[10px] font-black uppercase text-primary tracking-widest mb-2 z-10">{t.result.totalScore}</span>
-                    <span className="text-7xl font-black text-white z-10">{score.toFixed(1)}<span className="text-2xl text-white/30">/10</span></span>
+                    <span className="text-5xl md:text-7xl font-black text-white z-10">{score.toFixed(1)}<span className="text-xl md:text-2xl text-white/30">/10</span></span>
                     <span className="text-sm font-medium text-white/50 mt-4 px-4 py-1 bg-white/5 rounded-full z-10 border border-white/5">Percentile: 85th</span>
                 </motion.div>
                 
@@ -125,7 +125,7 @@ export const ExamResult = () => {
                                             {isCorrect ? t.result.correctLabel : t.result.incorrectLabel}
                                         </span>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 ml-12">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 ml-0 md:ml-12">
                                         {Object.keys(q.options).sort().map(opt => {
                                             if (!q.options[opt]) return null
                                             const isSelected = uAnsRaw.includes(opt)

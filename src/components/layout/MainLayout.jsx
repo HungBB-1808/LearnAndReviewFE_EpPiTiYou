@@ -23,6 +23,10 @@ export const MainLayout = () => {
       <div className="fixed bottom-0 left-1/4 w-[600px] h-[600px] bg-primary-dim/10 blur-[150px] -z-10 rounded-full pointer-events-none"></div>
 
       <Sidebar isOpen={isSidebarOpen && !isExamMode} setIsOpen={setIsSidebarOpen} />
+      {/* Mobile overlay */}
+      {isSidebarOpen && !isExamMode && (
+        <div className="fixed inset-0 bg-black/60 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
       
       <div 
         className={cn(

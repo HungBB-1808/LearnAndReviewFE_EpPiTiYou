@@ -30,9 +30,9 @@ export const SubjectSelection = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className="p-10"
+            className="p-4 md:p-10"
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
                 {subjects.map((sub, i) => {
                     const cls = colors[i % colors.length]
                     const locked = isSubjectLocked(sub)
@@ -48,7 +48,7 @@ export const SubjectSelection = () => {
                                     navigate('/mode')
                                 }
                             }}
-                            className={`glass-card rounded-xl p-8 flex flex-col h-[320px] relative overflow-hidden group transition-all duration-300 ${
+                            className={`glass-card rounded-xl p-6 md:p-8 flex flex-col h-auto md:h-[320px] relative overflow-hidden group transition-all duration-300 ${
                                 locked ? 'cursor-not-allowed opacity-50 grayscale' : 'cursor-pointer hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]'
                             }`}
                         >

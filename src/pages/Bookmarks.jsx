@@ -62,11 +62,11 @@ export const Bookmarks = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="p-10 max-w-6xl mx-auto"
+            className="p-4 md:p-10 max-w-6xl mx-auto"
         >
             <div className="flex justify-between items-end mb-12">
                 <div className="space-y-2">
-                    <h2 className="text-4xl font-black tracking-tight text-white flex items-center gap-4">
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white flex items-center gap-3 md:gap-4">
                         <span className="material-symbols-outlined text-4xl text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
                         {t.title}
                     </h2>
@@ -83,10 +83,10 @@ export const Bookmarks = () => {
             ) : (
                 <div className="space-y-12">
                     {/* Tabs / Filter Navigation */}
-                    <div className="flex flex-wrap gap-4 mb-8 p-2 bg-white/5 rounded-3xl w-fit border border-white/5 backdrop-blur-3xl">
+                    <div className="flex gap-3 md:gap-4 mb-8 p-2 bg-white/5 rounded-3xl w-full md:w-fit border border-white/5 backdrop-blur-3xl overflow-x-auto">
                         <button 
                             onClick={() => setActiveTab('ALL')}
-                            className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'ALL' ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
+                            className={`px-4 md:px-6 py-2 md:py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === 'ALL' ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
                         >
                             {t.all} ({totalCount})
                         </button>
@@ -94,7 +94,7 @@ export const Bookmarks = () => {
                             <button 
                                 key={subject}
                                 onClick={() => setActiveTab(subject)}
-                                className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === subject ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
+                                className={`px-4 md:px-6 py-2 md:py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === subject ? 'bg-primary text-black shadow-[0_10px_20px_rgba(0,188,212,0.3)]' : 'text-white/40 hover:text-white'}`}
                             >
                                 {subject} ({qList.length})
                             </button>

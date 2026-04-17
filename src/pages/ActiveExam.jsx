@@ -11,6 +11,7 @@ export const ActiveExam = () => {
     const [timeLeft, setTimeLeft] = useState(examSettings.timeLimit * 60)
     const timerRef = useRef()
     const sessionStartRef = useRef(Date.now())
+    const [showNav, setShowNav] = useState(false)
 
     useEffect(() => {
         if (!activeSession || activeSession.mode !== 'exam') {
@@ -158,19 +159,19 @@ export const ActiveExam = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="flex h-screen bg-surface relative"
+            className="flex flex-col md:flex-row h-screen bg-surface relative"
         >
-            <main className="flex-1 flex flex-col items-center justify-center p-10 relative overflow-hidden">
+            <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-10 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-error/5 blur-[150px] rounded-full pointer-events-none"></div>
 
                 <div className="w-full max-w-4xl relative z-10 flex flex-col h-full">
-                    <header className="flex justify-between items-center mb-8">
+                    <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-8 gap-3">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="w-2 h-2 rounded-full bg-error animate-pulse"></span>
                                 <span className="text-[10px] text-error font-black uppercase tracking-widest">{t.exam.liveExam}</span>
                             </div>
-                            <h2 className="text-3xl font-bold text-white tracking-tight">{selectedSubject} {t.exam.mockExam}</h2>
+                            <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight">{selectedSubject} {t.exam.mockExam}</h2>
                         </div>
                         <div className={`px-6 py-3 rounded-2xl border ${isWarning ? 'bg-error/20 border-error/50 text-error animate-pulse' : 'bg-surface-container-highest border-white/10 text-white'} flex items-center gap-3 backdrop-blur-md`}>
                             <span className="material-symbols-outlined">{isWarning ? 'warning' : 'schedule'}</span>
@@ -178,7 +179,7 @@ export const ActiveExam = () => {
                         </div>
                     </header>
 
-                    <div className="flex-1 glass-card p-10 rounded-2xl flex flex-col ring-1 ring-white/5 relative overflow-hidden">
+                    <div className="flex-1 glass-card p-4 md:p-10 rounded-2xl flex flex-col ring-1 ring-white/5 relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-surface-container">
                             <motion.div 
                                 className="h-full bg-error rounded-r-full" 
@@ -187,9 +188,9 @@ export const ActiveExam = () => {
                             />
                         </div>
 
-                        <div className="flex items-center gap-4 mb-8">
-                            <span className="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center font-black">{currentIndex + 1}</span>
-                            <h3 className="text-xl font-medium text-white/90 leading-relaxed flex-1">
+                        <div className="flex items-start md:items-center gap-3 md:gap-4 mb-4 md:mb-8">
+                            <span className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-error/10 text-error flex items-center justify-center font-black shrink-0">{currentIndex + 1}</span>
+                            <h3 className="text-base md:text-xl font-medium text-white/90 leading-relaxed flex-1">
                                 {q.questionTextCleaned || q.question}
                             </h3>
                         </div>
@@ -217,21 +218,27 @@ export const ActiveExam = () => {
                         </div>
                     </div>
 
-                    <footer className="mt-8 flex justify-between items-center">
+                    <footer className="mt-4 md:mt-8 flex justify-between items-center gap-2">
                         <button 
                             onClick={() => updateSessionIndex(currentIndex - 1)} 
                             disabled={currentIndex === 0} 
-                            className="px-8 py-4 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-4 md:px-8 py-3 md:py-4 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 md:gap-2 text-xs md:text-sm"
                         >
-                            <span className="material-symbols-outlined text-sm">arrow_back</span> {t.exam.previous}
+                            <span className="material-symbols-outlined text-sm">arrow_back</span> <span className="hidden md:inline">{t.exam.previous}</span>
                         </button>
-                        <p className="text-sm font-medium text-on-surface-variant">{t.exam.questionOf(currentIndex + 1, questions.length)}</p>
+                        <div className="flex items-center gap-2">
+                            <p className="text-xs md:text-sm font-medium text-on-surface-variant hidden md:block">{t.exam.questionOf(currentIndex + 1, questions.length)}</p>
+                            {/* Mobile nav toggle */}
+                            <button onClick={() => setShowNav(!showNav)} className="md:hidden w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center">
+                                <span className="material-symbols-outlined text-sm">grid_view</span>
+                            </button>
+                        </div>
                         <button 
                             onClick={() => {
                                 if (currentIndex < questions.length - 1) updateSessionIndex(currentIndex + 1)
                                 else handleSubmit()
                             }} 
-                            className="px-8 py-4 rounded-full bg-error hover:bg-error-dim text-white font-black shadow-[0_10px_20px_rgba(255,110,132,0.3)] transition-all flex items-center gap-2 active:scale-95"
+                            className="px-4 md:px-8 py-3 md:py-4 rounded-full bg-error hover:bg-error-dim text-white font-black shadow-[0_10px_20px_rgba(255,110,132,0.3)] transition-all flex items-center gap-1 md:gap-2 active:scale-95 text-xs md:text-sm"
                         >
                             {currentIndex === questions.length - 1 ? t.exam.finishExam : t.exam.nextQuestion}
                             {currentIndex !== questions.length - 1 && <span className="material-symbols-outlined text-sm">arrow_forward</span>}
@@ -240,7 +247,8 @@ export const ActiveExam = () => {
                 </div>
             </main>
 
-            <aside className="w-80 bg-surface-container/80 backdrop-blur-xl border-l border-white/5 p-6 flex flex-col h-full z-20 shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
+            {/* Desktop sidebar */}
+            <aside className="hidden md:flex w-80 bg-surface-container/80 backdrop-blur-xl border-l border-white/5 p-6 flex-col h-full z-20 shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
                 <div className="mb-6 flex justify-between items-center">
                     <h3 className="text-white font-bold tracking-tight">{t.exam.questionNav}</h3>
                     <span className="text-[10px] font-black uppercase text-on-surface-variant bg-white/5 px-2 py-1 rounded">{t.exam.gridView}</span>
@@ -273,11 +281,43 @@ export const ActiveExam = () => {
                         <div className="flex items-center gap-2 text-on-surface-variant"><div className="w-3 h-3 rounded-full bg-surface-container-highest border border-white/5"></div> {t.exam.unanswered}</div>
                         <span className="font-bold text-white">{questions.length - Object.keys(activeSession.answers).length}</span>
                     </div>
-                    <button onClick={() => { if(window.confirm(t.exam.submitConfirm)) handleSubmit() }} className="w-full py-4 mt-4 rounded-xl border border-error/30 text-error font-bold hover:bg-error/10 transition-colors uppercase tracking-widest text-xs tracking-widest flex items-center justify-center gap-2">
+                    <button onClick={() => { if(window.confirm(t.exam.submitConfirm)) handleSubmit() }} className="w-full py-4 mt-4 rounded-xl border border-error/30 text-error font-bold hover:bg-error/10 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2">
                         <span className="material-symbols-outlined text-sm">publish</span> {t.exam.submitExam}
                     </button>
                 </div>
             </aside>
+
+            {/* Mobile slide-up nav */}
+            {showNav && (
+                <div className="md:hidden fixed inset-0 z-50 bg-black/70 flex items-end" onClick={() => setShowNav(false)}>
+                    <div className="w-full bg-surface-container rounded-t-3xl p-6 max-h-[60vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-white font-bold">{t.exam.questionNav}</h3>
+                            <button onClick={() => setShowNav(false)} className="text-white/50 p-1"><span className="material-symbols-outlined">close</span></button>
+                        </div>
+                        <div className="grid grid-cols-5 gap-2 mb-4">
+                            {questions.map((_, i) => {
+                                const isCurrent = i === currentIndex
+                                const isAnswered = !!activeSession.answers[i]
+                                return (
+                                    <button key={i} onClick={() => { updateSessionIndex(i); setShowNav(false) }}
+                                        className={`h-10 rounded-lg font-bold text-sm transition-all flex items-center justify-center ${
+                                            isCurrent ? 'bg-primary text-black' : isAnswered ? 'bg-primary/20 text-primary' : 'bg-white/5 text-white/50'
+                                        }`}
+                                    >{i + 1}</button>
+                                )
+                            })}
+                        </div>
+                        <div className="flex justify-between text-xs text-on-surface-variant mb-4">
+                            <span>{t.exam.answered}: {Object.keys(activeSession.answers).length}</span>
+                            <span>{t.exam.unanswered}: {questions.length - Object.keys(activeSession.answers).length}</span>
+                        </div>
+                        <button onClick={() => { if(window.confirm(t.exam.submitConfirm)) handleSubmit() }} className="w-full py-3 rounded-xl border border-error/30 text-error font-bold hover:bg-error/10 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                            <span className="material-symbols-outlined text-sm">publish</span> {t.exam.submitExam}
+                        </button>
+                    </div>
+                </div>
+            )}
         </motion.div>
     )
 }

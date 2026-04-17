@@ -135,16 +135,16 @@ export const AdminDashboard = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="p-10 relative"
+            className="p-4 md:p-10 relative"
         >
-            <header className="flex justify-between items-end mb-12">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-4">
                 <div className="space-y-2">
-                    <h2 className="text-4xl font-black tracking-tight text-white">Content Management</h2>
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white">Content Management</h2>
                     <p className="text-on-surface-variant max-w-md">Oversee the question database, verify accuracy, and maintain subject integrity.</p>
                 </div>
                 
-                <div className="flex gap-4">
-                    <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
+                <div className="flex flex-wrap gap-2 md:gap-4 w-full md:w-auto">
+                    <div className="flex flex-wrap gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
                         <button 
                             onClick={async () => {
                                 const btn = document.getElementById('push-cloud-btn');
@@ -180,7 +180,7 @@ export const AdminDashboard = () => {
                 </div>
             </header>
 
-            <section className="grid grid-cols-4 gap-6 mb-10">
+            <section className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-10">
                 <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between h-32">
                     <span className="material-symbols-outlined text-primary-fixed text-3xl">quiz</span>
                     <div>
