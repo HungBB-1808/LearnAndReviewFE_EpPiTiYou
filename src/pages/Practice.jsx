@@ -105,8 +105,8 @@ export const PracticeSession = () => {
                                 const isSelected = parts.includes(opt)
                                 const isCorrect = corrects.includes(opt)
                                 
-                                let wrapperClass = "group relative flex items-center p-6 glass-card rounded-xl border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all text-left w-full overflow-hidden cursor-pointer"
-                                if (isSelected) wrapperClass = "group relative flex items-center p-6 bg-primary/10 border-primary/40 ring-1 ring-primary/50 transition-all text-left w-full overflow-hidden cursor-pointer"
+                                let wrapperClass = "group relative flex items-center p-6 glass-card rounded-xl border border-white/5 hover:border-white/20 hover:bg-white/10 transition-colors text-left w-full overflow-hidden cursor-pointer"
+                                if (isSelected) wrapperClass = "group relative flex items-center p-6 bg-primary/10 border-primary/40 ring-1 ring-primary/50 transition-colors text-left w-full overflow-hidden cursor-pointer"
                                 
                                 let tokenClass = "flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl bg-surface-container-highest text-on-surface font-black mr-6 group-hover:bg-primary group-hover:text-black transition-colors border-none"
                                 if (isSelected) tokenClass = "flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl bg-primary text-black font-black mr-6 border-none"
@@ -115,7 +115,7 @@ export const PracticeSession = () => {
                                 const showResult = hasAnswered 
 
                                 if (showResult) {
-                                    wrapperClass = "group relative flex items-center p-6 rounded-xl transition-all text-left w-full overflow-hidden"
+                                    wrapperClass = "group relative flex items-center p-6 rounded-xl transition-colors text-left w-full overflow-hidden"
                                     if (isCorrect) {
                                         wrapperClass += " border border-green-500/40 bg-green-500/10 ring-1 ring-green-500/50"
                                         tokenClass = "flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl bg-green-500 text-white font-black mr-6 border-none"

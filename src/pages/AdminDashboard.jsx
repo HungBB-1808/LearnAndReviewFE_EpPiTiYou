@@ -111,8 +111,8 @@ export const AdminDashboard = () => {
         return (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-10 h-full flex items-center justify-center relative">
                 <div className="glass-panel p-10 rounded-[2rem] w-full max-w-md border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] relative overflow-hidden ring-1 ring-white/5">
-                    <div className="absolute top-0 right-0 w-48 h-48 bg-error/10 blur-3xl rounded-full pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/10 blur-3xl rounded-full pointer-events-none"></div>
+                    <div className="hidden md:block absolute top-0 right-0 w-48 h-48 bg-error/10 blur-3xl rounded-full pointer-events-none"></div>
+                    <div className="hidden md:block absolute bottom-0 left-0 w-48 h-48 bg-primary/10 blur-3xl rounded-full pointer-events-none"></div>
                     
                     <div className="text-center relative z-10">
                         <div className="w-20 h-20 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-6 border border-error/20 shadow-[0_0_20px_rgba(255,110,132,0.15)] relative isolate">

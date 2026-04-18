@@ -159,10 +159,10 @@ export const ActiveExam = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="flex flex-col md:flex-row h-screen bg-surface relative"
+            className="flex flex-col md:flex-row h-full bg-surface relative"
         >
             <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-error/5 blur-[150px] rounded-full pointer-events-none"></div>
+                <div className="hidden md:block absolute top-0 right-0 w-[800px] h-[800px] bg-error/5 blur-[150px] rounded-full pointer-events-none"></div>
 
                 <div className="w-full max-w-4xl relative z-10 flex flex-col h-full">
                     <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-8 gap-3">
@@ -204,7 +204,7 @@ export const ActiveExam = () => {
                                     <button 
                                         key={opt}
                                         onClick={() => updateSessionAnswer(currentIndex, opt)}
-                                        className={`group relative flex items-center p-6 rounded-xl border transition-all text-left w-full overflow-hidden ${selected ? 'bg-primary/20 border-primary/60 ring-1 ring-primary/50 shadow-[0_0_20px_rgba(133,173,255,0.2)]' : 'bg-surface-container-highest border-white/5 hover:border-white/20 hover:bg-white/5'}`}
+                                        className={`group relative flex items-center p-6 rounded-xl border transition-colors text-left w-full overflow-hidden ${selected ? 'bg-primary/20 border-primary/60 ring-1 ring-primary/50 shadow-[0_0_20px_rgba(133,173,255,0.2)]' : 'bg-surface-container-highest border-white/5 hover:border-white/20 hover:bg-white/5'}`}
                                     >
                                         <div className={`flex flex-shrink-0 items-center justify-center w-10 h-10 rounded-lg font-black mr-6 transition-colors ${selected ? 'bg-primary text-black' : 'bg-surface-container text-on-surface-variant group-hover:bg-primary/20 group-hover:text-primary'}`}>
                                             {selected ? <span className="material-symbols-outlined text-sm font-black">done</span> : opt}

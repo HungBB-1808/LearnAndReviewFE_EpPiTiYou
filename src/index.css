@@ -4,10 +4,10 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-surface-container/50 backdrop-blur-[24px] border border-white/20 relative overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)];
+    @apply bg-surface-container/50 backdrop-blur-md md:backdrop-blur-[24px] border border-white/20 relative overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)];
   }
   .glass-card {
-    @apply bg-white/10 backdrop-blur-[24px] border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.1)];
+    @apply bg-white/10 backdrop-blur-md md:backdrop-blur-[24px] border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.1)];
   }
 }
 

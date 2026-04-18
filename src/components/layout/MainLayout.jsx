@@ -17,10 +17,10 @@ export const MainLayout = () => {
   const isExamMode = pathname.startsWith('/exam')
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-[100dvh] overflow-hidden">
       {/* Background Decor */}
-      <div className="fixed top-1/4 right-0 w-[500px] h-[500px] bg-secondary-container/20 blur-[120px] -z-10 rounded-full pointer-events-none"></div>
-      <div className="fixed bottom-0 left-1/4 w-[600px] h-[600px] bg-primary-dim/10 blur-[150px] -z-10 rounded-full pointer-events-none"></div>
+      <div className="hidden md:block fixed top-1/4 right-0 w-[500px] h-[500px] bg-secondary-container/20 blur-[120px] -z-10 rounded-full pointer-events-none"></div>
+      <div className="hidden md:block fixed bottom-0 left-1/4 w-[600px] h-[600px] bg-primary-dim/10 blur-[150px] -z-10 rounded-full pointer-events-none"></div>
 
       <Sidebar isOpen={isSidebarOpen && !isExamMode} setIsOpen={setIsSidebarOpen} />
       {/* Mobile overlay */}

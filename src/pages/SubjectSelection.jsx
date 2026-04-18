@@ -59,7 +59,7 @@ export const SubjectSelection = () => {
                                 </div>
                             )}
 
-                            <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${cls}/20 rounded-full blur-3xl group-hover:bg-${cls}/40 transition-colors pointer-events-none`}></div>
+                            <div className={`hidden md:block absolute -top-12 -right-12 w-32 h-32 bg-${cls}/20 rounded-full blur-3xl group-hover:bg-${cls}/40 transition-colors pointer-events-none`}></div>
                             
                             <div className="mb-auto pointer-events-none transition-all">
                                 <div className="flex items-center gap-2 mb-4">

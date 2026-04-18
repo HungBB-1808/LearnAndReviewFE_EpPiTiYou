@@ -109,7 +109,7 @@ export const ModeSelection = () => {
                 {/* Study Card */}
                 <div onClick={() => setModalMode('study')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(133,173,255,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-primary/30">
                     <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
-                        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="hidden md:block absolute inset-0 bg-primary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <span className="material-symbols-outlined text-5xl text-primary">menu_book</span>
                     </div>
                     <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">{t.mode.studyMode}</h3>
@@ -120,7 +120,7 @@ export const ModeSelection = () => {
                 {/* Practice Card */}
                 <div onClick={() => setModalMode('practice')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(92,202,252,0.2)] transition-all duration-300 group border-t-2 border-t-tertiary ring-1 ring-white/5">
                     <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-tertiary/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
-                        <div className="absolute inset-0 bg-tertiary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="hidden md:block absolute inset-0 bg-tertiary/20 blur-xl rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <span className="material-symbols-outlined text-5xl text-tertiary">psychology</span>
                     </div>
                     <h3 className="text-xl md:text-3xl font-bold text-white mb-2 md:mb-4">{t.mode.practiceMode}</h3>
@@ -130,7 +130,7 @@ export const ModeSelection = () => {
 
                 {/* Exam Card */}
                 <div onClick={() => setModalMode('exam')} className="glass-card p-6 md:p-10 rounded-2xl md:rounded-[2rem] flex flex-col items-center text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(255,110,132,0.2)] transition-all duration-300 group ring-1 ring-white/5 hover:ring-error/30 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-error/10 blur-3xl rounded-full pointer-events-none group-hover:bg-error/20 transition-colors"></div>
+                    <div className="hidden md:block absolute top-0 right-0 w-32 h-32 bg-error/10 blur-3xl rounded-full pointer-events-none group-hover:bg-error/20 transition-colors"></div>
                     <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-error/10 flex items-center justify-center mb-4 md:mb-8 isolate relative group-hover:scale-110 transition-transform">
                         <span className="material-symbols-outlined text-5xl text-error">timer</span>
                     </div>
