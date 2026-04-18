@@ -344,7 +344,9 @@ export const useAppStore = create(
       bookmarks: [],
       examHistory: [],
       language: 'en',
+      themeMode: 'dark',
       setLanguage: (lang) => set({ language: lang }),
+      setThemeMode: (mode) => set({ themeMode: mode }),
       lockedSubjects: [],
 
       setSelectedSubject: (sub) => set({ selectedSubject: sub }),
@@ -456,7 +458,8 @@ export const useAppStore = create(
           questionDB: state.questionDB,
           isDataLoaded: state.isDataLoaded,
           activeSession: state.activeSession,
-          language: state.language
+          language: state.language,
+          themeMode: state.themeMode
       }),
     }
   )

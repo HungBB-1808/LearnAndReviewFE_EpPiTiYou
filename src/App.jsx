@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useAppStore } from './store/useAppStore'
 import { MainLayout } from './components/layout/MainLayout'
 import { SubjectSelection } from './pages/SubjectSelection'
 import { ModeSelection } from './pages/ModeSelection'
@@ -20,6 +21,31 @@ function App() {
   useEffect(() => {
     initialize()
   }, [initialize])
+
+  const { themeMode } = useAppStore()
+
+  useEffect(() => {
+    const rootUrl = document.documentElement;
+    
+    // First, add the transitioning class
+    rootUrl.classList.add('switching-theme');
+    
+    // Wait for the next frame so the transition class is applied by the browser
+    requestAnimationFrame(() => {
+        if (themeMode === 'light') {
+          rootUrl.classList.add('light');
+        } else {
+          rootUrl.classList.remove('light');
+        }
+    });
+    
+    // Remove the transitioning class after animation completes
+    const timeout = setTimeout(() => {
+      rootUrl.classList.remove('switching-theme');
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [themeMode])
 
   // Show a centered spinner while checking auth state
   if (isLoading) {

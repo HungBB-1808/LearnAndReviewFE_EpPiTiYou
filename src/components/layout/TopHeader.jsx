@@ -8,6 +8,8 @@ import { getTranslations } from '../../lib/translations'
 export const TopHeader = ({ toggleSidebar }) => {
   const { user, isGuest, getDisplayName, getAvatarUrl, signOut, isAdmin } = useAuthStore()
   const language = useAppStore((s) => s.language)
+  const themeMode = useAppStore((s) => s.themeMode)
+  const setThemeMode = useAppStore((s) => s.setThemeMode)
   const t = getTranslations(language)
   const avatarUrl = getAvatarUrl()
   const displayName = getDisplayName()
@@ -34,7 +36,25 @@ export const TopHeader = ({ toggleSidebar }) => {
             </div>
         </div>
 
-        <div className="flex items-center gap-4 relative z-50 pointer-events-auto">
+        <div className="flex items-center gap-2 md:gap-4 relative z-50 pointer-events-auto">
+            {/* Theme Toggle */}
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-full p-1">
+                <button
+                    onClick={() => setThemeMode('light')}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${themeMode === 'light' ? 'bg-primary text-black shadow-[0_2px_10px_rgba(133,173,255,0.3)]' : 'text-white/50 hover:text-white'}`}
+                    title="Light Mode"
+                >
+                    <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>light_mode</span>
+                </button>
+                <button
+                    onClick={() => setThemeMode('dark')}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${themeMode === 'dark' ? 'bg-primary text-black shadow-[0_2px_10px_rgba(133,173,255,0.3)]' : 'text-white/50 hover:text-white'}`}
+                    title="Dark Mode"
+                >
+                    <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>dark_mode</span>
+                </button>
+            </div>
+
             {/* User Profile Chip */}
             <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10">
                 {avatarUrl ? (
