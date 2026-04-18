@@ -120,6 +120,15 @@ html.light {
   .glass-card {
     @apply bg-white/10 backdrop-blur-md md:backdrop-blur-[24px] border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.1)];
   }
+  
+  .light .glass-panel, .light .glass-card {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  }
+  .light .glass-panel:hover, .light .glass-card:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
 }
 
 /* Base custom styles replicated from vanilla */

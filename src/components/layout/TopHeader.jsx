@@ -46,12 +46,12 @@ export const TopHeader = ({ toggleSidebar }) => {
           
           document.documentElement.animate(
               {
-                 clipPath: targetMode === 'dark' ? [...clipPath].reverse() : clipPath
+                 clipPath: clipPath
               },
               {
                   duration: 500,
                   easing: 'ease-in-out',
-                  pseudoElement: targetMode === 'dark' ? '::view-transition-old(root)' : '::view-transition-new(root)'
+                  pseudoElement: '::view-transition-new(root)'
               }
           );
       });
