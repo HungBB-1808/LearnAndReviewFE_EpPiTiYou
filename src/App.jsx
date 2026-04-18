@@ -26,25 +26,11 @@ function App() {
 
   useEffect(() => {
     const rootUrl = document.documentElement;
-    
-    // First, add the transitioning class
-    rootUrl.classList.add('switching-theme');
-    
-    // Wait for the next frame so the transition class is applied by the browser
-    requestAnimationFrame(() => {
-        if (themeMode === 'light') {
-          rootUrl.classList.add('light');
-        } else {
-          rootUrl.classList.remove('light');
-        }
-    });
-    
-    // Remove the transitioning class after animation completes
-    const timeout = setTimeout(() => {
-      rootUrl.classList.remove('switching-theme');
-    }, 500);
-
-    return () => clearTimeout(timeout);
+    if (themeMode === 'light') {
+      rootUrl.classList.add('light');
+    } else {
+      rootUrl.classList.remove('light');
+    }
   }, [themeMode])
 
   // Show a centered spinner while checking auth state

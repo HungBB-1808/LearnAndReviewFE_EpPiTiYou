@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuthStore } from '../../store/useAuthStore'
 import { useAppStore } from '../../store/useAppStore'
 import { getTranslations } from '../../lib/translations'
+import { flushSync } from 'react-dom'
 
 export const TopHeader = ({ toggleSidebar }) => {
   const { user, isGuest, getDisplayName, getAvatarUrl, signOut, isAdmin } = useAuthStore()
@@ -13,6 +14,48 @@ export const TopHeader = ({ toggleSidebar }) => {
   const t = getTranslations(language)
   const avatarUrl = getAvatarUrl()
   const displayName = getDisplayName()
+
+  const handleThemeChange = (e, targetMode) => {
+      if (!document.startViewTransition) {
+          setThemeMode(targetMode);
+          return;
+      }
+
+      const valX = e.clientX;
+      const valY = e.clientY;
+      
+      const endRadius = Math.hypot(
+          Math.max(valX, window.innerWidth - valX),
+          Math.max(valY, window.innerHeight - valY)
+      );
+
+      const transition = document.startViewTransition(() => {
+          flushSync(() => {
+              setThemeMode(targetMode);
+              const rootUrl = document.documentElement;
+              if (targetMode === 'light') rootUrl.classList.add('light');
+              else rootUrl.classList.remove('light');
+          });
+      });
+
+      transition.ready.then(() => {
+          const clipPath = [
+              `circle(0px at ${valX}px ${valY}px)`,
+              `circle(${endRadius}px at ${valX}px ${valY}px)`
+          ];
+          
+          document.documentElement.animate(
+              {
+                 clipPath: targetMode === 'dark' ? [...clipPath].reverse() : clipPath
+              },
+              {
+                  duration: 500,
+                  easing: 'ease-in-out',
+                  pseudoElement: targetMode === 'dark' ? '::view-transition-old(root)' : '::view-transition-new(root)'
+              }
+          );
+      });
+  }
 
   return (
     <motion.header
@@ -40,14 +83,14 @@ export const TopHeader = ({ toggleSidebar }) => {
             {/* Theme Toggle */}
             <div className="flex items-center bg-white/5 border border-white/10 rounded-full p-1">
                 <button
-                    onClick={() => setThemeMode('light')}
+                    onClick={(e) => handleThemeChange(e, 'light')}
                     className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${themeMode === 'light' ? 'bg-primary text-black shadow-[0_2px_10px_rgba(133,173,255,0.3)]' : 'text-white/50 hover:text-white'}`}
                     title="Light Mode"
                 >
                     <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>light_mode</span>
                 </button>
                 <button
-                    onClick={() => setThemeMode('dark')}
+                    onClick={(e) => handleThemeChange(e, 'dark')}
                     className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${themeMode === 'dark' ? 'bg-primary text-black shadow-[0_2px_10px_rgba(133,173,255,0.3)]' : 'text-white/50 hover:text-white'}`}
                     title="Dark Mode"
                 >
