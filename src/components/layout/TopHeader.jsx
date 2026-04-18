@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/useAuthStore'
 import { useAppStore } from '../../store/useAppStore'
 import { getTranslations } from '../../lib/translations'
 import { flushSync } from 'react-dom'
+import { TextMorph } from '../ui/TextMorph'
 
 export const TopHeader = ({ toggleSidebar }) => {
   const { user, isGuest, getDisplayName, getAvatarUrl, signOut, isAdmin } = useAuthStore()
@@ -140,7 +141,7 @@ export const TopHeader = ({ toggleSidebar }) => {
                     className="px-5 py-2 rounded-full bg-white/5 hover:bg-error/10 border border-white/10 hover:border-error/30 text-white/60 hover:text-error text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2"
                 >
                     <span className="material-symbols-outlined text-sm">logout</span>
-                    <span className="hidden md:inline">{t.topHeader.signOut}</span>
+                    <TextMorph text={t.topHeader.signOut} className="hidden md:flex" />
                 </button>
             ) : isGuest ? (
                 <button 
@@ -150,7 +151,7 @@ export const TopHeader = ({ toggleSidebar }) => {
                     className="px-5 py-2 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2"
                 >
                     <span className="material-symbols-outlined text-sm">login</span>
-                    <span className="hidden md:inline">{t.topHeader.signIn}</span>
+                    <TextMorph text={t.topHeader.signIn} className="hidden md:flex" />
                 </button>
             ) : null}
         </div>

@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/useAuthStore'
 import { getTranslations } from '../../lib/translations'
 import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
+import { TextMorph } from '../ui/TextMorph'
 
 export const Sidebar = ({ isOpen, setIsOpen }) => {
   const { pathname } = useLocation()
@@ -57,14 +58,14 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                 )}>
                     {active && <motion.div layoutId="activeNav" className="absolute left-0 w-1 h-8 rounded-r bg-primary"></motion.div>}
                     <span className={cn("material-symbols-outlined transition-colors", active ? "text-primary" : "")} style={{ fontVariationSettings: "'FILL' 0" }}>{link.icon}</span>
-                    {link.label}
+                    <TextMorph text={link.label} />
                 </Link>
             )
         })}
 
         {/* Language Toggle */}
         <div className="my-6 px-2">
-            <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 px-4">{t.sidebar.language}</p>
+            <TextMorph text={t.sidebar.language} className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 px-4" />
             <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
                 <button
                     onClick={() => setLanguage('en')}
@@ -99,7 +100,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
             )}>
                 {isActive("/admin") && <motion.div layoutId="activeNav" className="absolute left-0 w-1 h-8 rounded-r bg-error"></motion.div>}
                 <span className="material-symbols-outlined transition-colors">admin_panel_settings</span>
-                {t.sidebar.adminAccess}
+                <TextMorph text={t.sidebar.adminAccess} />
             </Link>
           </>
         )}
@@ -120,9 +121,9 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
             <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate">{displayName}</p>
-                <p className={`text-[10px] truncate uppercase tracking-widest font-black transition-colors ${isAdmin() ? 'text-error' : isGuest ? 'text-yellow-400/80' : 'text-on-surface-variant'}`}>
-                    {isAdmin() ? t.sidebar.administrator : isGuest ? t.sidebar.guestMode : t.sidebar.student}
-                </p>
+                <div className={`text-[10px] truncate uppercase tracking-widest font-black transition-colors ${isAdmin() ? 'text-error' : isGuest ? 'text-yellow-400/80' : 'text-on-surface-variant'}`}>
+                    <TextMorph text={isAdmin() ? t.sidebar.administrator : isGuest ? t.sidebar.guestMode : t.sidebar.student} />
+                </div>
             </div>
         </div>
       </div>
