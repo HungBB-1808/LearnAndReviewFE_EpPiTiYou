@@ -6,6 +6,7 @@ import { getTranslations } from '../../lib/translations'
 import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 import { TextMorph } from '../ui/TextMorph'
+import { LiquidGlassTabs } from '../ui/LiquidGlassTabs'
 
 export const Sidebar = ({ isOpen, setIsOpen }) => {
   const { pathname } = useLocation()
@@ -25,6 +26,11 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
     { to: "/history", icon: "history", label: t.sidebar.examHistory },
     { to: "/bookmarks", icon: "bookmark", label: t.sidebar.bookmarks },
   ]
+  
+  const langTabs = [
+      { id: 'en', label: '🇺🇸 EN', color: '#0ea5e9' },
+      { id: 'vi', label: '🇻🇳 VI', color: '#ec4899' }
+  ];
 
   const isActive = (path) => pathname.startsWith(path)
 
@@ -66,27 +72,14 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
         {/* Language Toggle */}
         <div className="my-6 px-2">
             <TextMorph text={t.sidebar.language} className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 px-4" />
-            <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
-                <button
-                    onClick={() => setLanguage('en')}
-                    className={`flex-1 px-3 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
-                        language === 'en' 
-                        ? 'bg-primary text-black shadow-[0_4px_12px_rgba(0,188,212,0.3)]' 
-                        : 'text-white/40 hover:text-white'
-                    }`}
-                >
-                    🇺🇸 EN
-                </button>
-                <button
-                    onClick={() => setLanguage('vi')}
-                    className={`flex-1 px-3 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
-                        language === 'vi' 
-                        ? 'bg-primary text-black shadow-[0_4px_12px_rgba(0,188,212,0.3)]' 
-                        : 'text-white/40 hover:text-white'
-                    }`}
-                >
-                    🇻🇳 VI
-                </button>
+            <div className="w-full">
+                <LiquidGlassTabs 
+                    tabs={langTabs} 
+                    activeTab={language} 
+                    onTabChange={(id) => setLanguage(id)} 
+                    layoutIdPrefix="lang-switch"
+                    fullWidth={true}
+                />
             </div>
         </div>
 
