@@ -3,7 +3,7 @@ import { useAppStore } from '../store/useAppStore'
 import { useAuthStore } from '../store/useAuthStore'
 import { useNavigate } from 'react-router-dom'
 
-const BARCA_LOGO = 'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/800px-FC_Barcelona_%28crest%29.svg.png'
+const BARCA_LOGO = 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg'
 
 export const EOSExam = () => {
     const { activeSession, selectedSubject, updateSessionIndex, updateSessionAnswer, updateSessionTime, examSettings, getCorrectAnswerFor, saveExamResult } = useAppStore()
@@ -157,7 +157,14 @@ export const EOSExam = () => {
     }
 
     const handleOptionToggle = (opt) => {
-        updateSessionAnswer(currentIndex, opt)
+        if (!selectedParts.includes(opt) && selectedParts.length >= numCorrectAnswers) {
+            if (numCorrectAnswers === 1) {
+                // If it's single choice, we can auto-swap to the new selection
+                updateSessionAnswer(currentIndex, opt);
+            }
+            return; // Prevent selecting more than allowed
+        }
+        updateSessionAnswer(currentIndex, opt);
     }
 
     const formatTime = (secs) => {
