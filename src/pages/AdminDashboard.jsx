@@ -91,20 +91,33 @@ export const AdminDashboard = () => {
         const file = e.target.files[0]
         if (!file) return
         const reader = new FileReader()
-        reader.onload = (relevent) => {
+        reader.onload = async (relevent) => {
             try {
                 const imported = JSON.parse(relevent.target.result)
-                // Use a simple confirm if they want to overwrite
-                if(window.confirm("This will replace your current memory database. Continue?")) {
+                if(window.confirm("This will replace your current memory database and sync to cloud. Continue?")) {
                     // Update the whole DB in store
                     useAppStore.setState({ questionDB: imported })
-                    alert("Import successful!")
+                    
+                    // Automatically sync to cloud so the data persists across page loads
+                    try {
+                        const ok = await useAppStore.getState().syncToCloud()
+                        if (ok) {
+                            alert("✅ Import successful and synced to cloud! Your changes are now permanent.")
+                        } else {
+                            alert("⚠️ Import successful locally, but cloud sync failed. Click 'Push All To Cloud' to retry.")
+                        }
+                    } catch (syncErr) {
+                        console.error("Import cloud sync failed:", syncErr)
+                        alert("⚠️ Import successful locally, but cloud sync failed. Click 'Push All To Cloud' to retry.")
+                    }
                 }
             } catch (err) {
                 alert("Invalid JSON file!")
             }
         }
         reader.readAsText(file)
+        // Reset input so the same file can be re-imported
+        e.target.value = ''
     }
 
     if (!isAdmin()) {

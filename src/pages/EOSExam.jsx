@@ -157,14 +157,24 @@ export const EOSExam = () => {
     }
 
     const handleOptionToggle = (opt) => {
-        if (!selectedParts.includes(opt) && selectedParts.length >= numCorrectAnswers) {
-            if (numCorrectAnswers === 1) {
-                // If it's single choice, we can auto-swap to the new selection
-                updateSessionAnswer(currentIndex, opt);
-            }
-            return; // Prevent selecting more than allowed
-        }
-        updateSessionAnswer(currentIndex, opt);
+        // EOS allows free multi-select: students can check/uncheck any number of options.
+        // Only the scoring logic (handleSubmit) compares against correct answers.
+        const newParts = selectedParts.includes(opt)
+            ? selectedParts.filter(p => p !== opt)
+            : [...selectedParts, opt];
+        
+        // Directly set the answer string (bypass the store's built-in toggle logic)
+        const newAns = newParts.sort().join(',');
+        // We use a direct state update to avoid the store's restrictive multi-answer logic
+        useAppStore.setState(state => {
+            if (!state.activeSession) return state;
+            return {
+                activeSession: {
+                    ...state.activeSession,
+                    answers: { ...state.activeSession.answers, [currentIndex]: newAns || "" }
+                }
+            };
+        });
     }
 
     const formatTime = (secs) => {
